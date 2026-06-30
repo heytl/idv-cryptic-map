@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>加页手记 | 侧门入口解密攻略手册</title>
+  
+  <!-- 引入复古哥特风格字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 提灯光晕背景 -->
+  <div class="glow-bg"></div>
+
+  <div class="app-container">
+    <!-- 头部栏 -->
+    <header class="app-header">
+      <div class="header-decoration left-deco"></div>
+      <h1 class="app-title"><span class="en-font">CRYPTIC HANDBOOK</span><br>加页手记解密手册</h1>
+      <div class="header-decoration right-deco"></div>
+    </header>
+
+    <!-- 视图一：手记目录页 (Catalog View) -->
+    <main id="catalog-view" class="view-panel active">
+      <div class="parchment-card">
+        <div class="card-inner">
+          <div class="corner-decor top-left"></div>
+          <div class="corner-decor top-right"></div>
+          <div class="corner-decor bottom-left"></div>
+          <div class="corner-decor bottom-right"></div>
+
+          <div class="catalog-intro">
+            <p class="handwriting">庄园的侧门千变万化，寻找密码是唯一的生路。请根据您当前所处侧门入口的墙体结构，确认本局所在的地图...</p>
+          </div>
+
+          <!-- 方向过滤器 -->
+          <div class="tabs-container">
+            <div class="tabs-label">入口方向过滤:</div>
+            <div class="tabs">
+              <button class="tab-btn active" data-filter="all">
+                <span class="btn-texture"></span>全部
+              </button>
+              <button class="tab-btn" data-filter="左">
+                <span class="btn-texture"></span>左侧门
+              </button>
+              <button class="tab-btn" data-filter="右">
+                <span class="btn-texture"></span>右侧门
+              </button>
+              <button class="tab-btn" data-filter="南">
+                <span class="btn-texture"></span>南侧门
+              </button>
+              <button class="tab-btn" data-filter="北">
+                <span class="btn-texture"></span>北侧门
+              </button>
+            </div>
+          </div>
+
+          <!-- 入口图网格 -->
+          <div id="entry-grid" class="entry-grid">
+            <!-- 动态生成卡片 -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 视图二：地图详情页 (Strategy View) -->
+    <main id="strategy-view" class="view-panel">
+      <!-- 顶部控制条 -->
+      <div class="control-bar">
+        <button id="back-btn" class="gothic-btn btn-back">
+          <span class="btn-texture"></span> 返回手记目录
+        </button>
+        
+        <div class="map-title-container">
+          <h2 id="current-map-name" class="map-title">地图名称</h2>
+          <span id="current-map-direction" class="map-direction-badge">方向</span>
+        </div>
+
+        <!-- 一楼二楼切换器 (复古手感拉杆拉动样式) -->
+        <div class="floor-toggle-wrapper">
+          <span class="toggle-label">楼层切换:</span>
+          <div class="floor-switch" id="floor-switch">
+            <div class="switch-btn active" data-floor="full">全图</div>
+            <div class="switch-btn" data-floor="1">1楼</div>
+            <div class="switch-btn" data-floor="2">2楼</div>
+            <div class="switch-slider"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-container">
+        <!-- 左侧/参考面板: 侧门结构 -->
+        <section class="info-sidebar">
+          <div class="parchment-card tight">
+            <div class="card-inner">
+              <h3 class="sidebar-title">侧门入口参考</h3>
+              <div class="entry-img-container">
+                <img id="ref-entry-img" src="" alt="侧门入口图">
+                <div class="scan-line"></div>
+              </div>
+              <div class="sidebar-info-box">
+                <div class="info-item">
+                  <span class="label">入口方向:</span>
+                  <span id="info-direction" class="value">未知</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">特征备注:</span>
+                  <span id="info-remarks" class="value handwriting">未知</span>
+                </div>
+              </div>
+              <div class="legend-box">
+                <h4 class="legend-title">图示说明</h4>
+                <ul class="legend-list">
+                  <li><span class="legend-dot green"></span> <span>绿三角：玩家起点</span></li>
+                  <li><span class="legend-dot red"></span> <span>红实线：主要移动路线</span></li>
+                  <li><span class="legend-dot blue"></span> <span>蓝虚线：次要移动路线</span></li>
+                  <li><span class="legend-dot yellow"></span> <span>金箱点：必定刷金宝箱</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 右侧：地图交互面板 -->
+        <section class="map-main-panel">
+          <div class="parchment-card tight map-card">
+            <div class="card-inner">
+              <!-- 地图视口 -->
+              <div class="map-viewport" id="map-viewport">
+                <div class="map-wrapper" id="map-wrapper">
+                  <img id="main-map-img" src="" alt="交互地图" draggable="false">
+                  <!-- 高亮覆盖层 -->
+                  <div id="highlight-overlay" class="highlight-overlay"></div>
+                </div>
+                <!-- 遮罩图层，制造神秘感 -->
+                <div class="vignette-overlay"></div>
+              </div>
+
+              <!-- 地图浮动工具栏 -->
+              <div class="map-floating-controls">
+                <button class="tool-btn zoom-in-btn" title="放大"><span class="icon">+</span></button>
+                <button class="tool-btn zoom-out-btn" title="缩小"><span class="icon">-</span></button>
+                <button class="tool-btn fit-height-btn" title="高度铺满"><span class="icon">↕</span></button>
+                <button class="tool-btn reset-btn" title="自适应"><span class="icon">⟲</span></button>
+              </div>
+
+              <!-- 房间/区域导航 -->
+              <div class="room-selector-panel" style="display: none;">
+                <span class="room-nav-title">快速区域指引:</span>
+                <div id="room-buttons" class="room-buttons">
+                  <!-- 动态生成房间高亮按钮 -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="app-footer">
+      <p>© 2026 第五人格“加页手记”侧门解密系统 | <a href="https://space.bilibili.com/8618005" target="_blank" class="author-link">凉哈皮</a> 跑图攻略参考数据</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

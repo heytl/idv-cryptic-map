@@ -1,0 +1,13 @@
+{
+  "name": "idv-cryptic-map-guide",
+  "version": "1.0.0",
+  "description": "Identity V Cryptic Map Interactive Strategy Guide",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

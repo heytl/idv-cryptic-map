@@ -1,0 +1,28 @@
+# Temporary files
+temp_crops/
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Node dependencies
+node_modules/
+dist/
+.svelte-kit/
+.next/
+out/
+
+# Local configuration files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Gemini/Agentic systems
+.gemini/
+.agents/
+walkthrough.md
+task.md
+implementation_plan.md
