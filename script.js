@@ -348,11 +348,13 @@ function filterCatalog(filter) {
 // 视图切换
 function switchView(viewName) {
   if (viewName === "catalog") {
+    document.body.classList.remove("strategy-view-active");
     strategyView.classList.remove("active");
     setTimeout(() => {
       catalogView.classList.add("active");
     }, 200);
   } else {
+    document.body.classList.add("strategy-view-active");
     catalogView.classList.remove("active");
     setTimeout(() => {
       strategyView.classList.add("active");

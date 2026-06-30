@@ -827,6 +827,10 @@ body {
     margin-bottom: 15px;
   }
 
+  body.strategy-view-active .app-header {
+    display: none;
+  }
+
   .card-inner {
     padding: 15px;
   }
