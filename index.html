@@ -39,22 +39,22 @@
 
           <!-- 方向过滤器 -->
           <div class="tabs-container">
-            <div class="tabs-label">入口方向过滤:</div>
+            <div class="tabs-label">侧门入口方向过滤:</div>
             <div class="tabs">
               <button class="tab-btn active" data-filter="all">
                 <span class="btn-texture"></span>全部
               </button>
               <button class="tab-btn" data-filter="左">
-                <span class="btn-texture"></span>左侧门
+                <span class="btn-texture"></span>左
               </button>
               <button class="tab-btn" data-filter="右">
-                <span class="btn-texture"></span>右侧门
+                <span class="btn-texture"></span>右
               </button>
               <button class="tab-btn" data-filter="南">
-                <span class="btn-texture"></span>南侧门
+                <span class="btn-texture"></span>南
               </button>
               <button class="tab-btn" data-filter="北">
-                <span class="btn-texture"></span>北侧门
+                <span class="btn-texture"></span>北
               </button>
             </div>
           </div>
@@ -114,12 +114,32 @@
               </div>
               <div class="legend-box">
                 <h4 class="legend-title">图示说明</h4>
-                <ul class="legend-list">
-                  <li><span class="legend-dot green"></span> <span>绿三角：玩家起点</span></li>
-                  <li><span class="legend-dot red"></span> <span>红实线：主要移动路线</span></li>
-                  <li><span class="legend-dot blue"></span> <span>蓝虚线：次要移动路线</span></li>
-                  <li><span class="legend-dot yellow"></span> <span>金箱点：必定刷金宝箱</span></li>
-                </ul>
+                <div class="legend-grid">
+                  <div class="legend-item">
+                    <span class="legend-label">主要路线</span>
+                    <span class="legend-line red"></span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-label">次要路线</span>
+                    <span class="legend-line blue"></span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-label">金箱点</span>
+                    <span class="legend-symbol gold-chest">🪙</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-label">上/下层移动</span>
+                    <span class="legend-arrow">⇅</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-label">起点</span>
+                    <span class="legend-shape green-triangle">▲</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-label">终点</span>
+                    <span class="legend-shape green-circle">●</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -131,6 +151,8 @@
             <div class="card-inner">
               <!-- 地图视口 -->
               <div class="map-viewport" id="map-viewport">
+                <!-- 全屏关闭按钮 -->
+                <button class="fullscreen-close-btn" title="退出全屏">&times;</button>
                 <div class="map-wrapper" id="map-wrapper">
                   <img id="main-map-img" src="" alt="交互地图" draggable="false">
                   <!-- 高亮覆盖层 -->
@@ -144,8 +166,8 @@
               <div class="map-floating-controls">
                 <button class="tool-btn zoom-in-btn" title="放大"><span class="icon">+</span></button>
                 <button class="tool-btn zoom-out-btn" title="缩小"><span class="icon">-</span></button>
-                <button class="tool-btn fit-height-btn" title="高度铺满"><span class="icon">↕</span></button>
-                <button class="tool-btn reset-btn" title="自适应"><span class="icon">⟲</span></button>
+                <button class="tool-btn fullscreen-btn" title="地图全屏"><span class="icon">⤢</span></button>
+                <button class="tool-btn reset-btn" title="重置自适应"><span class="icon">⟲</span></button>
               </div>
 
               <!-- 房间/区域导航 -->

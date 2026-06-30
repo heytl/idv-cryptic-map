@@ -501,29 +501,74 @@ body {
   margin-bottom: 10px;
 }
 
-.legend-list {
-  list-style: none;
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
 }
 
-.legend-list li {
+.legend-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.legend-label {
+  font-size: 0.82rem;
+  color: var(--text-dark);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.legend-line {
+  width: 36px;
+  height: 3px;
+  border-radius: 1px;
+  display: inline-block;
   flex-shrink: 0;
 }
 
-.legend-dot.green { background-color: #2bcf40; border: 1px solid #1a8a25; }
-.legend-dot.red { background-color: #e62222; border: 1px solid #991313; }
-.legend-dot.blue { background-color: #225ce6; border: 1px solid #133a99; }
-.legend-dot.yellow { background-color: #ffd800; border: 1px solid #b39800; box-shadow: 0 0 6px #ffd800; }
+.legend-line.red {
+  background-color: #ff3b30;
+  box-shadow: 0 0 3px rgba(255, 59, 48, 0.4);
+}
+
+.legend-line.blue {
+  background-color: #007aff;
+  box-shadow: 0 0 3px rgba(0, 122, 255, 0.4);
+}
+
+.legend-symbol, .legend-shape, .legend-arrow {
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.legend-symbol.gold-chest {
+  font-size: 0.95rem;
+  filter: drop-shadow(0 0 2px rgba(255, 216, 0, 0.5));
+}
+
+.legend-shape.green-triangle {
+  color: #4cd964;
+  text-shadow: 0 0 3px rgba(76, 217, 100, 0.4);
+}
+
+.legend-shape.green-circle {
+  color: #4cd964;
+  text-shadow: 0 0 3px rgba(76, 217, 100, 0.4);
+  font-size: 0.85rem;
+}
+
+.legend-arrow {
+  color: #ff3b30;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(255, 59, 48, 0.4);
+}
 
 /* 地图主面板 */
 .map-main-panel {
@@ -558,6 +603,50 @@ body {
 
 .map-viewport:active {
   cursor: grabbing;
+}
+
+.map-viewport.in-page-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  border: none;
+  border-radius: 0;
+}
+
+/* 全屏关闭“X”按钮 */
+.fullscreen-close-btn {
+  display: none; /* 默认隐藏 */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(11, 12, 14, 0.85);
+  border: 2px solid var(--gold-dark);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 2rem;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10000;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  font-family: Arial, sans-serif; /* 保证叉号的正常显示 */
+}
+
+.fullscreen-close-btn:hover {
+  color: var(--gold-light);
+  border-color: var(--gold);
+  background-color: rgba(11, 12, 14, 0.95);
+  transform: scale(1.08);
+}
+
+.map-viewport.in-page-fullscreen .fullscreen-close-btn {
+  display: block;
 }
 
 .map-wrapper {
@@ -833,26 +922,25 @@ body {
   }
 }
 
-/* 针对极窄手机端（小于480px）单独优化分类筛选布局，实现对称美观的网格排版 */
 @media (max-width: 480px) {
+  /* 只隐藏占位较多的引导语文字 */
+  .catalog-intro {
+    display: none;
+  }
+
   .tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 4px;
     width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
   }
   
   .tabs .tab-btn {
-    width: 100%;
+    flex: 1;
     text-align: center;
-    box-sizing: border-box;
-    padding: 8px 5px;
-    font-size: 0.85rem;
-  }
-
-  .tabs .tab-btn[data-filter="all"] {
-    grid-column: span 2;
+    padding: 6px 2px;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 }

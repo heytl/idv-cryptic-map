@@ -293,6 +293,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 5. 地图缩放与拖拽初始化
   initMapZoomAndPan();
+
+  // 6. 点击图片外部（即视口黑边背景）退出全屏
+  mapViewport.addEventListener("click", (e) => {
+    if (mapViewport.classList.contains("in-page-fullscreen") && e.target === mapViewport) {
+      toggleFullscreen();
+    }
+  });
+
+  // 7. 点击右上角关闭按钮 (X) 退出全屏
+  const closeFullscreenBtn = document.querySelector(".fullscreen-close-btn");
+  closeFullscreenBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // 阻止事件冒泡，防止触发背景点击
+    toggleFullscreen();
+  });
 });
 
 // 渲染目录列表
@@ -594,45 +608,42 @@ function initMapZoomAndPan() {
     resetMapTransform();
   });
 
-  document.querySelector(".fit-height-btn").addEventListener("click", () => {
-    fitMapToHeight();
+  document.querySelector(".fullscreen-btn").addEventListener("click", () => {
+    toggleFullscreen();
   });
 }
 
-// 重置平移缩放
+// 重置平移缩放 (铺满自适应，无1.0上限限制)
 function resetMapTransform() {
   const viewW = mapViewport.clientWidth;
   const viewH = mapViewport.clientHeight;
   const mapW = 900;
   const mapH = currentFloor === "full" ? 1500 : 750;
   
-  // 计算自适应缩放比 (Contain 适应)
-  const scaleX = viewW / mapW;
-  const scaleY = viewH / mapH;
-  zoomState.scale = Math.min(scaleX, scaleY, 1.0); // 最大不超过1:1原尺寸
+  // 选择最限制的轴向比例进行自适应铺满
+  zoomState.scale = Math.min(viewW / mapW, viewH / mapH);
   
-  // 居中显示
+  // 水平与垂直完全居中对齐
   zoomState.x = (viewW - mapW * zoomState.scale) / 2;
   zoomState.y = (viewH - mapH * zoomState.scale) / 2;
   
   applyTransform();
 }
 
-// 高度完全铺满视口
-function fitMapToHeight() {
-  const viewW = mapViewport.clientWidth;
-  const viewH = mapViewport.clientHeight;
-  const mapW = 900;
-  const mapH = currentFloor === "full" ? 1500 : 750;
+// 切换页面内全屏模式 (使地图视口铺满整个浏览器窗口)
+function toggleFullscreen() {
+  const isCurrentlyFullscreen = mapViewport.classList.contains("in-page-fullscreen");
   
-  // 缩放比例设为高度比例，使上下刚好铺满
-  zoomState.scale = viewH / mapH;
+  if (!isCurrentlyFullscreen) {
+    mapViewport.classList.add("in-page-fullscreen");
+  } else {
+    mapViewport.classList.remove("in-page-fullscreen");
+  }
   
-  // 居中水平平移，垂直平移设为 0
-  zoomState.x = (viewW - mapW * zoomState.scale) / 2;
-  zoomState.y = 0;
-  
-  applyTransform();
+  // 视口大小发生变化，重新自适应计算居中
+  setTimeout(() => {
+    resetMapTransform();
+  }, 80);
 }
 
 // 触摸点距离计算
