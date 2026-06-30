@@ -832,3 +832,27 @@ body {
     justify-content: center;
   }
 }
+
+/* 针对极窄手机端（小于480px）单独优化分类筛选布局，实现对称美观的网格排版 */
+@media (max-width: 480px) {
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  
+  .tabs .tab-btn {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 8px 5px;
+    font-size: 0.85rem;
+  }
+
+  .tabs .tab-btn[data-filter="all"] {
+    grid-column: span 2;
+  }
+}
