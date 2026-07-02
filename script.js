@@ -51,6 +51,24 @@ const MAP_DATA = [
   },
   {
     "id": 6,
+    "direction": "左",
+    "name": "左-罐子门",
+    "entryImg": "public/entry/左-罐子门.png",
+    "floor1Img": "public/floor1/左-罐子门.jpg",
+    "floor2Img": "public/floor2/左-罐子门.jpg",
+    "remarks": "左侧入口，呈现罐子状墙体结构"
+  },
+  {
+    "id": 7,
+    "direction": "左",
+    "name": "左-对T门",
+    "entryImg": "public/entry/左-对T门.png",
+    "floor1Img": "public/floor1/左-对T门.jpg",
+    "floor2Img": "public/floor2/左-对T门.jpg",
+    "remarks": "左侧入口，呈现两个相对的T形墙体结构"
+  },
+  {
+    "id": 8,
     "direction": "右",
     "name": "右-左上右下门",
     "entryImg": "public/entry/右-左上右下门.png",
@@ -59,7 +77,7 @@ const MAP_DATA = [
     "remarks": "右侧入口，左上及右下方向的侧门结构"
   },
   {
-    "id": 7,
+    "id": 9,
     "direction": "右",
     "name": "右-双L门",
     "entryImg": "public/entry/右-双L门.png",
@@ -68,7 +86,7 @@ const MAP_DATA = [
     "remarks": "右侧入口，呈现双L型拐角墙体结构"
   },
   {
-    "id": 8,
+    "id": 10,
     "direction": "右",
     "name": "右-锤子门",
     "entryImg": "public/entry/右-锤子门.png",
@@ -77,7 +95,25 @@ const MAP_DATA = [
     "remarks": "右侧入口，呈现锤子形状墙体结构"
   },
   {
-    "id": 9,
+    "id": 11,
+    "direction": "右",
+    "name": "右-骑士门",
+    "entryImg": "public/entry/右-骑士门.png",
+    "floor1Img": "public/floor1/右-骑士门.jpg",
+    "floor2Img": "public/floor2/右-骑士门.jpg",
+    "remarks": "右侧入口，墙体轮廓形似骑士棋子"
+  },
+  {
+    "id": 12,
+    "direction": "右",
+    "name": "右-L门",
+    "entryImg": "public/entry/右-L门.png",
+    "floor1Img": "public/floor1/右-L门.jpg",
+    "floor2Img": "public/floor2/右-L门.jpg",
+    "remarks": "右侧入口，呈现L形墙体结构"
+  },
+  {
+    "id": 13,
     "direction": "南",
     "name": "南-三缺一门",
     "entryImg": "public/entry/南-三缺一门.png",
@@ -86,7 +122,7 @@ const MAP_DATA = [
     "remarks": "南侧入口，三缺一侧墙体结构"
   },
   {
-    "id": 10,
+    "id": 14,
     "direction": "南",
     "name": "南-十字门",
     "entryImg": "public/entry/南-十字门.png",
@@ -95,7 +131,7 @@ const MAP_DATA = [
     "remarks": "南侧入口，标准十字形门体与墙体"
   },
   {
-    "id": 11,
+    "id": 15,
     "direction": "南",
     "name": "南-L门",
     "entryImg": "public/entry/南-L门.png",
@@ -104,7 +140,16 @@ const MAP_DATA = [
     "remarks": "南侧入口，L形侧门通道结构"
   },
   {
-    "id": 12,
+    "id": 16,
+    "direction": "南",
+    "name": "南-红门",
+    "entryImg": "public/entry/南-红门.png",
+    "floor1Img": "public/floor1/南-红门.jpg",
+    "floor2Img": "public/floor2/南-红门.jpg",
+    "remarks": "南侧入口，红色标记危险门体"
+  },
+  {
+    "id": 17,
     "direction": "北",
     "name": "北-1门",
     "entryImg": "public/entry/北-1门.png",
@@ -113,7 +158,7 @@ const MAP_DATA = [
     "remarks": "北侧入口，单一侧门通道"
   },
   {
-    "id": 13,
+    "id": 18,
     "direction": "北",
     "name": "北-4门",
     "entryImg": "public/entry/北-4门.png",
@@ -122,7 +167,7 @@ const MAP_DATA = [
     "remarks": "北侧入口，4扇侧门结构"
   },
   {
-    "id": 14,
+    "id": 19,
     "direction": "北",
     "name": "北-红门",
     "entryImg": "public/entry/北-红门.png",
@@ -131,7 +176,7 @@ const MAP_DATA = [
     "remarks": "北侧入口，红色标记危险门体"
   },
   {
-    "id": 15,
+    "id": 20,
     "direction": "北",
     "name": "北-凹门",
     "entryImg": "public/entry/北-凹门.png",
@@ -140,7 +185,7 @@ const MAP_DATA = [
     "remarks": "北侧入口，呈现凹字形墙体包围结构"
   },
   {
-    "id": 16,
+    "id": 21,
     "direction": "北",
     "name": "北-T门",
     "entryImg": "public/entry/北-T门.png",
@@ -149,7 +194,7 @@ const MAP_DATA = [
     "remarks": "北侧入口，呈现T字形墙体接口"
   },
   {
-    "id": 17,
+    "id": 22,
     "direction": "北",
     "name": "北-红对角门",
     "entryImg": "public/entry/北-红对角门.png",
@@ -281,8 +326,8 @@ document.addEventListener("DOMContentLoaded", () => {
         floorSwitch.classList.add("floor-2-active");
       }
       
+      // 楼层高度改变时由 updateMapFloor 在图片加载后重置缩放自适应
       updateMapFloor();
-      resetMapTransform(); // 楼层高度改变时重置缩放自适应！非常关键！
     });
   });
 
@@ -397,18 +442,19 @@ function selectMap(map) {
 // 切换一二楼图片源
 function updateMapFloor() {
   if (!currentMap) return;
-  
+
   // 地图一楼、二楼和全图地址
-  const imgUrl = currentFloor === "1" ? currentMap.floor1Img : 
-                 currentFloor === "2" ? currentMap.floor2Img : 
+  const imgUrl = currentFloor === "1" ? currentMap.floor1Img :
+                 currentFloor === "2" ? currentMap.floor2Img :
                  `public/full/${currentMap.name}.jpg`;
   mainMapImg.src = imgUrl;
 
-  // 更新 mapWrapper 的高度限制
-  if (currentFloor === "full") {
-    mapWrapper.style.height = "1500px";
+  // 图片尺寸不再统一（新图有 1650/1700/1800 等高度），
+  // 待图片加载后按自然尺寸设置 wrapper 并重新自适应铺满
+  if (mainMapImg.complete && mainMapImg.naturalWidth > 0) {
+    fitWrapperToImage();
   } else {
-    mapWrapper.style.height = "750px";
+    mainMapImg.onload = () => fitWrapperToImage();
   }
 
   // 隐藏之前的区域高亮
@@ -416,6 +462,13 @@ function updateMapFloor() {
 
   // 渲染当前地图楼层对应的房间高亮按钮
   renderRoomButtons();
+}
+
+// 按当前图片自然尺寸设置 mapWrapper 大小并重置缩放居中
+function fitWrapperToImage() {
+  mapWrapper.style.width = `${mainMapImg.naturalWidth}px`;
+  mapWrapper.style.height = `${mainMapImg.naturalHeight}px`;
+  resetMapTransform();
 }
 
 // 渲染房间快速高亮按钮
@@ -471,9 +524,9 @@ function showHighlight(roomName, coords) {
   highlightOverlay.style.display = "block";
   
   // 动效：让地图包装器位移，聚焦在 highlight 的中心
-  // 转换百分比坐标为像素坐标 (地图 wrapper 本身是 900x750 尺寸)
-  const mapW = 900;
-  const mapH = 750;
+  // 转换百分比坐标为像素坐标 (取当前图片的自然尺寸)
+  const mapW = mainMapImg.naturalWidth || 900;
+  const mapH = mainMapImg.naturalHeight || 750;
   const targetX = (coords.left + coords.width / 2) / 100 * mapW;
   const targetY = (coords.top + coords.height / 2) / 100 * mapH;
   
@@ -619,8 +672,8 @@ function initMapZoomAndPan() {
 function resetMapTransform() {
   const viewW = mapViewport.clientWidth;
   const viewH = mapViewport.clientHeight;
-  const mapW = 900;
-  const mapH = currentFloor === "full" ? 1500 : 750;
+  const mapW = mainMapImg.naturalWidth || 900;
+  const mapH = mainMapImg.naturalHeight || (currentFloor === "full" ? 1500 : 750);
   
   // 选择最限制的轴向比例进行自适应铺满
   zoomState.scale = Math.min(viewW / mapW, viewH / mapH);
