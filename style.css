@@ -619,10 +619,15 @@ body.strategy-view-active .header-decoration {
   flex-direction: column;
 }
 
+/* 用 flex 伸展替代 height:100%（iPad Safari 对 flex/grid 内的百分比高度
+   解析有误，会把视口撑出卡片外盖住页脚）；overflow:hidden 兜底裁剪 */
 .map-card .card-inner {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* 地图视口 (Viewport) */
@@ -836,6 +841,9 @@ body.strategy-view-active .header-decoration {
   border-top: 1px solid rgba(195, 161, 104, 0.1);
   font-size: 0.8rem;
   color: rgba(209, 199, 183, 0.5);
+  /* 保证页脚始终绘制在地图视口等 positioned 元素之上，不被遮挡 */
+  position: relative;
+  z-index: 1;
 }
 
 .author-link {
