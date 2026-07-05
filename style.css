@@ -98,6 +98,28 @@ body {
   margin: 10px auto;
 }
 
+/* 地图详情页：瘦身标题栏，减少占位，让地图更快进入视野 */
+body.strategy-view-active .app-header {
+  margin-bottom: 10px;
+  padding: 6px 0;
+}
+
+body.strategy-view-active .app-title {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+body.strategy-view-active .app-title .en-font {
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+}
+
+body.strategy-view-active .header-decoration {
+  width: 60px;
+  height: 2px;
+  margin: 4px auto;
+}
+
 /* 视图面板控制 */
 .view-panel {
   display: none;
@@ -487,6 +509,14 @@ body {
 
 .info-item .label {
   font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.info-item .value {
+  text-align: left;
+  margin-left: 10px;
+  flex-grow: 1;
 }
 
 .legend-box {
@@ -549,8 +579,14 @@ body {
 }
 
 .legend-symbol.gold-chest {
-  font-size: 0.95rem;
   filter: drop-shadow(0 0 2px rgba(255, 216, 0, 0.5));
+}
+
+.legend-symbol.gold-chest img {
+  width: 18px;
+  height: auto;
+  display: block;
+  image-rendering: pixelated; /* 保留像素画风格 */
 }
 
 .legend-shape.green-triangle {
@@ -649,6 +685,11 @@ body {
   display: block;
 }
 
+/* 全屏时下移工具栏，避免与关闭按钮重叠 */
+.map-viewport.in-page-fullscreen .map-floating-controls {
+  top: 74px;
+}
+
 .map-wrapper {
   position: absolute;
   transform-origin: 0 0;
@@ -678,7 +719,7 @@ body {
 /* 地图悬浮工具栏 */
 .map-floating-controls {
   position: absolute;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   display: flex;
   flex-direction: column;
@@ -701,12 +742,20 @@ body {
   justify-content: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5);
   transition: all 0.2s ease;
+  opacity: 0.6;
 }
 
 .tool-btn:hover {
   background-color: var(--gold);
   color: var(--bg-dark);
   transform: scale(1.05);
+  opacity: 1;
+}
+
+/* 隐藏放大/缩小按钮（保留手势与滚轮缩放） */
+.zoom-in-btn,
+.zoom-out-btn {
+  display: none;
 }
 
 /* 高亮层 overlay */
