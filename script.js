@@ -267,13 +267,23 @@ const ROOM_COORDINATES = {
   }
 };
 
+// 缩放配置：最小/最大缩放均为相对“自适应铺满比例(fitScale)”的倍数
+// 例如 minScaleRatio: 1 表示最多缩小到刚好铺满视口，maxScaleRatio: 4 表示最多放大到铺满的4倍
+const ZOOM_CONFIG = {
+  minScaleRatio: 0.8,
+  maxScaleRatio: 4,
+  wheelZoomFactor: 1.1,  // 滚轮每格缩放倍率
+  buttonZoomFactor: 1.3  // 工具栏 +/- 按钮每次缩放倍率
+};
+
 // 状态管理
 let currentMap = null;
 let currentFloor = "full";
 let zoomState = {
   scale: 1,
   x: 0,
-  y: 0
+  y: 0,
+  fitScale: 1 // 当前图片在视口内自适应铺满的基准比例
 };
 
 // DOM 元素引用
@@ -535,11 +545,11 @@ function showHighlight(roomName, coords) {
   const viewH = mapViewport.clientHeight;
   
   // 计算在特定 scale 下需要位移的值，使中心对齐视口中心
-  // 聚焦时自动拉近到 1.5 倍缩放，使看清房间
-  zoomState.scale = 1.5;
+  // 聚焦时自动拉近到铺满比例的2倍，使看清房间（受缩放上下限约束）
+  zoomState.scale = clampScale(zoomState.fitScale * 2);
   zoomState.x = viewW / 2 - targetX * zoomState.scale;
   zoomState.y = viewH / 2 - targetY * zoomState.scale;
-  
+
   applyTransform();
 }
 
@@ -553,6 +563,54 @@ function hideHighlight() {
 // ==========================================================================
 // 地图拖拽缩放平移交互逻辑
 // ==========================================================================
+
+// 当前地图图片的自然尺寸 (带兜底值)
+function getMapSize() {
+  return {
+    width: mainMapImg.naturalWidth || 900,
+    height: mainMapImg.naturalHeight || (currentFloor === "full" ? 1500 : 750)
+  };
+}
+
+// 将缩放比例约束在 [fitScale * min, fitScale * max] 区间内
+function clampScale(scale) {
+  const min = zoomState.fitScale * ZOOM_CONFIG.minScaleRatio;
+  const max = zoomState.fitScale * ZOOM_CONFIG.maxScaleRatio;
+  return Math.min(Math.max(scale, min), max);
+}
+
+// 将平移位置约束在地图边界内：
+// 某轴上缩放后的地图小于视口时居中，大于视口时不允许边缘拖进视口内
+function clampPosition() {
+  const viewW = mapViewport.clientWidth;
+  const viewH = mapViewport.clientHeight;
+  const { width, height } = getMapSize();
+  const scaledW = width * zoomState.scale;
+  const scaledH = height * zoomState.scale;
+
+  if (scaledW <= viewW) {
+    zoomState.x = (viewW - scaledW) / 2;
+  } else {
+    zoomState.x = Math.min(Math.max(zoomState.x, viewW - scaledW), 0);
+  }
+
+  if (scaledH <= viewH) {
+    zoomState.y = (viewH - scaledH) / 2;
+  } else {
+    zoomState.y = Math.min(Math.max(zoomState.y, viewH - scaledH), 0);
+  }
+}
+
+// 以视口内某点 (pointX, pointY) 为锚点缩放到 newScale，锚点下的地图内容保持不动
+function zoomAt(pointX, pointY, newScale) {
+  newScale = clampScale(newScale);
+  const mapX = (pointX - zoomState.x) / zoomState.scale;
+  const mapY = (pointY - zoomState.y) / zoomState.scale;
+  zoomState.scale = newScale;
+  zoomState.x = pointX - mapX * newScale;
+  zoomState.y = pointY - mapY * newScale;
+  applyTransform();
+}
 
 function initMapZoomAndPan() {
   let isDragging = false;
@@ -587,6 +645,8 @@ function initMapZoomAndPan() {
   // 触摸拖拽（手机端/iPad）
   let touchStartDist = 0;
   let touchStartScale = 1;
+  let pinchMapX = 0; // 捏合起始中点对应的地图坐标
+  let pinchMapY = 0;
 
   mapViewport.addEventListener("touchstart", (e) => {
     if (e.touches.length === 1) {
@@ -598,6 +658,9 @@ function initMapZoomAndPan() {
       isDragging = false;
       touchStartDist = getTouchDistance(e.touches);
       touchStartScale = zoomState.scale;
+      const mid = getTouchMidpoint(e.touches);
+      pinchMapX = (mid.x - zoomState.x) / zoomState.scale;
+      pinchMapY = (mid.y - zoomState.y) / zoomState.scale;
     }
   });
 
@@ -608,55 +671,47 @@ function initMapZoomAndPan() {
       applyTransform();
       e.preventDefault();
     } else if (e.touches.length === 2) {
-      // 双指捏合缩放
+      // 双指捏合缩放：以两指中点为锚点，同时支持双指平移
       const dist = getTouchDistance(e.touches);
       if (dist > 0 && touchStartDist > 0) {
-        const factor = dist / touchStartDist;
-        zoomState.scale = Math.min(Math.max(touchStartScale * factor, 0.5), 4);
+        const mid = getTouchMidpoint(e.touches);
+        zoomState.scale = clampScale(touchStartScale * (dist / touchStartDist));
+        zoomState.x = mid.x - pinchMapX * zoomState.scale;
+        zoomState.y = mid.y - pinchMapY * zoomState.scale;
         applyTransform();
       }
       e.preventDefault();
     }
   });
 
-  mapViewport.addEventListener("touchend", () => {
-    isDragging = false;
+  mapViewport.addEventListener("touchend", (e) => {
+    if (e.touches.length === 1) {
+      // 双指抬起一指后无缝转为单指拖拽
+      isDragging = true;
+      startX = e.touches[0].clientX - zoomState.x;
+      startY = e.touches[0].clientY - zoomState.y;
+    } else {
+      isDragging = false;
+    }
   });
 
-  // 鼠标滚轮缩放
+  // 鼠标滚轮缩放 (以指针位置为锚点)
   mapViewport.addEventListener("wheel", (e) => {
     e.preventDefault();
-    const zoomIntensity = 0.1;
-    const mouseX = e.clientX - mapViewport.getBoundingClientRect().left;
-    const mouseY = e.clientY - mapViewport.getBoundingClientRect().top;
-    
-    // 计算在放大/缩小前，鼠标相对于地图 wrapper 的比例坐标
-    const mapMouseX = (mouseX - zoomState.x) / zoomState.scale;
-    const mapMouseY = (mouseY - zoomState.y) / zoomState.scale;
-    
-    // 缩放计算
-    if (e.deltaY < 0) {
-      zoomState.scale = Math.min(zoomState.scale + zoomIntensity, 4);
-    } else {
-      zoomState.scale = Math.max(zoomState.scale - zoomIntensity, 0.5);
-    }
-    
-    // 平移校正：使鼠标指针悬停点在缩放后保持在相同坐标
-    zoomState.x = mouseX - mapMouseX * zoomState.scale;
-    zoomState.y = mouseY - mapMouseY * zoomState.scale;
-    
-    applyTransform();
+    const rect = mapViewport.getBoundingClientRect();
+    const factor = e.deltaY < 0 ? ZOOM_CONFIG.wheelZoomFactor : 1 / ZOOM_CONFIG.wheelZoomFactor;
+    zoomAt(e.clientX - rect.left, e.clientY - rect.top, zoomState.scale * factor);
   }, { passive: false });
 
-  // 工具栏按钮控制
+  // 工具栏按钮控制 (以视口中心为锚点)
   document.querySelector(".zoom-in-btn").addEventListener("click", () => {
-    zoomState.scale = Math.min(zoomState.scale + 0.3, 4);
-    applyTransform();
+    zoomAt(mapViewport.clientWidth / 2, mapViewport.clientHeight / 2,
+           zoomState.scale * ZOOM_CONFIG.buttonZoomFactor);
   });
 
   document.querySelector(".zoom-out-btn").addEventListener("click", () => {
-    zoomState.scale = Math.max(zoomState.scale - 0.3, 0.5);
-    applyTransform();
+    zoomAt(mapViewport.clientWidth / 2, mapViewport.clientHeight / 2,
+           zoomState.scale / ZOOM_CONFIG.buttonZoomFactor);
   });
 
   document.querySelector(".reset-btn").addEventListener("click", () => {
@@ -668,20 +723,20 @@ function initMapZoomAndPan() {
   });
 }
 
-// 重置平移缩放 (铺满自适应，无1.0上限限制)
+// 重置平移缩放 (铺满自适应并居中，同时刷新缩放基准比例)
 function resetMapTransform() {
   const viewW = mapViewport.clientWidth;
   const viewH = mapViewport.clientHeight;
-  const mapW = mainMapImg.naturalWidth || 900;
-  const mapH = mainMapImg.naturalHeight || (currentFloor === "full" ? 1500 : 750);
-  
-  // 选择最限制的轴向比例进行自适应铺满
-  zoomState.scale = Math.min(viewW / mapW, viewH / mapH);
-  
+  const { width: mapW, height: mapH } = getMapSize();
+
+  // 选择最限制的轴向比例作为自适应铺满基准
+  zoomState.fitScale = Math.min(viewW / mapW, viewH / mapH);
+  zoomState.scale = zoomState.fitScale;
+
   // 水平与垂直完全居中对齐
   zoomState.x = (viewW - mapW * zoomState.scale) / 2;
   zoomState.y = (viewH - mapH * zoomState.scale) / 2;
-  
+
   applyTransform();
 }
 
@@ -708,7 +763,17 @@ function getTouchDistance(touches) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-// 应用 transform 到 DOM
+// 双指中点 (相对视口左上角的坐标)
+function getTouchMidpoint(touches) {
+  const rect = mapViewport.getBoundingClientRect();
+  return {
+    x: (touches[0].clientX + touches[1].clientX) / 2 - rect.left,
+    y: (touches[0].clientY + touches[1].clientY) / 2 - rect.top
+  };
+}
+
+// 应用 transform 到 DOM (统一在此处做边界约束，任何入口都不会越界)
 function applyTransform() {
+  clampPosition();
   mapWrapper.style.transform = `translate(${zoomState.x}px, ${zoomState.y}px) scale(${zoomState.scale})`;
 }
