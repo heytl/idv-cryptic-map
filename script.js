@@ -279,6 +279,9 @@ const ZOOM_CONFIG = {
 // 状态管理
 let currentMap = null;
 let currentFloor = "full";
+// 是否由目录页内点击进入攻略页：是则返回按钮走 history.back()，
+// 否则（分享链接直达）返回按钮改为前进到目录，避免退出站点
+let enteredFromCatalog = false;
 let zoomState = {
   scale: 1,
   x: 0,
@@ -304,38 +307,77 @@ const mapViewport = document.getElementById("map-viewport");
 const mapWrapper = document.getElementById("map-wrapper");
 const backBtn = document.getElementById("back-btn");
 
+// ==========================================================================
+// Hash 路由：#/ 目录页 | #/dir/左 目录页+筛选 | #/map/左-Y门/1 攻略页+楼层
+// 交互只负责写 hash，渲染统一由 applyRoute 驱动，刷新/分享链接可直达任意状态
+// ==========================================================================
+
+const VALID_DIRECTIONS = ["左", "右", "南", "北"];
+const BASE_TITLE = document.title;
+
+// 构造攻略页 hash（楼层为"全图"时省略第三段）
+function mapHash(name, floor) {
+  const floorPart = (floor === "1" || floor === "2") ? `/${floor}` : "";
+  return `#/map/${encodeURIComponent(name)}${floorPart}`;
+}
+
+// 解析当前 hash；未知地图返回 null 由 applyRoute 兜底回目录
+function parseRoute() {
+  const raw = location.hash.replace(/^#\/?/, "");
+  if (!raw) return { view: "catalog", filter: "all" };
+
+  const parts = raw.split("/").map(decodeURIComponent);
+  if (parts[0] === "map" && parts[1]) {
+    const map = MAP_DATA.find(m => m.name === parts[1]);
+    if (!map) return null;
+    const floor = (parts[2] === "1" || parts[2] === "2") ? parts[2] : "full";
+    return { view: "strategy", map, floor };
+  }
+  if (parts[0] === "dir" && VALID_DIRECTIONS.includes(parts[1])) {
+    return { view: "catalog", filter: parts[1] };
+  }
+  return { view: "catalog", filter: "all" };
+}
+
+// 路由唯一渲染入口：hash 变化与首次加载都经由此处
+function applyRoute() {
+  const route = parseRoute();
+  if (!route) {
+    location.replace("#/");
+    return;
+  }
+
+  if (route.view === "strategy") {
+    selectMap(route.map, route.floor);
+  } else {
+    document.title = BASE_TITLE;
+    applyCatalogFilter(route.filter);
+    switchView("catalog");
+  }
+}
+
 // 初始化入口
 document.addEventListener("DOMContentLoaded", () => {
   // 1. 初始化手记目录网格
   renderCatalog(MAP_DATA);
-  
-  // 2. 绑定方向过滤事件
-  const filterButtons = document.querySelectorAll(".tab-btn");
-  filterButtons.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      filterButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+
+  // 2. 绑定方向过滤事件（replace 写入 hash，筛选状态可随刷新还原且不产生历史记录）
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
       const filterValue = btn.getAttribute("data-filter");
-      filterCatalog(filterValue);
+      history.replaceState(null, "", filterValue === "all" ? "#/" : `#/dir/${filterValue}`);
+      applyCatalogFilter(filterValue);
     });
   });
 
-  // 3. 楼层切换事件
-  const switchBtns = document.querySelectorAll(".switch-btn");
-  switchBtns.forEach(btn => {
+  // 3. 楼层切换事件（replace 更新 hash 楼层段，返回键仍一步回目录）
+  document.querySelectorAll(".switch-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      switchBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentFloor = btn.getAttribute("data-floor");
-      
-      // 清空旧样式类，并根据新楼层状态添加对应位置的滑块类
-      floorSwitch.classList.remove("floor-1-active", "floor-2-active");
-      if (currentFloor === "1") {
-        floorSwitch.classList.add("floor-1-active");
-      } else if (currentFloor === "2") {
-        floorSwitch.classList.add("floor-2-active");
+      const floor = btn.getAttribute("data-floor");
+      if (currentMap) {
+        history.replaceState(null, "", mapHash(currentMap.name, floor));
       }
-      
+      setFloorUI(floor);
       // 楼层高度改变时由 updateMapFloor 在图片加载后重置缩放自适应
       updateMapFloor();
     });
@@ -343,7 +385,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 4. 返回目录按钮
   backBtn.addEventListener("click", () => {
-    switchView("catalog");
+    if (enteredFromCatalog) {
+      history.back();
+    } else {
+      location.hash = "#/";
+    }
   });
 
   // 5. 地图缩放与拖拽初始化
@@ -362,6 +408,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.stopPropagation(); // 阻止事件冒泡，防止触发背景点击
     toggleFullscreen();
   });
+
+  // 8. 路由驱动视图：监听 hash 变化，并按当前 hash 完成首次渲染（刷新/直达链接）
+  window.addEventListener("hashchange", applyRoute);
+  applyRoute();
 });
 
 // 渲染目录列表
@@ -380,9 +430,20 @@ function renderCatalog(data) {
         <div class="map-card-dir">${item.direction}侧入口</div>
       </div>
     `;
-    card.addEventListener("click", () => selectMap(item));
+    card.addEventListener("click", () => {
+      enteredFromCatalog = true;
+      location.hash = mapHash(item.name, "full");
+    });
     entryGrid.appendChild(card);
   });
+}
+
+// 同步方向筛选按钮激活态并执行筛选
+function applyCatalogFilter(filter) {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-filter") === filter);
+  });
+  filterCatalog(filter);
 }
 
 // 筛选目录
@@ -419,18 +480,25 @@ function switchView(viewName) {
   }
 }
 
-// 选中地图，加载详情
-function selectMap(map) {
-  currentMap = map;
-  currentFloor = "full";
-  
-  // 恢复楼层滑块到“全图”
-  const switchBtns = document.querySelectorAll(".switch-btn");
-  switchBtns.forEach(btn => {
-    if (btn.getAttribute("data-floor") === "full") btn.classList.add("active");
-    else btn.classList.remove("active");
+// 同步楼层滑块 UI 与当前楼层状态
+function setFloorUI(floor) {
+  currentFloor = floor;
+  document.querySelectorAll(".switch-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-floor") === floor);
   });
   floorSwitch.classList.remove("floor-1-active", "floor-2-active");
+  if (floor === "1") {
+    floorSwitch.classList.add("floor-1-active");
+  } else if (floor === "2") {
+    floorSwitch.classList.add("floor-2-active");
+  }
+}
+
+// 渲染攻略页详情（路由直达与目录点击共用此入口）
+function selectMap(map, floor = "full") {
+  currentMap = map;
+  setFloorUI(floor);
+  document.title = `${map.name} | ${BASE_TITLE}`;
 
   // 更新文本和侧门参考图
   currentMapName.textContent = map.name;
