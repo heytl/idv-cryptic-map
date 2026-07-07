@@ -199,6 +199,68 @@ body.strategy-view-active .header-decoration {
   background: rgba(43, 34, 22, 0.05);
   padding: 12px;
   border-radius: 4px;
+  position: relative; /* 紧凑视图开关的定位锚点 */
+}
+
+/* 卡片密度切换器：迷你双段滑块开关，设计语言与楼层切换拉杆一致，
+   绝对定位在筛选栏右侧，不占用居中布局空间 */
+.density-switch {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  width: 60px;
+  height: 26px;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--gold-dark);
+  border-radius: 14px;
+  padding: 2px;
+}
+
+.density-opt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  opacity: 0.55;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.density-opt svg {
+  display: block;
+  fill: currentColor;
+}
+
+.density-opt:hover {
+  opacity: 0.9;
+}
+
+.density-opt.active {
+  color: var(--bg-dark);
+  opacity: 1;
+}
+
+.density-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(50% - 2px);
+  height: calc(100% - 4px);
+  background-color: var(--gold);
+  border-radius: 12px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+.density-switch.compact-active .density-slider {
+  transform: translateX(100%);
 }
 
 .tabs-label {
@@ -259,6 +321,26 @@ body.strategy-view-active .header-decoration {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
+}
+
+/* 紧凑视图：缩小卡片最小宽度，列数仍由 auto-fill 按屏宽自适应 */
+.entry-grid.compact {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.entry-grid.compact .map-card-item {
+  padding: 6px;
+}
+
+.entry-grid.compact .map-card-name {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* 紧凑视图下隐藏方向徽章，方向信息由筛选栏承担 */
+.entry-grid.compact .map-card-dir {
+  display: none;
 }
 
 /* 卡片样式 */
@@ -924,6 +1006,13 @@ body.strategy-view-active .header-decoration {
     align-items: stretch;
     padding: 8px;
   }
+
+  /* 纵向堆叠布局下钉在右上角（与居中的标签行同高，角落无重叠） */
+  .density-switch {
+    top: 6px;
+    right: 6px;
+    transform: none;
+  }
   
   .tabs-label {
     text-align: center;
@@ -941,6 +1030,11 @@ body.strategy-view-active .header-decoration {
   .entry-grid {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 12px;
+  }
+
+  .entry-grid.compact {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
   }
 
   .map-card-name {
