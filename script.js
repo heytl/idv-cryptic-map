@@ -293,6 +293,7 @@ let zoomState = {
 const catalogView = document.getElementById("catalog-view");
 const strategyView = document.getElementById("strategy-view");
 const entryGrid = document.getElementById("entry-grid");
+const densitySwitch = document.getElementById("density-switch");
 const currentMapName = document.getElementById("current-map-name");
 const currentMapDirection = document.getElementById("current-map-direction");
 const refEntryImg = document.getElementById("ref-entry-img");
@@ -362,7 +363,8 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCatalog(MAP_DATA);
 
   // 2. 绑定方向过滤事件（replace 写入 hash，筛选状态可随刷新还原且不产生历史记录）
-  document.querySelectorAll(".tab-btn").forEach(btn => {
+  // 注意选择器必须限定在 .tabs 容器内，避免误绑到筛选栏里的其他控件
+  document.querySelectorAll(".tabs .tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const filterValue = btn.getAttribute("data-filter");
       history.replaceState(null, "", filterValue === "all" ? "#/" : `#/dir/${filterValue}`);
@@ -409,7 +411,10 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleFullscreen();
   });
 
-  // 8. 路由驱动视图：监听 hash 变化，并按当前 hash 完成首次渲染（刷新/直达链接）
+  // 8. 紧凑视图开关初始化
+  initDensityToggle();
+
+  // 9. 路由驱动视图：监听 hash 变化，并按当前 hash 完成首次渲染（刷新/直达链接）
   window.addEventListener("hashchange", applyRoute);
   applyRoute();
 });
@@ -438,9 +443,42 @@ function renderCatalog(data) {
   });
 }
 
+// 紧凑视图偏好的 localStorage 键（设备个人偏好，不进路由 hash）
+const DENSITY_STORAGE_KEY = "idv-catalog-compact";
+
+// 应用卡片密度：网格紧凑类、滑块位置、两段按钮的激活与无障碍状态一并同步
+function applyDensity(compact) {
+  entryGrid.classList.toggle("compact", compact);
+  densitySwitch.classList.toggle("compact-active", compact);
+  densitySwitch.querySelectorAll(".density-opt").forEach(btn => {
+    const isActive = (btn.getAttribute("data-density") === "compact") === compact;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+// 初始化密度切换器：读取偏好、绑定两段点击（localStorage 在部分隐私模式下不可用，故做容错）
+function initDensityToggle() {
+  let compactPref = false;
+  try {
+    compactPref = localStorage.getItem(DENSITY_STORAGE_KEY) === "1";
+  } catch (e) { /* 读取失败按默认标准视图处理 */ }
+  applyDensity(compactPref);
+
+  densitySwitch.querySelectorAll(".density-opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const compact = btn.getAttribute("data-density") === "compact";
+      applyDensity(compact);
+      try {
+        localStorage.setItem(DENSITY_STORAGE_KEY, compact ? "1" : "0");
+      } catch (e) { /* 写入失败仅本次会话生效 */ }
+    });
+  });
+}
+
 // 同步方向筛选按钮激活态并执行筛选
 function applyCatalogFilter(filter) {
-  document.querySelectorAll(".tab-btn").forEach(btn => {
+  document.querySelectorAll(".tabs .tab-btn").forEach(btn => {
     btn.classList.toggle("active", btn.getAttribute("data-filter") === filter);
   });
   filterCatalog(filter);
