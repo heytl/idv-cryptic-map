@@ -1,5 +1,4 @@
 import os
-import shutil
 import sys
 from PIL import Image
 
@@ -43,6 +42,9 @@ MAP_ORDER = [
 ENTRY_X = (1890, 2705)
 # 行边界白色分隔线约12px，上下各内缩8px避开
 ROW_INSET = 8
+
+# WebP 输出质量：q90 对地图截图为视觉无损，体积约为 JPEG q90 的 1/5
+WEBP_QUALITY = 90
 
 # 单张原图的一二楼分界 y 坐标（非均分的图需在此登记，其余默认高度对半）
 FLOOR_SPLITS = {
@@ -92,8 +94,10 @@ def main():
         ymax = PEAKS[idx + 1] - ROW_INSET
 
         entry_crop = flow_img.crop((xmin, ymin, xmax, ymax))
-        entry_save_path = os.path.join(entry_dir, f"{name}.png")
-        entry_crop.save(entry_save_path, "PNG")
+        if entry_crop.mode != "RGB":
+            entry_crop = entry_crop.convert("RGB")
+        entry_save_path = os.path.join(entry_dir, f"{name}.webp")
+        entry_crop.save(entry_save_path, "WEBP", quality=WEBP_QUALITY)
         print(f"[{idx+1:02d}/{total}] 已裁剪入口图 -> {entry_save_path} ({entry_crop.size})")
 
     print("一图流入口图片裁剪完毕。")
@@ -113,17 +117,13 @@ def main():
             map_img = map_img.convert("RGB")
 
         floor1_crop = map_img.crop((0, 0, w, split))
-        floor1_crop.save(os.path.join(floor1_dir, f"{name}.jpg"), "JPEG", quality=90)
+        floor1_crop.save(os.path.join(floor1_dir, f"{name}.webp"), "WEBP", quality=WEBP_QUALITY)
 
         floor2_crop = map_img.crop((0, split, w, h))
-        floor2_crop.save(os.path.join(floor2_dir, f"{name}.jpg"), "JPEG", quality=90)
+        floor2_crop.save(os.path.join(floor2_dir, f"{name}.webp"), "WEBP", quality=WEBP_QUALITY)
 
-        # 完整双层图：jpg 原图直接复制，png 原图转存 JPEG
-        full_save_path = os.path.join(full_dir, f"{name}.jpg")
-        if src_path.lower().endswith(".jpg"):
-            shutil.copyfile(src_path, full_save_path)
-        else:
-            map_img.save(full_save_path, "JPEG", quality=90)
+        # 完整双层图：从原图直接编码 WebP，避免二次压缩
+        map_img.save(os.path.join(full_dir, f"{name}.webp"), "WEBP", quality=WEBP_QUALITY)
 
         print(f"[{idx+1:02d}/{total}] 已拆分 1楼/2楼 + 全图 -> {name} "
               f"({w}x{h}, 分界 y={split})")
