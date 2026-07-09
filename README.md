@@ -15,7 +15,7 @@
   - **电脑端**：支持鼠标左键拖拽平移、滚轮以指针为中心缩放。
   - **移动端/iPad**：支持单指拖拽平移、双指捏合无级缩放。
   - **悬浮工具栏**：支持一键放大、缩小、**高度铺满**（使图片上下刚好与视口贴合）及一键重置居中。
-* **离线免部署可用**：无任何外部框架依赖，支持直接双击 `index.html` 本地访问（无需启动本地服务器）。
+* **离线免部署可用**：无任何外部框架依赖，支持直接双击 `site/index.html` 本地访问（无需启动本地服务器）。
 
 ---
 
@@ -23,49 +23,62 @@
 
 ```text
 idv-cryptic-map/
-├── public/                 # 静态图片资源目录
-│   ├── entry/              # 裁剪好的 22 张侧门入口图
-│   ├── floor1/             # 裁剪好的 22 张一楼地图
-│   ├── floor2/             # 裁剪好的 22 张二楼地图
-│   └── full/               # 22 张原始完整双层地图
-├── maps/                   # 原始图片素材（备份归档，不随发布提交）
-├── index.html              # 网页主框架 HTML
-├── style.css               # 哥特风格样式表
-├── script.js               # 地图数据与交互逻辑核心 JS
-├── maps.json               # 地图元数据 JSON（供其他系统或接口引用）
-├── crop_images.py          # 图片自动裁剪处理 Python 脚本
+├── maps/                   # 原始图片素材（仅作裁剪源，不参与部署）
+├── site/                   # 部署根目录（Vercel / Cloudflare Pages 均指向这里）
+│   ├── public/             # 静态图片资源目录
+│   │   ├── entry/          # 裁剪好的 22 张侧门入口图
+│   │   ├── floor1/         # 裁剪好的 22 张一楼地图
+│   │   ├── floor2/         # 裁剪好的 22 张二楼地图
+│   │   ├── full/           # 22 张原始完整双层地图
+│   │   └── icons/          # 图例图标
+│   ├── index.html          # 网页主框架 HTML
+│   ├── style.css           # 哥特风格样式表
+│   ├── script.js           # 地图数据与交互逻辑核心 JS
+│   ├── maps.json           # 地图元数据 JSON（供其他系统或接口引用）
+│   └── _headers            # Cloudflare Pages 缓存响应头配置
+├── crop_images.py          # 图片自动裁剪处理 Python 脚本（须在仓库根目录运行）
+├── vercel.json             # Vercel 部署配置（outputDirectory 指向 site/）
 ├── README.md               # 项目自述文档
 └── .gitignore              # Git 忽略配置文件
 ```
 
+> **为什么拆分 `site/` 目录？** `maps/` 中的原始素材（含一张 48MB 的一图流大图）仅用于本地裁图，不应参与部署——Cloudflare Pages 有单文件 25MiB 的硬限制。将部署文件收进 `site/`，源素材与部署产物彻底分离，两个平台均以 `site/` 为部署根。地图更新流程：新原图放入 `maps/` → 在**仓库根目录**运行 `python crop_images.py` → 生成的 `site/public/` 一并提交。
+
 ---
 
-## 🚀 托管与一键部署到 Vercel / GitHub Pages
+## 🚀 托管与一键部署到 Vercel / Cloudflare Pages
 
-本项目采用了**原生 Vanilla HTML/CSS/JS 架构**，对静态托管极其友好，具有**零构建、零配置、极速载入**的优势。
+本项目采用了**原生 Vanilla HTML/CSS/JS 架构**，对静态托管极其友好，具有**零构建、零配置、极速载入**的优势。部署根目录为 `site/`。
 
 ### 方式一：一键部署到 Vercel (推荐)
 1. 将本项目上传至您的 GitHub 仓库。
 2. 登录 [Vercel 官网](https://vercel.com/)，点击 **Add New** ➔ **Project**。
-3. 导入您的项目 GitHub 仓库，框架预设选择 **Other**（或由 Vercel 自动识别），无需修改任何构建命令。
+3. 导入您的项目 GitHub 仓库，框架预设选择 **Other**（或由 Vercel 自动识别），无需修改任何构建命令（输出目录已由仓库内 `vercel.json` 指定为 `site`）。
 4. 点击 **Deploy**，几秒钟内即可生成您的在线访问链接！
 
-### 方式二：部署到 GitHub Pages
+### 方式二：部署到 Cloudflare Pages
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 **Workers & Pages** ➔ **Create** ➔ **Pages** ➔ **Connect to Git**。
+2. 选择您的项目 GitHub 仓库，生产分支选择 `main`。
+3. 构建设置：Framework preset 选 **None**，Build command **留空**，Build output directory 填 `site`。
+4. 点击 **Save and Deploy**，即可获得 `https://<项目名>.pages.dev` 在线访问链接（免费且不限带宽）。
+
+### 方式三：部署到 GitHub Pages
 1. 在项目 GitHub 仓库中，进入 **Settings** ➔ **Pages**。
 2. 在 **Build and deployment** 下的 Source 选择 **Deploy from a branch**。
-3. 选择 `main` 分支（或您当前的主分支）及 `/ (root)` 根目录，点击 **Save**。
-4. 稍等 1-2 分钟，即可通过 `https://<用户名>.github.io/<仓库名>` 在线访问。
+3. 选择 `main` 分支及 `/ (root)` 根目录，点击 **Save**。
+4. 稍等 1-2 分钟，即可通过 `https://<用户名>.github.io/<仓库名>/site/` 在线访问（注意路径需带 `site/`）。
 
 ---
 
 ## 💻 本地运行与调试
 
 ### 1. 双击直接运行
-因为所有地图元数据已直接内嵌在 `script.js` 中作为默认兜底数据，所以您可以直接双击项目根目录下的 `index.html`，即可直接在 Chrome/Edge 等浏览器中运行，无需开启任何服务器，非常适合离线跑图。
+因为所有地图元数据已直接内嵌在 `script.js` 中作为默认兜底数据，所以您可以直接双击 `site/index.html`，即可直接在 Chrome/Edge 等浏览器中运行，无需开启任何服务器，非常适合离线跑图。
 
-### 2. 通过 Python 内置服务运行
-如果需要以网络服务器形式进行调试，可以在项目根目录下打开终端，执行：
+### 2. 通过 Python 内置服务运行（推荐调试方式）
+如果需要以网络服务器形式进行调试（Hash 路由等行为与线上完全一致），在 `site/` 目录下打开终端，执行：
 ```bash
+cd site
 python -m http.server 8000
 ```
 然后在浏览器中访问 [http://localhost:8000](http://localhost:8000)。

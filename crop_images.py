@@ -67,10 +67,10 @@ def find_source(name):
 def main():
     print("开始图片裁剪任务...")
 
-    entry_dir = "public/entry"
-    floor1_dir = "public/floor1"
-    floor2_dir = "public/floor2"
-    full_dir = "public/full"
+    entry_dir = "site/public/entry"
+    floor1_dir = "site/public/floor1"
+    floor2_dir = "site/public/floor2"
+    full_dir = "site/public/full"
     for d in (entry_dir, floor1_dir, floor2_dir, full_dir):
         os.makedirs(d, exist_ok=True)
 
