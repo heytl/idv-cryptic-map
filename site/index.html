@@ -10,7 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <!-- ?v= 为缓存穿透版本号：发布时若改动了 css/js，需同步递增，确保无视 no-cache 的浏览器也能拉到新版 -->
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <!-- 提灯光晕背景 -->
@@ -224,7 +225,7 @@
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
   <!-- Vercel Web Analytics 访问统计（仅在 Vercel 部署时生效，本地/GitHub Pages 下静默失败无副作用） -->
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
