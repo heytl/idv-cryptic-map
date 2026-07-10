@@ -68,6 +68,15 @@ const MAP_DATA = [
     "remarks": "左侧入口，呈现两个相对的T形墙体结构"
   },
   {
+    "id": 24,
+    "direction": "左",
+    "name": "左-Y青蛙房",
+    "entryImg": "public/entry/左-Y青蛙房.webp",
+    "floor1Img": "public/floor1/左-Y青蛙房.webp",
+    "floor2Img": "public/floor2/左-Y青蛙房.webp",
+    "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构"
+  },
+  {
     "id": 8,
     "direction": "右",
     "name": "右-左上右下门",
@@ -201,6 +210,15 @@ const MAP_DATA = [
     "floor1Img": "public/floor1/北-红对角门.webp",
     "floor2Img": "public/floor2/北-红对角门.webp",
     "remarks": "北侧入口，带有红色标识的对角侧门"
+  },
+  {
+    "id": 23,
+    "direction": "北",
+    "name": "北-1沙发门",
+    "entryImg": "public/entry/北-1沙发门.webp",
+    "floor1Img": "public/floor1/北-1沙发门.webp",
+    "floor2Img": "public/floor2/北-1沙发门.webp",
+    "remarks": "北侧入口，单门通道变体，门内带沙发标志物"
   }
 ];
 
