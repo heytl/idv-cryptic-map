@@ -70,7 +70,7 @@ const MAP_DATA = [
   {
     "id": 24,
     "direction": "左",
-    "name": "左-Y青蛙房（新）",
+    "name": "左-Y青蛙房",
     "entryImg": "public/entry/左-Y青蛙房.webp",
     "floor1Img": "public/floor1/左-Y青蛙房.webp",
     "floor2Img": "public/floor2/左-Y青蛙房.webp",
@@ -214,7 +214,7 @@ const MAP_DATA = [
   {
     "id": 23,
     "direction": "北",
-    "name": "北-1沙发门（新）",
+    "name": "北-1沙发门",
     "entryImg": "public/entry/北-1沙发门.webp",
     "floor1Img": "public/floor1/北-1沙发门.webp",
     "floor2Img": "public/floor2/北-1沙发门.webp",
