@@ -2,23 +2,28 @@ import os
 import sys
 from PIL import Image
 
-# 全地图一图流约 9900 万像素，超过 PIL 默认告警阈值
+# 全地图一图流约 1.5 亿像素，超过 PIL 默认告警阈值
 Image.MAX_IMAGE_PIXELS = None
 
-# 全地图一图流的行边界坐标（共23个点，划分出22个区间）
-PEAKS = [
-    444, 1250, 2058, 2866, 3682, 4494, 5302, 6118, 6922, 7730,
-    8538, 9358, 10170, 10990, 11818, 12622, 13442, 14264, 15066,
-    15870, 16690, 17514, 18332
+# 新版全地图一图流（5341x28217）为表格布局：入口方向 | 地图名称 | 入口 | 一楼 | 二楼
+# 每张地图入口单元格的行坐标范围 (ymin, ymax)，按图流从上到下排列，共28行
+ROWS = [
+    (461, 1297), (1309, 2137), (2155, 2981), (2993, 3831), (3843, 4674),
+    (4686, 5519), (5530, 6363), (6380, 7204), (7225, 8048), (8060, 8890),
+    (8904, 9733), (9755, 10589), (10601, 11444), (11456, 12294), (12317, 13144),
+    (13156, 13998), (14010, 14854), (14866, 15689), (15705, 16528), (16540, 17382),
+    (17403, 18238), (18250, 19091), (19103, 19945), (19957, 20801), (20813, 21643),
+    (21655, 22495), (22511, 23334), (23346, 24173),
 ]
 
-# 22张地图与行数的映射关系（完全按图流中的先后顺序排布）
+# 28张地图与行的映射关系（完全按图流中的先后顺序排布）
 MAP_ORDER = [
     "右-左上右下门",
     "右-双L门",
     "右-锤子门",
     "右-骑士门",
     "右-L门",
+    "右-三L门",
     "左-Y门",
     "左-锤子门",
     "左-倒T门",
@@ -26,22 +31,25 @@ MAP_ORDER = [
     "左-音叉门",
     "左-罐子门",
     "左-对T门",
+    "左-Y青蛙房",
+    "左-锤灯笼门",
     "南-三缺一门",
     "南-十字门",
     "南-L门",
     "南-红门",
+    "南-orz门",
     "北-1门",
     "北-4门",
     "北-红门",
     "北-凹门",
     "北-T门",
     "北-红对角门",
+    "北-1沙发门",
+    "北-4安全门",
 ]
 
-# 入口图片在全地图一图流中的列坐标范围
-ENTRY_X = (1890, 2705)
-# 行边界白色分隔线约12px，上下各内缩8px避开
-ROW_INSET = 8
+# 入口图片在全地图一图流中的列坐标范围（入口列）
+ENTRY_X = (1968, 2814)
 
 # WebP 输出质量：q90 对地图截图为视觉无损，体积约为 JPEG q90 的 1/5
 WEBP_QUALITY = 90
@@ -50,23 +58,33 @@ WEBP_QUALITY = 90
 FLOOR_SPLITS = {
     "右-骑士门": 690,
     "右-L门": 895,
+    "右-三L门": 752,
     "左-罐子门": 777,
     "左-对T门": 895,
     "左-对角门": 745,
+    "左-Y青蛙房": 800,
+    "左-锤灯笼门": 784,
     "南-红门": 888,
+    "南-orz门": 752,
+    "北-1沙发门": 750,
+    "北-4安全门": 748,
 }
 
 
 def find_source(name):
-    """maps/ 下的原图，优先 PNG（新版素材），其次 JPG。"""
-    for ext in (".png", ".jpg"):
-        path = os.path.join("maps", f"{name}{ext}")
-        if os.path.exists(path):
-            return path
+    """maps/ 下的原图，兼容带（新增）后缀的文件名，优先 PNG（新版素材），其次 JPG。"""
+    for stem in (name, f"{name}（新增）"):
+        for ext in (".png", ".jpg"):
+            path = os.path.join("maps", f"{stem}{ext}")
+            if os.path.exists(path):
+                return path
     return None
 
 
 def main():
+    only = set(sys.argv[1:])  # 传入地图名可只处理指定图，如: python crop_images.py 南-orz门
+    targets = [n for n in MAP_ORDER if not only or n in only]
+
     print("开始图片裁剪任务...")
 
     entry_dir = "site/public/entry"
@@ -76,7 +94,7 @@ def main():
     for d in (entry_dir, floor1_dir, floor2_dir, full_dir):
         os.makedirs(d, exist_ok=True)
 
-    total = len(MAP_ORDER)
+    total = len(targets)
 
     # 1. 从全地图一图流裁剪入口图片 (entry)
     flow_path = "maps/全地图一图流.png"
@@ -89,9 +107,8 @@ def main():
     print(f"全地图一图流加载成功, 尺寸: {flow_img.size}")
 
     xmin, xmax = ENTRY_X
-    for idx, name in enumerate(MAP_ORDER):
-        ymin = PEAKS[idx] + ROW_INSET
-        ymax = PEAKS[idx + 1] - ROW_INSET
+    for idx, name in enumerate(targets):
+        ymin, ymax = ROWS[MAP_ORDER.index(name)]
 
         entry_crop = flow_img.crop((xmin, ymin, xmax, ymax))
         if entry_crop.mode != "RGB":
@@ -103,7 +120,7 @@ def main():
     print("一图流入口图片裁剪完毕。")
 
     # 2. 从单张原图拆分一楼/二楼 (floor1 & floor2)，并生成完整图 (full)
-    for idx, name in enumerate(MAP_ORDER):
+    for idx, name in enumerate(targets):
         src_path = find_source(name)
         if src_path is None:
             print(f"警告: 未找到地图原图 maps/{name}.(png|jpg)，跳过该图的处理。")
@@ -129,10 +146,10 @@ def main():
               f"({w}x{h}, 分界 y={split})")
 
     print("\n所有图片裁剪及拆分操作已顺利完成！")
-    print(f"入口图目录: {entry_dir} (应含{total}个文件)")
-    print(f"一楼图目录: {floor1_dir} (应含{total}个文件)")
-    print(f"二楼图目录: {floor2_dir} (应含{total}个文件)")
-    print(f"全图目录:   {full_dir} (应含{total}个文件)")
+    print(f"入口图目录: {entry_dir} (应含{len(MAP_ORDER)}个文件)")
+    print(f"一楼图目录: {floor1_dir} (应含{len(MAP_ORDER)}个文件)")
+    print(f"二楼图目录: {floor2_dir} (应含{len(MAP_ORDER)}个文件)")
+    print(f"全图目录:   {full_dir} (应含{len(MAP_ORDER)}个文件)")
 
 
 if __name__ == "__main__":
