@@ -72,6 +72,15 @@
     "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构"
   },
   {
+    "id": 27,
+    "direction": "左",
+    "name": "左-锤灯笼门（新）",
+    "entryImg": "public/entry/左-锤灯笼门.webp",
+    "floor1Img": "public/floor1/左-锤灯笼门.webp",
+    "floor2Img": "public/floor2/左-锤灯笼门.webp",
+    "remarks": "左侧入口，锤子形通道与灯笼状墙体组合结构"
+  },
+  {
     "id": 8,
     "direction": "右",
     "name": "右-左上右下门",
@@ -117,6 +126,15 @@
     "remarks": "右侧入口，呈现L形墙体结构"
   },
   {
+    "id": 26,
+    "direction": "右",
+    "name": "右-三L门（新）",
+    "entryImg": "public/entry/右-三L门.webp",
+    "floor1Img": "public/floor1/右-三L门.webp",
+    "floor2Img": "public/floor2/右-三L门.webp",
+    "remarks": "右侧入口，三个L形拐角墙体结构"
+  },
+  {
     "id": 13,
     "direction": "南",
     "name": "南-三缺一门",
@@ -151,6 +169,15 @@
     "floor1Img": "public/floor1/南-红门.webp",
     "floor2Img": "public/floor2/南-红门.webp",
     "remarks": "南侧入口，红色标记危险门体"
+  },
+  {
+    "id": 25,
+    "direction": "南",
+    "name": "南-orz门（新）",
+    "entryImg": "public/entry/南-orz门.webp",
+    "floor1Img": "public/floor1/南-orz门.webp",
+    "floor2Img": "public/floor2/南-orz门.webp",
+    "remarks": "南侧入口，墙体轮廓形似orz字形"
   },
   {
     "id": 17,
@@ -214,5 +241,14 @@
     "floor1Img": "public/floor1/北-1沙发门.webp",
     "floor2Img": "public/floor2/北-1沙发门.webp",
     "remarks": "北侧入口，单门通道变体，门内带沙发标志物"
+  },
+  {
+    "id": 28,
+    "direction": "北",
+    "name": "北-4安全门（新）",
+    "entryImg": "public/entry/北-4安全门.webp",
+    "floor1Img": "public/floor1/北-4安全门.webp",
+    "floor2Img": "public/floor2/北-4安全门.webp",
+    "remarks": "北侧入口，北-4门变体，邻接安全门结构"
   }
 ]
