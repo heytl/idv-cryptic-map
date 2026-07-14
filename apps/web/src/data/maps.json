@@ -1,0 +1,411 @@
+{
+  "updatedAt": "2026-07-10",
+  "maps": [
+    {
+      "id": 1,
+      "direction": "左",
+      "name": "左-Y门",
+      "displayName": "左-Y门",
+      "remarks": "左侧入口，呈现Y字形墙体结构",
+      "rooms": {
+        "1": {
+          "餐厅": {
+            "left": 33,
+            "top": 15,
+            "width": 15,
+            "height": 15
+          },
+          "悬空桌": {
+            "left": 50,
+            "top": 15,
+            "width": 12,
+            "height": 12
+          },
+          "图书长廊": {
+            "left": 28,
+            "top": 32,
+            "width": 11,
+            "height": 18
+          },
+          "谬斯房": {
+            "left": 55,
+            "top": 33,
+            "width": 14,
+            "height": 15
+          }
+        },
+        "2": {
+          "餐厅": {
+            "left": 41,
+            "top": 12,
+            "width": 15,
+            "height": 17
+          },
+          "悬空桌": {
+            "left": 24,
+            "top": 12,
+            "width": 12,
+            "height": 12
+          },
+          "会客厅": {
+            "left": 55,
+            "top": 20,
+            "width": 14,
+            "height": 15
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "direction": "左",
+      "name": "左-锤子门",
+      "displayName": "左-锤子门",
+      "remarks": "左侧入口，呈现锤子形状墙体结构"
+    },
+    {
+      "id": 3,
+      "direction": "左",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "左侧入口，呈现倒T字形墙体结构"
+    },
+    {
+      "id": 4,
+      "direction": "左",
+      "name": "左-对角门",
+      "displayName": "左-对角门",
+      "remarks": "左侧入口，呈现对角线墙体结构"
+    },
+    {
+      "id": 5,
+      "direction": "左",
+      "name": "左-音叉门",
+      "displayName": "左-音叉门",
+      "remarks": "左侧入口，呈现音叉状对称墙体结构"
+    },
+    {
+      "id": 6,
+      "direction": "左",
+      "name": "左-罐子门",
+      "displayName": "左-罐子门",
+      "remarks": "左侧入口，呈现罐子状墙体结构"
+    },
+    {
+      "id": 7,
+      "direction": "左",
+      "name": "左-对T门",
+      "displayName": "左-对T门",
+      "remarks": "左侧入口，呈现两个相对的T形墙体结构"
+    },
+    {
+      "id": 24,
+      "direction": "左",
+      "name": "左-Y青蛙房",
+      "displayName": "左-Y青蛙房（新）",
+      "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构"
+    },
+    {
+      "id": 27,
+      "direction": "左",
+      "name": "左-锤灯笼门",
+      "displayName": "左-锤灯笼门（新）",
+      "remarks": "左侧入口，锤子形通道与灯笼状墙体组合结构"
+    },
+    {
+      "id": 8,
+      "direction": "右",
+      "name": "右-左上右下门",
+      "displayName": "右-左上右下门",
+      "remarks": "右侧入口，左上及右下方向的侧门结构",
+      "rooms": {
+        "1": {
+          "餐厅": {
+            "left": 55,
+            "top": 12,
+            "width": 15,
+            "height": 18
+          },
+          "悬空桌": {
+            "left": 38,
+            "top": 12,
+            "width": 12,
+            "height": 12
+          },
+          "图书长廊": {
+            "left": 27,
+            "top": 21,
+            "width": 10,
+            "height": 19
+          },
+          "断梯房": {
+            "left": 10,
+            "top": 36,
+            "width": 12,
+            "height": 13
+          },
+          "谬斯房": {
+            "left": 16,
+            "top": 52,
+            "width": 14,
+            "height": 13
+          }
+        },
+        "2": {
+          "餐厅": {
+            "left": 64,
+            "top": 11,
+            "width": 15,
+            "height": 17
+          },
+          "悬空桌": {
+            "left": 47,
+            "top": 11,
+            "width": 12,
+            "height": 13
+          },
+          "图书长廊": {
+            "left": 36,
+            "top": 25,
+            "width": 9,
+            "height": 18
+          },
+          "会客厅": {
+            "left": 22,
+            "top": 18,
+            "width": 14,
+            "height": 15
+          },
+          "断梯房": {
+            "left": 19,
+            "top": 36,
+            "width": 12,
+            "height": 13
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "direction": "右",
+      "name": "右-双L门",
+      "displayName": "右-双L门",
+      "remarks": "右侧入口，呈现双L型拐角墙体结构"
+    },
+    {
+      "id": 10,
+      "direction": "右",
+      "name": "右-锤子门",
+      "displayName": "右-锤子门",
+      "remarks": "右侧入口，呈现锤子形状墙体结构"
+    },
+    {
+      "id": 11,
+      "direction": "右",
+      "name": "右-骑士门",
+      "displayName": "右-骑士门",
+      "remarks": "右侧入口，墙体轮廓形似骑士棋子"
+    },
+    {
+      "id": 12,
+      "direction": "右",
+      "name": "右-L门",
+      "displayName": "右-L门",
+      "remarks": "右侧入口，呈现L形墙体结构"
+    },
+    {
+      "id": 26,
+      "direction": "右",
+      "name": "右-三L门",
+      "displayName": "右-三L门（新）",
+      "remarks": "右侧入口，三个L形拐角墙体结构"
+    },
+    {
+      "id": 13,
+      "direction": "南",
+      "name": "南-三缺一门",
+      "displayName": "南-三缺一门",
+      "remarks": "南侧入口，三缺一侧墙体结构"
+    },
+    {
+      "id": 14,
+      "direction": "南",
+      "name": "南-十字门",
+      "displayName": "南-十字门",
+      "remarks": "南侧入口，标准十字形门体与墙体",
+      "rooms": {
+        "1": {
+          "餐厅": {
+            "left": 52,
+            "top": 10,
+            "width": 16,
+            "height": 17
+          },
+          "悬空桌": {
+            "left": 35,
+            "top": 10,
+            "width": 13,
+            "height": 13
+          },
+          "断梯房": {
+            "left": 8,
+            "top": 32,
+            "width": 13,
+            "height": 13
+          },
+          "谬斯房": {
+            "left": 14,
+            "top": 48,
+            "width": 14,
+            "height": 14
+          }
+        },
+        "2": {
+          "餐厅": {
+            "left": 61,
+            "top": 9,
+            "width": 15,
+            "height": 17
+          },
+          "会客厅": {
+            "left": 20,
+            "top": 15,
+            "width": 14,
+            "height": 15
+          }
+        }
+      }
+    },
+    {
+      "id": 15,
+      "direction": "南",
+      "name": "南-L门",
+      "displayName": "南-L门",
+      "remarks": "南侧入口，L形侧门通道结构"
+    },
+    {
+      "id": 16,
+      "direction": "南",
+      "name": "南-红门",
+      "displayName": "南-红门",
+      "remarks": "南侧入口，红色标记危险门体"
+    },
+    {
+      "id": 25,
+      "direction": "南",
+      "name": "南-orz门",
+      "displayName": "南-orz门（新）",
+      "remarks": "南侧入口，墙体轮廓形似orz字形"
+    },
+    {
+      "id": 17,
+      "direction": "北",
+      "name": "北-1门",
+      "displayName": "北-1门",
+      "remarks": "北侧入口，单一侧门通道",
+      "rooms": {
+        "1": {
+          "餐厅": {
+            "left": 41,
+            "top": 7,
+            "width": 15,
+            "height": 16
+          },
+          "会客厅": {
+            "left": 19,
+            "top": 7,
+            "width": 14,
+            "height": 15
+          },
+          "罐子房": {
+            "left": 47,
+            "top": 16,
+            "width": 12,
+            "height": 11
+          },
+          "图书长廊": {
+            "left": 75,
+            "top": 8,
+            "width": 9,
+            "height": 21
+          },
+          "谬斯房": {
+            "left": 69,
+            "top": 31,
+            "width": 15,
+            "height": 13
+          }
+        },
+        "2": {
+          "餐厅": {
+            "left": 45,
+            "top": 60,
+            "width": 16,
+            "height": 17
+          },
+          "罐子房": {
+            "left": 52,
+            "top": 70,
+            "width": 14,
+            "height": 13
+          },
+          "图书长廊": {
+            "left": 79,
+            "top": 62,
+            "width": 9,
+            "height": 21
+          }
+        }
+      }
+    },
+    {
+      "id": 18,
+      "direction": "北",
+      "name": "北-4门",
+      "displayName": "北-4门",
+      "remarks": "北侧入口，4扇侧门结构"
+    },
+    {
+      "id": 19,
+      "direction": "北",
+      "name": "北-红门",
+      "displayName": "北-红门",
+      "remarks": "北侧入口，红色标记危险门体"
+    },
+    {
+      "id": 20,
+      "direction": "北",
+      "name": "北-凹门",
+      "displayName": "北-凹门",
+      "remarks": "北侧入口，呈现凹字形墙体包围结构"
+    },
+    {
+      "id": 21,
+      "direction": "北",
+      "name": "北-T门",
+      "displayName": "北-T门",
+      "remarks": "北侧入口，呈现T字形墙体接口"
+    },
+    {
+      "id": 22,
+      "direction": "北",
+      "name": "北-红对角门",
+      "displayName": "北-红对角门",
+      "remarks": "北侧入口，带有红色标识的对角侧门"
+    },
+    {
+      "id": 23,
+      "direction": "北",
+      "name": "北-1沙发门",
+      "displayName": "北-1沙发门（新）",
+      "remarks": "北侧入口，单门通道变体，门内带沙发标志物"
+    },
+    {
+      "id": 28,
+      "direction": "北",
+      "name": "北-4安全门",
+      "displayName": "北-4安全门（新）",
+      "remarks": "北侧入口，北-4门变体，邻接安全门结构"
+    }
+  ]
+}
