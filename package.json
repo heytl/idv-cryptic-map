@@ -1,0 +1,11 @@
+{
+  "name": "idv-cryptic-map",
+  "private": true,
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "preview": "pnpm --filter web preview",
+    "test": "pnpm --filter web test"
+  }
+}
