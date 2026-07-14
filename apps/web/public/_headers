@@ -2,9 +2,19 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML 始终回源验证（体积小），保证部署后用户刷新即拿到新资源引用
+# HTML 与 Service Worker 相关文件始终回源验证（体积小、无哈希），
+# 保证部署后用户刷新即拿到新资源引用、SW 及时更新
 /
   Cache-Control: no-cache, must-revalidate
 
 /index.html
+  Cache-Control: no-cache, must-revalidate
+
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+
+/registerSW.js
+  Cache-Control: no-cache, must-revalidate
+
+/manifest.webmanifest
   Cache-Control: no-cache, must-revalidate
