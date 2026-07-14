@@ -343,7 +343,29 @@ export function getMaps(): MapItem[] { /* 读 maps.json，逐条解析四张图 
 - 视觉 1:1 是硬约束（Phase 4 双窗口对照），CSS 先整体迁移不重写。
 - Service Worker 是唯一"缓存出错难恢复"的新风险点：坚持 autoUpdate + 不 precache 大图的保守策略，且 vite-plugin-pwa 提供 `selfDestroying` 开关，出问题可发一版自毁 SW 立即回到纯在线模式。
 
-## 七、关键源文件参考
+## 七、执行与验收记录（2026-07-15）
+
+Phase 0–6 已在 `refactor/vite` 分支完成，每 Phase 一个提交。与原方案的差异与补充：
+
+| 项 | 说明 |
+|----|------|
+| 验收自动化 | 手动验收清单升级为脚本：`scripts/verify-e2e.mjs`（34 项，Playwright 驱动本机 Chrome，含新旧站截图对照）与 `scripts/verify-pwa.mjs`（离线 5 项），全部通过 |
+| 单元测试 | 16 项：数据一致性 7 + 路由旧链接兼容 8 + 字体子集覆盖 1 |
+| 缩略图命名 | 产物统一纯 hash，唯缩略图加 `t-` 前缀（`assets/t-[hash].webp`）以便 PWA precache 与大图区分；`assetsInlineLimit=0` 防止小图内联进 JS 破坏缓存粒度 |
+| 字体成果 | 三款字体子集化后共约 529KB（思源宋体 24.5MB → 261KB），变量字体单文件覆盖多字重 |
+| 路由守卫补充 | vue-router `beforeEnter` 在同记录参数变化时不重跑，组件内已做兜底（CatalogView 非法方向按“全部”，StrategyView 未知地图回目录），E2E 覆盖两条路径 |
+| 与旧站有意差异 | “快速区域指引”面板对有坐标数据的 4 张图启用（旧站该面板被 display:none 永久隐藏）；移除无数据地图的 alert 占位按钮 |
+| 增量缓存验证 | 改动一张图重建：仅该图 + 其缩略图 + index.js 哈希变化，其余 130+ 产物文件名不变 |
+| 缓存头实测 | wrangler dev：`/` 与 sw.js/registerSW.js/manifest 均 no-cache，`/assets/*` 一年 immutable |
+| updatedAt | 按用户决策为 maps.json 配置字段（随地图更新手工维护），页脚经数据层读取，后续由后台接口下发 |
+
+### 待用户完成的手动步骤
+1. GitHub repo Secrets：`CLOUDFLARE_API_TOKEN`（Workers 编辑权限）、`CLOUDFLARE_ACCOUNT_ID`
+2. Cloudflare Dashboard：确认 Worker `idv-cryptic-map` 创建成功后绑定正式域名，打开 Preview URLs 开关；旧 Pages 项目保留观察
+3. Vercel：确认新构建配置（vercel.json 已更新）生效
+4. 生产切换验证通过后：删除 `site/` 旧目录（Phase 7 收尾提交）
+
+## 八、关键源文件参考
 
 | 用途 | 文件 |
 |------|------|
