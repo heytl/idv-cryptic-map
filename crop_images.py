@@ -87,10 +87,12 @@ def main():
 
     print("开始图片裁剪任务...")
 
-    entry_dir = "site/public/entry"
-    floor1_dir = "site/public/floor1"
-    floor2_dir = "site/public/floor2"
-    full_dir = "site/public/full"
+    # 输出到前端资源目录（走 Vite 构建管线，产物带内容哈希）
+    out_root = "apps/web/src/assets/maps"
+    entry_dir = f"{out_root}/entry"
+    floor1_dir = f"{out_root}/floor1"
+    floor2_dir = f"{out_root}/floor2"
+    full_dir = f"{out_root}/full"
     for d in (entry_dir, floor1_dir, floor2_dir, full_dir):
         os.makedirs(d, exist_ok=True)
 
