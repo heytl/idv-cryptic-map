@@ -29,3 +29,6 @@ implementation_plan.md
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# 构建时生成的缩略图（scripts/gen-thumbs.mjs）
+apps/web/src/assets/maps/entry-thumb/

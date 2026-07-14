@@ -5,6 +5,7 @@
 import rawData from './maps.json';
 
 // 构建期生成 逻辑路径 → 哈希 URL 清单；只有被 maps.json 引用的图片才会进产物
+// entry-thumb 由 scripts/gen-thumbs.mjs 生成（build/dev/test 前置步骤）
 const imgUrls = import.meta.glob('../assets/maps/**/*.webp', {
   eager: true,
   query: '?url',
@@ -33,6 +34,8 @@ export interface MapItem {
   /** 楼层 → 房间名 → 百分比坐标（基于图片自然尺寸） */
   rooms?: Partial<Record<'1' | '2', FloorRooms>>;
   entryImg: string;
+  /** 目录卡片用的 300px 缩略图（缺失时回退原图，保证未跑生成脚本也可用） */
+  entryThumbImg: string;
   floor1Img: string;
   floor2Img: string;
   fullImg: string;
@@ -60,6 +63,7 @@ export const mapsUpdatedAt: string = rawData.updatedAt;
 export const maps: MapItem[] = (rawData.maps as RawMap[]).map((m) => ({
   ...m,
   entryImg: resolveImg('entry', m.name),
+  entryThumbImg: imgUrls[`../assets/maps/entry-thumb/${m.name}.webp`] ?? resolveImg('entry', m.name),
   floor1Img: resolveImg('floor1', m.name),
   floor2Img: resolveImg('floor2', m.name),
   fullImg: resolveImg('full', m.name),

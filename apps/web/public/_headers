@@ -1,0 +1,10 @@
+# 构建产物均为内容哈希文件名：一年 immutable，内容变化 = 文件名变化，永不用手动清缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML 始终回源验证（体积小），保证部署后用户刷新即拿到新资源引用
+/
+  Cache-Control: no-cache, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, must-revalidate

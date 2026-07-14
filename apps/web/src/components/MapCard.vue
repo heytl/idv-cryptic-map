@@ -15,7 +15,7 @@ function open() {
 <template>
   <div class="map-card-item" :data-dir="map.direction" @click="open">
     <div class="img-wrapper">
-      <img :src="map.entryImg" :alt="map.displayName" loading="lazy">
+      <img :src="map.entryThumbImg" :alt="map.displayName" loading="lazy">
     </div>
     <div class="map-card-info">
       <div class="map-card-name">{{ map.displayName }}</div>

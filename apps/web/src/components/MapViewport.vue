@@ -99,6 +99,7 @@ function onViewportClick(e: MouseEvent) {
         :src="imgUrl"
         alt="交互地图"
         draggable="false"
+        fetchpriority="high"
         @load="fitWrapperToImage"
       >
       <!-- 高亮覆盖层 -->
