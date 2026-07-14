@@ -26,3 +26,6 @@ out/
 walkthrough.md
 task.md
 implementation_plan.md
+
+# TypeScript build cache
+*.tsbuildinfo
