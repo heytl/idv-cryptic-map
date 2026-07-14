@@ -1,0 +1,1124 @@
+/* ==========================================================================
+   第五人格风格哥特主题样式表 (style.css)
+   ========================================================================== */
+
+/* 全局变量定义 */
+:root {
+  --bg-dark: #0a0b0d;
+  --bg-mid: #14161a;
+  --text-light: #d1c7b7;
+  --text-dark: #2b2216;
+  --parchment: #c7b99c;
+  --parchment-light: #dbd0b9;
+  --parchment-dark: #ab9c7e;
+  --gold: #c3a168;
+  --gold-hover: #e5c38c;
+  --gold-dark: #7e633a;
+  --red-accent: #8b1e1e;
+  --red-hover: #b52a2a;
+  --gothic-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  --border-stitch: 2px dashed #928469;
+}
+
+/* 全局基础设置 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 提灯光晕背景效果 */
+.glow-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 10%, rgba(195, 161, 104, 0.08) 0%, rgba(10, 11, 13, 0) 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 字体样式辅助 */
+.en-font {
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.handwriting {
+  font-family: 'Ma Shan Zheng', 'Noto Serif SC', cursive, serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+/* 主容器 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* 头部栏设计 */
+.app-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 15px 0;
+  position: relative;
+}
+
+.app-title {
+  font-size: 1.8rem;
+  color: var(--gold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  line-height: 1.3;
+}
+
+.app-title span {
+  font-size: 1rem;
+  color: var(--red-accent);
+}
+
+.header-decoration {
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 10px auto;
+}
+
+/* 地图详情页：瘦身标题栏，减少占位，让地图更快进入视野 */
+body.strategy-view-active .app-header {
+  margin-bottom: 10px;
+  padding: 6px 0;
+}
+
+body.strategy-view-active .app-title {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+body.strategy-view-active .app-title .en-font {
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+}
+
+body.strategy-view-active .header-decoration {
+  width: 60px;
+  height: 2px;
+  margin: 4px auto;
+}
+
+/* 视图面板控制 */
+.view-panel {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  flex-grow: 1;
+}
+
+.view-panel.active {
+  display: block;
+  opacity: 1;
+}
+
+#strategy-view.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 羊皮纸卡片设计 */
+.parchment-card {
+  background-color: var(--parchment);
+  color: var(--text-dark);
+  border-radius: 4px;
+  padding: 10px;
+  position: relative;
+  box-shadow: var(--gothic-shadow);
+  border: 1px solid var(--parchment-dark);
+}
+
+.parchment-card.tight {
+  padding: 4px;
+}
+
+.card-inner {
+  border: var(--border-stitch);
+  padding: 30px;
+  height: 100%;
+  position: relative;
+}
+
+.tight .card-inner {
+  padding: 15px;
+}
+
+/* 复古角落饰品 */
+.corner-decor {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold-dark);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.corner-decor.top-left { top: 12px; left: 12px; border-width: 3px 0 0 3px; }
+.corner-decor.top-right { top: 12px; right: 12px; border-width: 3px 3px 0 0; }
+.corner-decor.bottom-left { bottom: 12px; left: 12px; border-width: 0 0 3px 3px; }
+.corner-decor.bottom-right { bottom: 12px; right: 12px; border-width: 0 3px 3px 0; }
+
+/* 目录引导语 */
+.catalog-intro {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 30px;
+  padding: 10px;
+  border-bottom: 1px solid rgba(43, 34, 22, 0.15);
+}
+
+/* 目录标签栏 */
+.tabs-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: rgba(43, 34, 22, 0.05);
+  padding: 12px;
+  border-radius: 4px;
+  position: relative; /* 紧凑视图开关的定位锚点 */
+}
+
+/* 卡片密度切换器：迷你双段滑块开关，设计语言与楼层切换拉杆一致，
+   绝对定位在筛选栏右侧，不占用居中布局空间 */
+.density-switch {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  width: 60px;
+  height: 26px;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--gold-dark);
+  border-radius: 14px;
+  padding: 2px;
+}
+
+.density-opt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  opacity: 0.55;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.density-opt svg {
+  display: block;
+  fill: currentColor;
+}
+
+.density-opt:hover {
+  opacity: 0.9;
+}
+
+.density-opt.active {
+  color: var(--bg-dark);
+  opacity: 1;
+}
+
+.density-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(50% - 2px);
+  height: calc(100% - 4px);
+  background-color: var(--gold);
+  border-radius: 12px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+.density-switch.compact-active .density-slider {
+  transform: translateX(100%);
+}
+
+.tabs-label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 哥特风格按钮 */
+.tab-btn, .gothic-btn {
+  background-color: var(--bg-mid);
+  color: var(--gold);
+  border: 1px solid var(--gold-dark);
+  padding: 8px 18px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  border-radius: 2px;
+  font-size: 0.95rem;
+}
+
+.tab-btn:hover, .gothic-btn:hover {
+  color: var(--gold-hover);
+  border-color: var(--gold);
+  box-shadow: 0 5px 12px rgba(195, 161, 104, 0.3);
+  transform: translateY(-1px);
+}
+
+.tab-btn.active {
+  background-color: var(--gold-dark);
+  color: var(--parchment-light);
+  border-color: var(--gold);
+}
+
+/* 按钮内部纹理 */
+.btn-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(255,255,255,0.03), transparent);
+  pointer-events: none;
+}
+
+/* 入口图片网格 */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* 紧凑视图：缩小卡片最小宽度，列数仍由 auto-fill 按屏宽自适应 */
+.entry-grid.compact {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.entry-grid.compact .map-card-item {
+  padding: 6px;
+}
+
+.entry-grid.compact .map-card-name {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* 紧凑视图下隐藏方向徽章，方向信息由筛选栏承担 */
+.entry-grid.compact .map-card-dir {
+  display: none;
+}
+
+/* 卡片样式 */
+.map-card-item {
+  background-color: var(--parchment-light);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.map-card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 10px rgba(195, 161, 104, 0.4);
+  border-color: var(--gold);
+}
+
+.map-card-item .img-wrapper {
+  aspect-ratio: 1;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid rgba(43, 34, 22, 0.1);
+}
+
+.map-card-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.map-card-item:hover img {
+  transform: scale(1.05);
+}
+
+.map-card-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.map-card-name {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.map-card-dir {
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  background-color: rgba(43, 34, 22, 0.1);
+  border-radius: 10px;
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   地图详情页视图 (Strategy View)
+   ========================================================================== */
+
+/* 控制栏 */
+.control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--bg-mid);
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px;
+}
+
+.btn-back {
+  background-color: var(--red-accent);
+  color: white;
+  border-color: #611313;
+}
+
+.btn-back:hover {
+  background-color: var(--red-hover);
+  color: white;
+  border-color: var(--red-accent);
+}
+
+.map-title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-title {
+  color: var(--gold);
+  font-size: 1.5rem;
+}
+
+.map-direction-badge {
+  background-color: var(--gold-dark);
+  color: var(--parchment-light);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* 楼层切换器（复古设计） */
+.floor-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.floor-switch {
+  display: flex;
+  background-color: var(--bg-dark);
+  border: 2px solid var(--gold-dark);
+  border-radius: 20px;
+  padding: 2px;
+  position: relative;
+  width: 210px;
+  cursor: pointer;
+}
+
+.switch-btn {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 0;
+  font-size: 0.9rem;
+  z-index: 2;
+  color: var(--text-light);
+  transition: color 0.3s ease;
+}
+
+.switch-btn.active {
+  color: var(--bg-dark);
+}
+
+.switch-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 66px;
+  height: calc(100% - 4px);
+  background-color: var(--gold);
+  border-radius: 18px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+.floor-switch.floor-1-active .switch-slider {
+  transform: translateX(68px);
+}
+
+.floor-switch.floor-2-active .switch-slider {
+  transform: translateX(136px);
+}
+
+/* 详情分栏容器 */
+.detail-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  flex-grow: 1;
+}
+
+/* 侧边信息栏 */
+.info-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-title {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  border-bottom: 2px solid rgba(43, 34, 22, 0.2);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.entry-img-container {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: var(--bg-dark);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--parchment-dark);
+  position: relative;
+}
+
+.entry-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 扫描线动画，增加科技解密感 */
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(195, 161, 104, 0.8), transparent);
+  animation: scan 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.sidebar-info-box {
+  background-color: rgba(43, 34, 22, 0.05);
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-item .label {
+  font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.info-item .value {
+  text-align: left;
+  margin-left: 10px;
+  flex-grow: 1;
+}
+
+.legend-box {
+  margin-top: 15px;
+  border-top: 1px solid rgba(43, 34, 22, 0.15);
+  padding-top: 15px;
+}
+
+.legend-title {
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.legend-label {
+  font-size: 0.82rem;
+  color: var(--text-dark);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.legend-line {
+  width: 36px;
+  height: 3px;
+  border-radius: 1px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.legend-line.red {
+  background-color: #ff3b30;
+  box-shadow: 0 0 3px rgba(255, 59, 48, 0.4);
+}
+
+.legend-line.blue {
+  background-color: #007aff;
+  box-shadow: 0 0 3px rgba(0, 122, 255, 0.4);
+}
+
+.legend-symbol, .legend-shape, .legend-arrow {
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.legend-symbol.gold-chest {
+  filter: drop-shadow(0 0 2px rgba(255, 216, 0, 0.5));
+}
+
+.legend-symbol.gold-chest img {
+  width: 18px;
+  height: auto;
+  display: block;
+  image-rendering: pixelated; /* 保留像素画风格 */
+}
+
+.legend-shape.green-triangle {
+  color: #4cd964;
+  text-shadow: 0 0 3px rgba(76, 217, 100, 0.4);
+}
+
+.legend-shape.green-circle {
+  color: #4cd964;
+  text-shadow: 0 0 3px rgba(76, 217, 100, 0.4);
+  font-size: 0.85rem;
+}
+
+.legend-arrow {
+  color: #ff3b30;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(255, 59, 48, 0.4);
+}
+
+/* 地图主面板 */
+.map-main-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.map-card {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 用 flex 伸展替代 height:100%（iPad Safari 对 flex/grid 内的百分比高度
+   解析有误，会把视口撑出卡片外盖住页脚）；overflow:hidden 兜底裁剪 */
+.map-card .card-inner {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 地图视口 (Viewport) */
+.map-viewport {
+  flex-grow: 1;
+  background-color: #0b0c0e;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--parchment-dark);
+  cursor: grab;
+  min-height: 450px;
+}
+
+.map-viewport:active {
+  cursor: grabbing;
+}
+
+.map-viewport.in-page-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  border: none;
+  border-radius: 0;
+}
+
+/* 全屏关闭“X”按钮 */
+.fullscreen-close-btn {
+  display: none; /* 默认隐藏 */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(11, 12, 14, 0.85);
+  border: 2px solid var(--gold-dark);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 2rem;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10000;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  font-family: Arial, sans-serif; /* 保证叉号的正常显示 */
+}
+
+.fullscreen-close-btn:hover {
+  color: var(--gold-light);
+  border-color: var(--gold);
+  background-color: rgba(11, 12, 14, 0.95);
+  transform: scale(1.08);
+}
+
+.map-viewport.in-page-fullscreen .fullscreen-close-btn {
+  display: block;
+}
+
+/* 全屏时下移工具栏，避免与关闭按钮重叠 */
+.map-viewport.in-page-fullscreen .map-floating-controls {
+  top: 74px;
+}
+
+.map-wrapper {
+  position: absolute;
+  transform-origin: 0 0;
+  width: 900px;
+  height: 750px;
+  transition: transform 0.1s ease-out; /* 微小的平滑，减少顿挫感 */
+}
+
+#main-map-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 压角阴影，增强暗黑氛围 */
+.vignette-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
+  pointer-events: none;
+}
+
+/* 地图悬浮工具栏 */
+.map-floating-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.tool-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-mid);
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+.tool-btn:hover {
+  background-color: var(--gold);
+  color: var(--bg-dark);
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+/* 隐藏放大/缩小按钮（保留手势与滚轮缩放） */
+.zoom-in-btn,
+.zoom-out-btn {
+  display: none;
+}
+
+/* 高亮层 overlay */
+.highlight-overlay {
+  position: absolute;
+  border: 3px solid #ffcc00;
+  box-shadow: 0 0 15px #ffcc00, inset 0 0 15px #ffcc00;
+  background-color: rgba(255, 204, 0, 0.2);
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  opacity: 0;
+  animation: pulse 1.5s infinite alternate;
+  z-index: 5;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.8; }
+}
+
+/* 房间选择栏 */
+.room-selector-panel {
+  margin-top: 15px;
+  background-color: rgba(43, 34, 22, 0.05);
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-top: 1px solid rgba(43, 34, 22, 0.1);
+}
+
+.room-nav-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.room-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 纽扣样式的房间按钮 */
+.room-btn {
+  background-color: var(--parchment-light);
+  border: 1px solid var(--parchment-dark);
+  color: var(--text-dark);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.room-btn:hover {
+  background-color: var(--gold-dark);
+  color: var(--parchment-light);
+  border-color: var(--gold);
+}
+
+.room-btn.active {
+  background-color: var(--red-accent);
+  color: white;
+  border-color: #611313;
+  box-shadow: 0 0 8px rgba(139, 30, 30, 0.4);
+}
+
+/* 页脚样式 */
+.app-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px 0 10px;
+  border-top: 1px solid rgba(195, 161, 104, 0.1);
+  font-size: 0.8rem;
+  color: rgba(209, 199, 183, 0.5);
+  /* 保证页脚始终绘制在地图视口等 positioned 元素之上，不被遮挡 */
+  position: relative;
+  z-index: 1;
+}
+
+.author-link {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: bold;
+}
+
+.author-link:hover {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+
+.footer-meta {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.footer-divider {
+  color: rgba(209, 199, 183, 0.3);
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.github-icon {
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   多端响应式断点适配 (Media Queries)
+   ========================================================================== */
+
+/* 平板端适配 (小于 1024px) */
+@media (max-width: 1024px) {
+  .detail-container {
+    grid-template-columns: 260px 1fr;
+    gap: 15px;
+  }
+  
+  .app-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* 移动端适配 (小于 768px) */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
+  }
+
+  .app-header {
+    margin-bottom: 15px;
+  }
+
+  body.strategy-view-active .app-header {
+    display: none;
+  }
+
+  .card-inner {
+    padding: 15px;
+  }
+
+  .catalog-intro {
+    margin-bottom: 20px;
+  }
+
+  .tabs-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px;
+  }
+
+  /* 纵向堆叠布局下钉在右上角（与居中的标签行同高，角落无重叠） */
+  .density-switch {
+    top: 6px;
+    right: 6px;
+    transform: none;
+  }
+  
+  .tabs-label {
+    text-align: center;
+  }
+
+  .tabs {
+    justify-content: center;
+  }
+
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .entry-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .entry-grid.compact {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+  }
+
+  .map-card-name {
+    font-size: 0.9rem;
+  }
+
+  .map-card-dir {
+    font-size: 0.75rem;
+  }
+
+  /* 详情页改为单列上下布局 */
+  .detail-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .control-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .btn-back {
+    text-align: center;
+    width: 100%;
+  }
+
+  .map-title-container {
+    justify-content: center;
+  }
+
+  .floor-toggle-wrapper {
+    justify-content: center;
+  }
+
+  /* 侧边参考栏收缩 */
+  .info-sidebar {
+    order: 2; /* 放在地图下方 */
+  }
+
+  .entry-img-container {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+
+  .map-viewport {
+    min-height: 350px; /* 减小视口高度 */
+  }
+  
+  .room-selector-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .room-nav-title {
+    text-align: center;
+    margin-bottom: 5px;
+  }
+  
+  .room-buttons {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 只隐藏占位较多的引导语文字 */
+  .catalog-intro {
+    display: none;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+  }
+  
+  .tabs .tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 6px 2px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}

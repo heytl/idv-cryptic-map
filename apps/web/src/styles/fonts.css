@@ -1,0 +1,26 @@
+/* ==========================================================================
+   自托管子集化字体（替代 Google Fonts CDN，解决大陆访问不可达）
+   源：github.com/google/fonts（OFL 协议），经 scripts/subset-fonts.mjs 子集化
+   Cinzel / Noto Serif SC 为变量字体，单文件覆盖多字重
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('../assets/fonts/Cinzel-subset.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ma Shan Zheng';
+  src: url('../assets/fonts/MaShanZheng-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Serif SC';
+  src: url('../assets/fonts/NotoSerifSC-subset.woff2') format('woff2');
+  font-weight: 200 900;
+  font-display: swap;
+}
