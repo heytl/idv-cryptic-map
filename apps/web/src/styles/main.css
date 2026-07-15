@@ -845,76 +845,6 @@ body.strategy-view-active .header-decoration {
   display: none;
 }
 
-/* 高亮层 overlay */
-.highlight-overlay {
-  position: absolute;
-  border: 3px solid #ffcc00;
-  box-shadow: 0 0 15px #ffcc00, inset 0 0 15px #ffcc00;
-  background-color: rgba(255, 204, 0, 0.2);
-  border-radius: 4px;
-  pointer-events: none;
-  display: none;
-  opacity: 0;
-  animation: pulse 1.5s infinite alternate;
-  z-index: 5;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.3; }
-  100% { opacity: 0.8; }
-}
-
-/* 房间选择栏 */
-.room-selector-panel {
-  margin-top: 15px;
-  background-color: rgba(43, 34, 22, 0.05);
-  border-radius: 4px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  border-top: 1px solid rgba(43, 34, 22, 0.1);
-}
-
-.room-nav-title {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: var(--text-dark);
-}
-
-.room-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-/* 纽扣样式的房间按钮 */
-.room-btn {
-  background-color: var(--parchment-light);
-  border: 1px solid var(--parchment-dark);
-  color: var(--text-dark);
-  padding: 4px 10px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.room-btn:hover {
-  background-color: var(--gold-dark);
-  color: var(--parchment-light);
-  border-color: var(--gold);
-}
-
-.room-btn.active {
-  background-color: var(--red-accent);
-  color: white;
-  border-color: #611313;
-  box-shadow: 0 0 8px rgba(139, 30, 30, 0.4);
-}
-
 /* 页脚样式 */
 .app-footer {
   text-align: center;
@@ -1083,20 +1013,6 @@ body.strategy-view-active .header-decoration {
 
   .map-viewport {
     min-height: 350px; /* 减小视口高度 */
-  }
-  
-  .room-selector-panel {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .room-nav-title {
-    text-align: center;
-    margin-bottom: 5px;
-  }
-  
-  .room-buttons {
-    justify-content: center;
   }
 }
 

@@ -6,55 +6,7 @@
       "direction": "左",
       "name": "左-Y门",
       "displayName": "左-Y门",
-      "remarks": "左侧入口，呈现Y字形墙体结构",
-      "rooms": {
-        "1": {
-          "餐厅": {
-            "left": 33,
-            "top": 15,
-            "width": 15,
-            "height": 15
-          },
-          "悬空桌": {
-            "left": 50,
-            "top": 15,
-            "width": 12,
-            "height": 12
-          },
-          "图书长廊": {
-            "left": 28,
-            "top": 32,
-            "width": 11,
-            "height": 18
-          },
-          "谬斯房": {
-            "left": 55,
-            "top": 33,
-            "width": 14,
-            "height": 15
-          }
-        },
-        "2": {
-          "餐厅": {
-            "left": 41,
-            "top": 12,
-            "width": 15,
-            "height": 17
-          },
-          "悬空桌": {
-            "left": 24,
-            "top": 12,
-            "width": 12,
-            "height": 12
-          },
-          "会客厅": {
-            "left": 55,
-            "top": 20,
-            "width": 14,
-            "height": 15
-          }
-        }
-      }
+      "remarks": "左侧入口，呈现Y字形墙体结构"
     },
     {
       "id": 2,
@@ -117,73 +69,7 @@
       "direction": "右",
       "name": "右-左上右下门",
       "displayName": "右-左上右下门",
-      "remarks": "右侧入口，左上及右下方向的侧门结构",
-      "rooms": {
-        "1": {
-          "餐厅": {
-            "left": 55,
-            "top": 12,
-            "width": 15,
-            "height": 18
-          },
-          "悬空桌": {
-            "left": 38,
-            "top": 12,
-            "width": 12,
-            "height": 12
-          },
-          "图书长廊": {
-            "left": 27,
-            "top": 21,
-            "width": 10,
-            "height": 19
-          },
-          "断梯房": {
-            "left": 10,
-            "top": 36,
-            "width": 12,
-            "height": 13
-          },
-          "谬斯房": {
-            "left": 16,
-            "top": 52,
-            "width": 14,
-            "height": 13
-          }
-        },
-        "2": {
-          "餐厅": {
-            "left": 64,
-            "top": 11,
-            "width": 15,
-            "height": 17
-          },
-          "悬空桌": {
-            "left": 47,
-            "top": 11,
-            "width": 12,
-            "height": 13
-          },
-          "图书长廊": {
-            "left": 36,
-            "top": 25,
-            "width": 9,
-            "height": 18
-          },
-          "会客厅": {
-            "left": 22,
-            "top": 18,
-            "width": 14,
-            "height": 15
-          },
-          "断梯房": {
-            "left": 19,
-            "top": 36,
-            "width": 12,
-            "height": 13
-          }
-        }
-      }
+      "remarks": "右侧入口，左上及右下方向的侧门结构"
     },
     {
       "id": 9,
@@ -232,49 +118,7 @@
       "direction": "南",
       "name": "南-十字门",
       "displayName": "南-十字门",
-      "remarks": "南侧入口，标准十字形门体与墙体",
-      "rooms": {
-        "1": {
-          "餐厅": {
-            "left": 52,
-            "top": 10,
-            "width": 16,
-            "height": 17
-          },
-          "悬空桌": {
-            "left": 35,
-            "top": 10,
-            "width": 13,
-            "height": 13
-          },
-          "断梯房": {
-            "left": 8,
-            "top": 32,
-            "width": 13,
-            "height": 13
-          },
-          "谬斯房": {
-            "left": 14,
-            "top": 48,
-            "width": 14,
-            "height": 14
-          }
-        },
-        "2": {
-          "餐厅": {
-            "left": 61,
-            "top": 9,
-            "width": 15,
-            "height": 17
-          },
-          "会客厅": {
-            "left": 20,
-            "top": 15,
-            "width": 14,
-            "height": 15
-          }
-        }
-      }
+      "remarks": "南侧入口，标准十字形门体与墙体"
     },
     {
       "id": 15,
@@ -302,61 +146,7 @@
       "direction": "北",
       "name": "北-1门",
       "displayName": "北-1门",
-      "remarks": "北侧入口，单一侧门通道",
-      "rooms": {
-        "1": {
-          "餐厅": {
-            "left": 41,
-            "top": 7,
-            "width": 15,
-            "height": 16
-          },
-          "会客厅": {
-            "left": 19,
-            "top": 7,
-            "width": 14,
-            "height": 15
-          },
-          "罐子房": {
-            "left": 47,
-            "top": 16,
-            "width": 12,
-            "height": 11
-          },
-          "图书长廊": {
-            "left": 75,
-            "top": 8,
-            "width": 9,
-            "height": 21
-          },
-          "谬斯房": {
-            "left": 69,
-            "top": 31,
-            "width": 15,
-            "height": 13
-          }
-        },
-        "2": {
-          "餐厅": {
-            "left": 45,
-            "top": 60,
-            "width": 16,
-            "height": 17
-          },
-          "罐子房": {
-            "left": 52,
-            "top": 70,
-            "width": 14,
-            "height": 13
-          },
-          "图书长廊": {
-            "left": 79,
-            "top": 62,
-            "width": 9,
-            "height": 21
-          }
-        }
-      }
+      "remarks": "北侧入口，单一侧门通道"
     },
     {
       "id": 18,

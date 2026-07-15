@@ -14,15 +14,6 @@ const imgUrls = import.meta.glob('../assets/maps/**/*.webp', {
 
 export type Direction = '左' | '右' | '南' | '北';
 
-export interface RoomRect {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-export type FloorRooms = Record<string, RoomRect>;
-
 export interface MapItem {
   id: number;
   direction: Direction;
@@ -31,8 +22,6 @@ export interface MapItem {
   /** 展示名（可带“（新）”等后缀） */
   displayName: string;
   remarks: string;
-  /** 楼层 → 房间名 → 百分比坐标（基于图片自然尺寸） */
-  rooms?: Partial<Record<'1' | '2', FloorRooms>>;
   entryImg: string;
   /** 目录卡片用的 300px 缩略图（缺失时回退原图，保证未跑生成脚本也可用） */
   entryThumbImg: string;
