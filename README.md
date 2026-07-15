@@ -46,8 +46,19 @@ idv-cryptic-map/
 ├── wrangler.jsonc               # Cloudflare Workers 部署配置
 ├── vercel.json                  # Vercel 部署配置（备用镜像）
 ├── .github/workflows/deploy.yml # CI：PR 预览 + main 自动部署
-└── docs/REFACTOR.md             # 重构实施文档（含各阶段验收记录）
+└── docs/                        # 项目文档（见下方「文档」一节）
 ```
+
+---
+
+## 📚 文档
+
+完整文档见 [docs/](docs/README.md)：
+
+* [架构总览](docs/ARCHITECTURE.md) — 技术栈、数据流、缓存与 PWA 机制
+* [后台管理设计](docs/ADMIN-BACKEND.md) — Phase 2：KV/R2/Access 全动态方案（设计定稿，待实施）
+* [运维手册](docs/OPERATIONS.md) — 地图更新、发布与回滚、上线待办
+* [重构实施记录](docs/REFACTOR.md) — Phase 0–7 过程与验收（历史存档）
 
 ---
 
