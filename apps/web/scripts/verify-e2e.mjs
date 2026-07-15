@@ -56,16 +56,6 @@ ok('切 1 楼 hash', decodeURIComponent(page.url()).includes('/左-Y门/1'), dec
 const f1Src = await page.locator('#main-map-img').getAttribute('src');
 ok('切 1 楼图片变化', f1Src !== fullSrc);
 
-// 6. 房间高亮（左-Y门 1 楼有坐标数据）
-ok('房间面板显示', await page.locator('.room-selector-panel').isVisible());
-await page.click('.room-btn:has-text("餐厅")');
-await page.waitForTimeout(400);
-ok('高亮层显示', await page.locator('#highlight-overlay').isVisible());
-const t1 = await page.locator('#map-wrapper').evaluate((el) => el.style.transform);
-await page.click('.room-btn:has-text("餐厅")');
-await page.waitForTimeout(200);
-ok('再点取消高亮', !(await page.locator('#highlight-overlay').isVisible()));
-
 // 7. 缩放工具栏（旧站 CSS 有意隐藏 +/- 按钮，保留手势与滚轮缩放——新站需一致）
 const scaleOf = (t) => parseFloat(t.match(/scale\(([\d.]+)\)/)?.[1] ?? '0');
 ok('+/- 按钮与旧站一致隐藏', !(await page.locator('.zoom-in-btn').isVisible())

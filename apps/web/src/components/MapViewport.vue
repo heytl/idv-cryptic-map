@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import type { FloorRooms, MapItem, RoomRect } from '../data/maps';
+import { computed, onMounted, ref } from 'vue';
+import type { MapItem } from '../data/maps';
 import type { Floor } from './FloorSwitch.vue';
 import { useZoomPan, ZOOM_CONFIG } from '../composables/useZoomPan';
 
@@ -35,34 +35,6 @@ onMounted(() => {
     fitWrapperToImage();
   }
 });
-
-// ---- 房间高亮 ----
-const rooms = computed<FloorRooms | null>(() => {
-  if (props.floor !== '1' && props.floor !== '2') return null;
-  return props.map.rooms?.[props.floor] ?? null;
-});
-
-const activeRoom = ref<string | null>(null);
-const highlightRect = ref<RoomRect | null>(null);
-
-function toggleRoom(name: string, rect: RoomRect) {
-  if (activeRoom.value === name) {
-    // 重复点击已激活的按钮，取消高亮
-    hideHighlight();
-    return;
-  }
-  activeRoom.value = name;
-  highlightRect.value = rect;
-  zoom.focusOn(rect);
-}
-
-function hideHighlight() {
-  activeRoom.value = null;
-  highlightRect.value = null;
-}
-
-// 切换地图或楼层时清除高亮（图片加载完成后由 @load 重置缩放）
-watch(imgUrl, hideHighlight);
 
 // ---- 页内全屏 ----
 const isFullscreen = ref(false);
@@ -102,18 +74,6 @@ function onViewportClick(e: MouseEvent) {
         fetchpriority="high"
         @load="fitWrapperToImage"
       >
-      <!-- 高亮覆盖层 -->
-      <div
-        id="highlight-overlay"
-        class="highlight-overlay"
-        :style="highlightRect ? {
-          display: 'block',
-          left: `${highlightRect.left}%`,
-          top: `${highlightRect.top}%`,
-          width: `${highlightRect.width}%`,
-          height: `${highlightRect.height}%`,
-        } : { display: 'none' }"
-      ></div>
     </div>
     <!-- 遮罩图层，制造神秘感 -->
     <div class="vignette-overlay"></div>
@@ -125,19 +85,5 @@ function onViewportClick(e: MouseEvent) {
     <button class="tool-btn zoom-out-btn" title="缩小" @click="zoom.zoomByFactor(1 / ZOOM_CONFIG.buttonZoomFactor)"><span class="icon">-</span></button>
     <button class="tool-btn fullscreen-btn" title="地图全屏" @click="toggleFullscreen"><span class="icon">⤢</span></button>
     <button class="tool-btn reset-btn" title="重置自适应" @click="zoom.reset()"><span class="icon">⟲</span></button>
-  </div>
-
-  <!-- 房间/区域导航（仅在当前地图楼层配有坐标数据时显示） -->
-  <div v-if="rooms" class="room-selector-panel">
-    <span class="room-nav-title">快速区域指引:</span>
-    <div id="room-buttons" class="room-buttons">
-      <button
-        v-for="(rect, name) in rooms"
-        :key="name"
-        class="room-btn"
-        :class="{ active: activeRoom === name }"
-        @click="toggleRoom(name as string, rect)"
-      >{{ name }}</button>
-    </div>
   </div>
 </template>

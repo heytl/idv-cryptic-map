@@ -4,7 +4,6 @@
 // clampScale/clampPosition 边界钳制、fitScale 自适应铺满
 // ==========================================================================
 import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue';
-import type { RoomRect } from '../data/maps';
 
 // 缩放配置：最小/最大缩放均为相对“自适应铺满比例(fitScale)”的倍数
 export const ZOOM_CONFIG = {
@@ -108,21 +107,6 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     // 水平与垂直完全居中对齐
     state.x = (viewW - mapW * state.scale) / 2;
     state.y = (viewH - mapH * state.scale) / 2;
-
-    applyTransform();
-  }
-
-  // 聚焦到百分比矩形中心：拉近到铺满比例的2倍（受缩放上下限约束），用于房间高亮
-  function focusOn(rect: RoomRect) {
-    const vp = viewport.value;
-    if (!vp) return;
-    const { width: mapW, height: mapH } = getMapSize();
-    const targetX = ((rect.left + rect.width / 2) / 100) * mapW;
-    const targetY = ((rect.top + rect.height / 2) / 100) * mapH;
-
-    state.scale = clampScale(state.fitScale * 2);
-    state.x = vp.clientWidth / 2 - targetX * state.scale;
-    state.y = vp.clientHeight / 2 - targetY * state.scale;
 
     applyTransform();
   }
@@ -253,5 +237,5 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     }
   });
 
-  return { state, reset, zoomByFactor, focusOn };
+  return { state, reset, zoomByFactor };
 }

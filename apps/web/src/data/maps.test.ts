@@ -26,22 +26,6 @@ describe('maps 数据一致性', () => {
     }
   });
 
-  it('rooms 坐标均在 0-100 百分比范围内', () => {
-    for (const m of maps) {
-      if (!m.rooms) continue;
-      for (const floor of Object.values(m.rooms)) {
-        for (const [room, rect] of Object.entries(floor)) {
-          for (const v of [rect.left, rect.top, rect.width, rect.height]) {
-            expect(v, `${m.name}/${room}`).toBeGreaterThanOrEqual(0);
-            expect(v, `${m.name}/${room}`).toBeLessThanOrEqual(100);
-          }
-          expect(rect.left + rect.width, `${m.name}/${room} 越右界`).toBeLessThanOrEqual(100);
-          expect(rect.top + rect.height, `${m.name}/${room} 越下界`).toBeLessThanOrEqual(100);
-        }
-      }
-    }
-  });
-
   it('displayName 去掉“（新）”后缀等于 name', () => {
     for (const m of maps) {
       expect(m.displayName.replace(/（新）$/, ''), m.name).toBe(m.name);
