@@ -1,12 +1,32 @@
-// Cloudflare Workers 静态资源部署配置
-// 后续加后台管理 API 时：在此加 "main": "workers/api/index.ts" 并配 KV/D1/R2 绑定，
-// 静态资源与 API 同一个 Worker，无需迁移
+// Cloudflare Workers 部署配置：静态资源 + 后台 API 同一个 Worker
+// - /maps.json 与 /api/* 先进 Worker（workers/index.ts），其余路径静态直出
+// - 生产 KV/R2 绑定待 Phase 2.0 资源开通后填入真实 id（见 docs/ADMIN-BACKEND.md §7）；
+//   未绑定期间 Worker 自动回退静态快照，随时可安全部署
+// - 本地开发用 env.dev + `wrangler dev --env dev --local`（本地模拟存储，id 仅占位）
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "idv-cryptic-map",
   "compatibility_date": "2026-07-01",
+  "main": "workers/index.ts",
   "assets": {
     "directory": "./apps/web/dist",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "run_worker_first": ["/maps.json", "/api/*"]
+  },
+  // Phase 2.0 后取消注释并填入真实 id：
+  // "kv_namespaces": [{ "binding": "CONFIG", "id": "<prod-kv-id>" }],
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
+  "env": {
+    "dev": {
+      "assets": {
+        "directory": "./apps/web/dist",
+        "not_found_handling": "single-page-application",
+        "binding": "ASSETS",
+        "run_worker_first": ["/maps.json", "/api/*"]
+      },
+      "kv_namespaces": [{ "binding": "CONFIG", "id": "local-dev-config" }],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media-dev" }]
+    }
   }
 }

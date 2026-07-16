@@ -18,3 +18,7 @@
 
 /manifest.webmanifest
   Cache-Control: no-cache, must-revalidate
+
+# 地图配置：刷新必回源验证（KV 接管后由 Worker 下发同样的头 + ETag 304）
+/maps.json
+  Cache-Control: no-cache, must-revalidate
