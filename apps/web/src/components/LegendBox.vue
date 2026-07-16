@@ -1,3 +1,9 @@
+<script setup lang="ts">
+// public/ 下的图标用字符串绑定而非模板字面量 src：
+// 绝对路径 src 会被资产转换层当作模块解析，在 Windows 下的 vitest 中直接报错
+const treasureUrl = import.meta.env.BASE_URL + 'icons/treasure.webp';
+</script>
+
 <template>
   <div class="legend-box">
     <h4 class="legend-title">图示说明</h4>
@@ -12,7 +18,7 @@
       </div>
       <div class="legend-item">
         <span class="legend-label">金箱点</span>
-        <span class="legend-symbol gold-chest"><img src="/icons/treasure.webp" alt="金箱"></span>
+        <span class="legend-symbol gold-chest"><img :src="treasureUrl" alt="金箱"></span>
       </div>
       <div class="legend-item">
         <span class="legend-label">上/下层移动</span>
