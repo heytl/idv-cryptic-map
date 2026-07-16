@@ -18,6 +18,28 @@ importers:
         specifier: ^4.110.0
         version: 4.110.0(@cloudflare/workers-types@5.20260715.1)
 
+  apps/admin:
+    dependencies:
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.39(typescript@5.9.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.1.1
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.0
+        version: 6.0.7(vite@7.3.6(@types/node@26.1.1)(terser@5.49.0))(vue@3.5.39(typescript@5.9.3))
+      typescript:
+        specifier: ~5.9.0
+        version: 5.9.3
+      vite:
+        specifier: ^7.0.0
+        version: 7.3.6(@types/node@26.1.1)(terser@5.49.0)
+      vue-tsc:
+        specifier: ^3.0.0
+        version: 3.3.7(typescript@5.9.3)
+
   apps/web:
     dependencies:
       vue:
