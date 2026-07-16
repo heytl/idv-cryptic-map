@@ -98,7 +98,8 @@ KV 键 `config:current`，单文档：
 - **缓存穿透原理不变**：换图 = 新哈希 = 新 URL，用户刷新拿到新 `/maps.json` 后只重新下载变化的图；未变的图 URL 不变，继续命中一年缓存。哈希由 Worker 自动计算，无任何人工版本号环节。
 - **R2 键名规范**：`maps/<kind>/<hash8>.webp`（纯 ASCII，延续现产物命名思路）；原图 `sources/<mapId>-<yyyymmdd>.<ext>`；备份 `backups/<ISO时刻>-v<version>.json`。
 - **被替代的现有环节**：`crop_images.py`（本地裁图）与 `scripts/gen-thumbs.mjs`（sharp 缩略图）在图片迁入 R2 后退役——缩略图改为上传时浏览器一并生成。
-- **PWA 适配**：`vite.config.ts` 的 runtimeCaching `urlPattern` 需增加 `img.<domain>` 主机名匹配，R2 图片同样「访问过才缓存、命中即离线可用」。
+- **PWA 适配**：runtimeCaching 按路径特征匹配（`/maps/<kind>/<hash>.webp`），与主机名无关，img 子域上线无需再改；前台 SW 的 navigateFallback 需将 `/admin`、`/api`、`/r2` 加入黑名单。
+- **实现补充（2026-07-16）**：全图不单独裁剪，由 1楼+2楼 裁剪框纵向自动合成（与现有 full/ 构图一致）；**img 子域绑定前的过渡出图路径为同 Worker `GET /r2/<key>`**（`IMG_BASE_URL` var 控制前缀，默认 `/r2`，绑定子域后改 var 即可，仅影响新上传 URL，存量 URL 需脚本批量改写）。
 
 ## 5. API 设计
 
@@ -180,12 +181,12 @@ export async function loadMaps(): Promise<MapItem[]> {
 
 ## 11. 实施子阶段
 
-| 阶段 | 内容 | 验收要点 |
-|------|------|---------|
-| 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、`img.` 子域绑 R2、Access 应用（双 IdP + 白名单）、KV/R2 各建 dev+prod、Secrets（CF/GitHub PAT） | Access 拦截 `/admin` 生效；img 子域可访问测试对象 |
-| 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本：现 maps.json → KV、28×4 图哈希命名上传 R2、`maps/` 原图入 `sources/`；前端切 `loadMaps()` + 内嵌快照；PWA host 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 |
-| 2.2 后台上线 | `apps/admin`：列表（筛选/拖拽排序/发布开关/回收站）、编辑页 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验 | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 |
-| 2.3 韧性收尾 | 保存留档策略、Cron 快照回写、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；Vercel 镜像展示快照数据；演练「误删地图 → 后台恢复」 |
+| 阶段 | 内容 | 验收要点 | 状态（2026-07-16） |
+|------|------|---------|------|
+| 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、`img.` 子域绑 R2、Access 应用（双 IdP + 白名单）、KV/R2 各建 dev+prod（**Location Hint 选亚太**，回源跨境延迟最低）、Secrets（CF/GitHub PAT）、真实绑定 id 填入 wrangler.jsonc | Access 拦截 `/admin` 生效；img 子域可访问测试对象 | ⬜ 待用户操作 |
+| 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本 `scripts/migrate-phase2.mjs`（图哈希命名上传 R2 + 灌 KV，`--local/--remote` 幂等可重跑）；前端 `initMaps()` + 内嵌兜底；PWA 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 | ✅ 代码完成，本地验证通过（feat/admin-backend） |
+| 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关/回收站）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 代码完成，待 2.0 后线上联调 |
+| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC，未配 secrets 自动跳过）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；Vercel 镜像展示快照数据；演练「误删地图 → 后台恢复」 | 🟡 代码完成（快照文件接入打包兜底的接线待做）；验收待 2.0 |
 
 回滚原则同 §8.3：任何阶段出问题，摘 Worker 路由即回到当前纯静态架构。
 
