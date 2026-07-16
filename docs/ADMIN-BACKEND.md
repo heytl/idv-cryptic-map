@@ -70,7 +70,6 @@ KV 键 `config:current`，单文档：
       "remarks": "左侧入口，呈现Y字形墙体结构",
       "published": true,               // 草稿/发布；草稿不出现在 GET /maps.json
       "deletedAt": null,               // 软删除时间戳（回收站，30 天后可清理）
-      "rooms": { "1": { "餐厅": { "left": 33, "top": 15, "width": 15, "height": 15 } } },
       "images": {                      // 显式存完整 URL（含内容哈希文件名）
         "entry":      "https://img.<domain>/maps/entry/8f3a21c9.webp",
         "entryThumb": "https://img.<domain>/maps/entry-thumb/1d0c77ab.webp",
@@ -82,7 +81,7 @@ KV 键 `config:current`，单文档：
 }
 ```
 
-与现 `src/data/maps.json` 的迁移映射：`id`/`direction`/`name`/`displayName`/`remarks`/`rooms` 原样沿用；新增 `sort`（按现数组顺序 ×10 初始化）、`published: true`、`images`（迁移脚本上传图片后回填）、`version`。
+与现 `src/data/maps.json` 的迁移映射：`id`/`direction`/`name`/`displayName`/`remarks` 原样沿用；新增 `sort`（按现数组顺序 ×10 初始化）、`published: true`、`images`（迁移脚本上传图片后回填）、`version`。（「快速区域指引」的 `rooms` 字段已随功能移除，模型中不保留。）
 
 ## 4. 图片管线
 

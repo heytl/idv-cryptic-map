@@ -30,7 +30,7 @@ idv-cryptic-map/
 │   │   ├── components/          # 地图视口、楼层切换、方向筛选等组件
 │   │   ├── composables/         # useZoomPan 缩放拖拽交互
 │   │   ├── data/
-│   │   │   ├── maps.json        # ★ 唯一数据源（地图元数据 + 房间坐标 + updatedAt）
+│   │   │   ├── maps.json        # ★ 唯一数据源（地图元数据 + updatedAt）
 │   │   │   └── maps.ts          # 数据访问层（逻辑名 → 构建哈希 URL）
 │   │   ├── assets/maps/         # entry/floor1/floor2/full 各 28 张 webp
 │   │   ├── assets/fonts/        # 子集化后的自托管字体
@@ -38,7 +38,7 @@ idv-cryptic-map/
 │   ├── scripts/
 │   │   ├── gen-thumbs.mjs       # 构建前自动生成目录页缩略图（sharp）
 │   │   ├── subset-fonts.mjs     # 字体子集化（新增文案缺字时重跑）
-│   │   ├── verify-e2e.mjs       # 34 项交互验收（Playwright 驱动本机 Chrome）
+│   │   ├── verify-e2e.mjs       # 31 项交互验收（Playwright 驱动本机 Chrome）
 │   │   └── verify-pwa.mjs       # PWA 离线验收
 │   └── public/                  # _headers 缓存策略 / 图标 / PWA 图标
 ├── maps/                        # 原始图片素材（仅作裁剪源，不参与部署）

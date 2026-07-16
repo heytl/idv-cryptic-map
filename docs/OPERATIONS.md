@@ -14,7 +14,6 @@
 
 - [ ] 四张图入 `assets/maps/{entry,floor1,floor2,full}/<逻辑名>.webp`（缩略图不用管，构建自动生成）
 - [ ] `src/data/maps.json` 增加记录：`id` 取 max+1 且**永不复用**；「（新）」等后缀只写 `displayName`，`name` 保持与文件名一致
-- [ ] 有房间坐标数据则补 `rooms`（百分比 0–100）
 - [ ] 更新根级 `updatedAt`（页脚展示）
 - [ ] `pnpm test`——缺图、数据错误、**地图名出现子集字体没有的新字**都会在这里红；缺字则先跑 `node apps/web/scripts/subset-fonts.mjs` 再测
 - [ ] push 后在 PR 预览 URL 上抽查新地图
@@ -43,9 +42,9 @@
 ## 4. 验证命令
 
 ```bash
-pnpm test                              # 单测 16 项（数据/路由兼容/字体覆盖）
+pnpm test                              # 单测 15 项（数据/路由兼容/字体覆盖）
 pnpm build && npx wrangler dev         # 本地起 Workers 形态，curl -I 验证缓存头
-node apps/web/scripts/verify-e2e.mjs   # E2E 34 项（需本机 Chrome + dev 服务）
+node apps/web/scripts/verify-e2e.mjs   # E2E 31 项（需本机 Chrome + dev 服务）
 node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 ```
 
