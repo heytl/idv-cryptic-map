@@ -41,8 +41,18 @@ const KINDS = [
   ['full', 'full'],
 ];
 
-function sh(cmd) {
-  execSync(cmd, { cwd: ROOT, stdio: ['ignore', 'ignore', 'inherit'] });
+function sh(cmd, attempts = 4) {
+  for (let i = 1; ; i++) {
+    try {
+      execSync(cmd, { cwd: ROOT, stdio: ['ignore', 'ignore', 'inherit'] });
+      return;
+    } catch (e) {
+      // 跨境网络抖动是常态，指数退避重试而不是崩掉整个迁移
+      if (i >= attempts) throw e;
+      console.log(`  ↻ 网络抖动，第 ${i} 次重试 …`);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2000 * i);
+    }
+  }
 }
 
 // 缩略图目录可能未生成，先跑一遍生成脚本

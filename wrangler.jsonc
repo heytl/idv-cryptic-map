@@ -20,14 +20,18 @@
   },
   "vars": {
     // img 子域绑定 R2 后改为 https://img.<domain>；过渡期由本 Worker /r2/* 同源出图
-    "IMG_BASE_URL": "/r2"
-    // Phase 2.0 配置 Access 后加入：
-    // "ACCESS_TEAM_DOMAIN": "https://<team>.cloudflareaccess.com",
-    // "ACCESS_AUD": "<access-app-aud>"
+    "IMG_BASE_URL": "/r2",
+    // Cloudflare Access（Zero Trust 应用 idv-map-admin，保护 /admin 与 /api）
+    "ACCESS_TEAM_DOMAIN": "https://zwdwrg.cloudflareaccess.com",
+    "ACCESS_AUD": "4e19758aa55c7ac99c86bd294f3947a4de492b3042272ad38b1318ae10328bee"
   },
-  // Phase 2.0 后取消注释并填入真实 id：
-  // "kv_namespaces": [{ "binding": "CONFIG", "id": "<prod-kv-id>" }],
-  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
+  // 生产绑定（Phase 2.0 已开通，2026-07-16）
+  "kv_namespaces": [{ "binding": "CONFIG", "id": "d33cc5d1354f441287b216b2c7a96d9f" }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
+  // 主站自定义域（部署时自动建 DNS 记录）；workers.dev 关闭，避免绕过 Access 的重复入口
+  "workers_dev": false,
+  "preview_urls": true,
+  "routes": [{ "pattern": "new-map.321666.xyz", "custom_domain": true }],
   "env": {
     "dev": {
       "assets": {
