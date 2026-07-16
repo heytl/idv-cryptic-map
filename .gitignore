@@ -35,3 +35,7 @@ apps/web/src/assets/maps/entry-thumb/
 
 # wrangler 本地开发状态（KV/R2 模拟存储与临时产物）
 .wrangler/
+
+# 迁移脚本生成物（scripts/migrate-phase2.mjs）
+kv-config.json
+kv-seed.json
