@@ -30,10 +30,10 @@ flowchart LR
 idv-cryptic-map/
 ├── apps/web/                  # 前端应用
 │   ├── scripts/               # gen-thumbs（sharp 缩略图）/ subset-fonts（字体子集化）
-│   │                          # verify-e2e（34 项验收）/ verify-pwa（离线 5 项）
+│   │                          # verify-e2e（31 项验收）/ verify-pwa（离线 5 项）
 │   ├── public/                # _headers（缓存头）、PWA 图标、图例 icons
 │   └── src/
-│       ├── data/maps.json     # ★ 唯一数据源（地图元数据 + 房间坐标 + updatedAt）
+│       ├── data/maps.json     # ★ 唯一数据源（地图元数据 + updatedAt）
 │       ├── data/maps.ts       # 数据访问层（未来切 API 的唯一隔离点）
 │       ├── assets/maps/       # entry / entry-thumb(生成) / floor1 / floor2 / full，28×4 webp
 │       ├── assets/fonts/      # 子集化 woff2 ×3（共约 529KB）
@@ -52,7 +52,7 @@ idv-cryptic-map/
 
 ```mermaid
 flowchart LR
-  J[data/maps.json<br>id/direction/name/displayName<br>remarks/rooms/updatedAt] --> T[data/maps.ts<br>import.meta.glob 解析<br>逻辑名 → 哈希 URL]
+  J[data/maps.json<br>id/direction/name/displayName<br>remarks/updatedAt] --> T[data/maps.ts<br>import.meta.glob 解析<br>逻辑名 → 哈希 URL]
   A[assets/maps/**.webp] --> T
   T --> V[views / components]
 ```
@@ -60,7 +60,8 @@ flowchart LR
 - **逻辑名约定**：`name` = 各目录下图片文件名（不带扩展名）；展示名（含「（新）」后缀）只写 `displayName`，改展示名不影响任何文件路径。
 - **缺图即失败**：`maps.ts` 解析不到图片直接 throw，配合 Vitest 数据一致性测试，缺图/坏数据在 CI 就红，不会上线后 404。
 - **只打包被引用的资源**：`import.meta.glob` 让淘汰图片从源头不进产物。
-- 房间坐标（`rooms`，百分比）随地图数据存放，驱动「快速区域指引」高亮。
+
+> 历史注记：重构初版曾实现「快速区域指引」（`rooms` 房间坐标 + 高亮聚焦），2026-07-16 经确认无实际使用价值已整体移除（`bf89f7a`），后续后台管理数据模型中也不保留该字段。
 
 ## 4. 缓存模型：「更新即生效」
 
@@ -100,7 +101,7 @@ flowchart LR
 
 | 手段 | 覆盖 |
 |------|------|
-| Vitest 16 项 | 数据一致性 7 + 路由旧链接兼容 8 + 字体子集覆盖 1 |
-| `verify-e2e.mjs` 34 项 | Playwright 驱动本机 Chrome，含新旧站截图对照 |
+| Vitest 15 项 | 数据一致性 6 + 路由旧链接兼容 8 + 字体子集覆盖 1 |
+| `verify-e2e.mjs` 31 项 | Playwright 驱动本机 Chrome，含新旧站截图对照 |
 | `verify-pwa.mjs` 5 项 | 离线可用性 |
 | CI 硬门槛 | test + build 失败即阻断部署 |
