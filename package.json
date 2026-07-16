@@ -4,9 +4,11 @@
   "packageManager": "pnpm@11.13.0",
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
+    "dev:admin": "pnpm --filter admin dev",
+    "build": "pnpm --filter web build && pnpm --filter admin build",
     "preview": "pnpm --filter web preview",
-    "test": "pnpm --filter web test"
+    "test": "pnpm --filter web test",
+    "check:worker": "tsc -p workers"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260715.1",
