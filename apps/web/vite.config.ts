@@ -79,7 +79,8 @@ export default defineConfig({
             options: { cacheName: 'maps-config', networkTimeoutSeconds: 3 },
           },
         ],
-        navigateFallbackDenylist: [/^\/_vercel\//],
+        // /admin(后台)、/api、/r2 不归前台 SW 管，避免离线兜底劫持这些路径
+        navigateFallbackDenylist: [/^\/_vercel\//, /^\/admin/, /^\/api\//, /^\/r2\//],
       },
     }),
   ],
