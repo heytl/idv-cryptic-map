@@ -1,10 +1,34 @@
-import { defineConfig } from 'vite';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, type Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
+
+const MAPS_JSON = fileURLToPath(new URL('./src/data/maps.json', import.meta.url));
+
+// 向 dist 输出 /maps.json 静态快照（与打包进 JS 的兜底数据同源）：
+// Worker 未接管或 KV 无数据时，该 URL 由静态资源服务，前端 fetch 路径始终闭环；
+// dev 下用中间件模拟同一 URL，保证开发态与线上数据流一致
+function mapsJsonSnapshot(): Plugin {
+  return {
+    name: 'maps-json-snapshot',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'maps.json', source: readFileSync(MAPS_JSON, 'utf-8') });
+    },
+    configureServer(server) {
+      server.middlewares.use('/maps.json', (_req, res) => {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.end(readFileSync(MAPS_JSON, 'utf-8'));
+      });
+    },
+  };
+}
 
 export default defineConfig({
   plugins: [
     vue(),
+    mapsJsonSnapshot(),
     VitePWA({
       // 后台发现新版本自动激活（配合下方 skipWaiting），保证“部署即生效”
       registerType: 'autoUpdate',
@@ -35,6 +59,24 @@ export default defineConfig({
               expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
             },
+          },
+          {
+            // Phase 2：R2 直出的地图图片（img.<domain>/maps/**，内容哈希文件名），
+            // 规则按路径匹配、与主机名无关，域名定了无需再改
+            urlPattern: /\/maps\/(entry|entry-thumb|floor1|floor2|full)\/[^/]+\.webp$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'map-images-r2',
+              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // 地图配置：在线永远走网络拿最新；离线回落到最近一次成功拉取的版本
+            // （比打包快照更新），彻底断网首次访问则由 JS 内嵌兜底数据接管
+            urlPattern: /\/maps\.json$/,
+            handler: 'NetworkFirst',
+            options: { cacheName: 'maps-config', networkTimeoutSeconds: 3 },
           },
         ],
         navigateFallbackDenylist: [/^\/_vercel\//],

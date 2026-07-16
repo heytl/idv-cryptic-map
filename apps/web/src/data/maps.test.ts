@@ -33,6 +33,6 @@ describe('maps 数据一致性', () => {
   });
 
   it('updatedAt 为 YYYY-MM-DD 格式', () => {
-    expect(mapsUpdatedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(mapsUpdatedAt.value).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 });

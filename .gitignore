@@ -32,3 +32,6 @@ implementation_plan.md
 
 # 构建时生成的缩略图（scripts/gen-thumbs.mjs）
 apps/web/src/assets/maps/entry-thumb/
+
+# wrangler 本地开发状态（KV/R2 模拟存储与临时产物）
+.wrangler/
