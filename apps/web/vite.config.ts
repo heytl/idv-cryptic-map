@@ -41,6 +41,9 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    port: 5210,
+  },
   build: {
     // 禁用小资源 base64 内联：缩略图保持独立文件，
     // 改一张图只失效一个文件的缓存，也便于 PWA 按名精确 precache
