@@ -1,7 +1,8 @@
-# 后台管理系统设计（Phase 2，待实施）
+# 后台管理系统设计（Phase 2，已上线）
 
-> 2026-07-14/15 逐项确认的设计定稿。目标：网页后台管理地图资源与配置，改动**秒级生效**，不依赖本地脚本与 git 操作。
+> 2026-07-14/15 逐项确认设计定稿，2026-07-16/17 全部实施并生产验证通过。目标：网页后台管理地图资源与配置，改动**秒级生效**，不依赖本地脚本与 git 操作。
 > 前置阅读：[ARCHITECTURE.md](ARCHITECTURE.md)（当前静态架构）。
+> 代码在 `feat/admin-backend` 分支（已推送远程，未合并 `refactor/vite`/`main`）。生产地址：`https://new-map.321666.xyz/admin/`（临时子域，见 §12 #1）。当前实施状态见 §11；已知遗留见 §13。
 
 ## 1. 路线决策记录
 
@@ -98,7 +99,7 @@ KV 键 `config:current`，单文档：
 - **缓存穿透原理不变**：换图 = 新哈希 = 新 URL，用户刷新拿到新 `/maps.json` 后只重新下载变化的图；未变的图 URL 不变，继续命中一年缓存。哈希由 Worker 自动计算，无任何人工版本号环节。
 - **R2 键名规范**：`maps/<kind>/<hash8>.webp`（纯 ASCII，延续现产物命名思路）；原图 `sources/<mapId>-<yyyymmdd>.<ext>`；备份 `backups/<ISO时刻>-v<version>.json`。
 - **被替代的现有环节**：`crop_images.py`（本地裁图）与 `scripts/gen-thumbs.mjs`（sharp 缩略图）在图片迁入 R2 后退役——缩略图改为上传时浏览器一并生成。
-- **PWA 适配**：runtimeCaching 按路径特征匹配（`/maps/<kind>/<hash>.webp`），与主机名无关，img 子域上线无需再改；前台 SW 的 navigateFallback 需将 `/admin`、`/api`、`/r2` 加入黑名单。
+- **PWA 适配**：runtimeCaching 按路径特征匹配（`/maps/<kind>/<hash>.webp`），与主机名无关，img 子域上线无需再改；前台 SW 的 navigateFallback **改用白名单**（`navigateFallbackAllowlist: [/^\/$/]`，前台是纯 hash 路由真实 pathname 永远只有 `/`）而非黑名单排除 `/admin`、`/api`、`/r2` ——黑名单模式曾漏记 `/cdn-cgi/`（Access 登录回调路径），导致登录回调被 SW 缓存壳子静默拦截误显前台页面（2026-07-17 修复，见 §13）。
 - **实现补充（2026-07-16）**：全图不单独裁剪，由 1楼+2楼 裁剪框纵向自动合成（与现有 full/ 构图一致）；**img 子域绑定前的过渡出图路径为同 Worker `GET /r2/<key>`**（`IMG_BASE_URL` var 控制前缀，默认 `/r2`，绑定子域后改 var 即可，仅影响新上传 URL，存量 URL 需脚本批量改写）。
 
 ## 5. API 设计
@@ -133,7 +134,7 @@ KV 键 `config:current`，单文档：
   "assets": {
     "directory": "./apps/web/dist",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/maps.json", "/api/*"] // 这两类路径进 Worker，其余静态直出
+    "run_worker_first": ["/maps.json", "/api/*", "/r2/*"] // 这三类路径进 Worker，其余（含 /admin*）静态直出
   },
   "kv_namespaces": [{ "binding": "CONFIG", "id": "<prod>" }],
   "r2_buckets":    [{ "binding": "MEDIA",  "bucket_name": "idv-media" }],
@@ -181,12 +182,12 @@ export async function loadMaps(): Promise<MapItem[]> {
 
 ## 11. 实施子阶段
 
-| 阶段 | 内容 | 验收要点 | 状态（2026-07-16） |
+| 阶段 | 内容 | 验收要点 | 状态（2026-07-17） |
 |------|------|---------|------|
-| 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、`img.` 子域绑 R2、Access 应用（双 IdP + 白名单）、KV/R2 各建 dev+prod（**Location Hint 选亚太**，回源跨境延迟最低）、Secrets（CF/GitHub PAT）、真实绑定 id 填入 wrangler.jsonc | Access 拦截 `/admin` 生效；img 子域可访问测试对象 | ⬜ 待用户操作 |
-| 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本 `scripts/migrate-phase2.mjs`（图哈希命名上传 R2 + 灌 KV，`--local/--remote` 幂等可重跑）；前端 `initMaps()` + 内嵌兜底；PWA 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 | ✅ 代码完成，本地验证通过（feat/admin-backend） |
-| 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关/回收站）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 代码完成，待 2.0 后线上联调 |
-| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC，未配 secrets 自动跳过）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；Vercel 镜像展示快照数据；演练「误删地图 → 后台恢复」 | 🟡 代码完成（快照文件接入打包兜底的接线待做）；验收待 2.0 |
+| 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、Access 应用（双 IdP + 白名单）、KV/R2 建 prod（**Location Hint 选亚太**，回源跨境延迟最低）、真实绑定 id 填入 wrangler.jsonc | Access 拦截 `/admin` 生效 | ✅ 已完成（2026-07-16，c8d89c6）：`new-map.321666.xyz`、KV `d33cc5d1354f441287b216b2c7a96d9f`、R2 `idv-media`、Access 应用 `idv-map-admin`（OTP + GitHub，白名单）；生产数据迁移完成（140 图、KV v1） |
+| 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本 `scripts/migrate-phase2.mjs`（图哈希命名上传 R2 + 灌 KV，`--local/--remote` 幂等可重跑）；前端 `initMaps()` + 内嵌兜底；PWA 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 | ✅ 代码完成，生产验证通过 |
+| 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关/回收站）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 登录 + 列表渲染已用真实 Access 会话在生产实测通过（29 条记录正常显示）；**编辑/裁剪上传/版本历史恢复的端到端验收仍待做**（见 §13 待办） |
+| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC，未配 secrets 自动跳过）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；Vercel 镜像展示快照数据；演练「误删地图 → 后台恢复」 | 🟡 代码完成；`GITHUB_TOKEN`/`GITHUB_REPO` secrets 未配置，Cron 尚未实际跑过；快照文件接入打包兜底的接线待做 |
 
 回滚原则同 §8.3：任何阶段出问题，摘 Worker 路由即回到当前纯静态架构。
 
@@ -194,6 +195,42 @@ export async function loadMaps(): Promise<MapItem[]> {
 
 | # | 事项 | 默认建议 |
 |---|------|---------|
-| 1 | 主站用根域还是 `map.` 子域；图片子域名 | 图片默认 `img.`；主站看域名用途（正式域名确定后填入本文档占位处） |
+| 1 | 主站用根域还是 `map.` 子域；图片子域名 | **已用临时子域上线**：`new-map.321666.xyz`（用户明确后续可改为正式域名/子域，届时同步改 `wrangler.jsonc` 的 `routes`）；图片**未走子域直出**，改为同 Worker `/r2/*` 同源出图（见 §4 实现补充）——img 子域会公开整个 R2 桶（含 `backups/`），且相对 URL 让换域名零成本，主动放弃了原设计里的 `img.<domain>` 方案 |
 | 2 | 入口小图裁剪框比例 | 现有 28 张 entry 图实测均 ≈1:1（1.00–1.03），**默认锁定 1:1、可手动解锁**，保证目录卡片整齐 |
 | 3 | `maps/` 历史原始素材（~79MB，含 48MB 一图流）是否批量入 R2 `sources/` | **建议入**：此后重新裁剪全程网页操作；额度占用 < 1GB 无压力 |
+
+## 13. 已知遗留 / 排障记录（2026-07-17）
+
+### 13.1 `/admin` 登录后 500（已修复）
+
+**现象**：Access 邮箱登录成功后无法进入后台（不同阶段表现不同：有时回落到前台目录页，有时直接 Cloudflare 边缘 1101 错误页）。
+
+**根因**：`workers/index.ts` 曾出现过 `Response.redirect('/admin/index.html', 302)` 这类**相对路径**写法——workerd 的 `Response.redirect()` 要求绝对 URL，传相对路径直接抛 `TypeError`（边缘展示 "Error 1101 Worker threw exception"）；即便改绝对 URL，这段自定义重定向还会跟 Cloudflare 静态资源引擎自带的 `index.html ↔ 目录` 规范化重定向撞成死循环。这些都是**调试期间未提交的工作区改动**，未曾进入任何 commit。
+
+**修复**：删掉这段自定义重定向代码，`/admin`、`/admin/` 也不放进 `run_worker_first`——完全不让 Worker 插手这两个路径。Cloudflare 静态资源默认的 `html_handling: auto-trailing-slash` 本身就会把 `/admin/` 自动渲染成 `/admin/index.html` 内容、把裸 `/admin` 308 到 `/admin/`，跟站点根路径 `/` 现在的工作方式完全一致，不需要任何自定义代码。用 claude-in-chrome 携带真实 Access 会话 fetch 实测验证：`/admin`、`/admin/`、`/admin/index.html` 三种入口全部 200 且渲染正确。
+
+**方法论教训**：遇到"改了边缘路由配置但验证不了效果"时，应尽早用浏览器工具（真实会话 fetch / 实际导航截图）拿到确切的状态码和响应内容，而不是基于假设连续多轮盲改配置。
+
+### 13.2 前台 SW 导航兜底：黑名单 → 白名单（已修复）
+
+上述排查过程中连带发现：`apps/web/vite.config.ts` 的 `navigateFallbackDenylist` 漏记了 `/cdn-cgi/`（Cloudflare Access 登录回调用的系统路径），理论上会导致 Service Worker 把该回调请求静默拦截、错误兜底成前台页面壳子（同一类"地址栏对但内容错"的失败模式）。已改为 `navigateFallbackAllowlist: [/^\/$/]`——前台是纯 hash 路由，真实 pathname 永远只有 `/`，白名单天然免疫任何现在或未来的系统路径，不必逐条记黑名单。
+
+### 13.3 后台 SPA fallback 与前台共享一份兜底文件（已知，暂不处理）
+
+前台、后台目前共用同一份 Workers `assets` 清单（`apps/web/dist`，后台产物挂在其下的 `dist/admin/`），`not_found_handling: single-page-application` 是**整个 Worker 只有一个兜底文件**（站点根 `index.html`）。实测：`/admin/` 与 `/admin/index.html` 命中真实文件，正常；但 `/admin/<任意不存在的子路径>` 会静默兜底成**前台**页面（不是后台页面，也不是 404）。
+
+当前不可触发：`apps/admin` 没有 vue-router，只是单页内 tab 切换，不存在真实的深链接子路径。**如果以后给后台加真实路由或深链接**（例如某条地图记录的可分享编辑链接），必须重新评估——届时可选方案：
+- 子域名拆分（如 `admin.new-map.321666.xyz`）：后台变成独立 Worker + 独立 `assets` 清单，零自定义路由代码，Access 策略简化为纯域名匹配，代价是 URL 变化、多一次 `wrangler deploy`；
+- 同域名路径拆分：用 Cloudflare Workers Routes 把 `/admin/*` 转发给另一个独立 Worker，保留现有 URL，但需要一小段前缀剥离代码（`/admin/xxx` → 查资源清单前先去掉 `/admin` 前缀）。
+
+2026-07-17 与用户确认：暂不实施，留作后台加真实路由时的技术债。
+
+### 13.4 尚待验收 / 待办
+
+- `apps/admin` 的编辑保存、裁剪工作台上传、版本历史恢复三条链路尚未在生产环境端到端走过一遍（本地 `wrangler dev --env dev --local` 曾验证通过，生产环境仅验证了登录+列表渲染）
+- `GITHUB_TOKEN`/`GITHUB_REPO` secrets 未配置，Cron 快照回写（§8.2）尚未实际跑过
+- `maps.snapshot.json` 接入打包兜底数据的接线未做
+- CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）未配置，`.github/workflows/deploy.yml` 尚不能自动部署
+- 分支未合并：`feat/admin-backend` 已推送远程，未合入 `refactor/vite`/`main`；`refactor/vite` 本身也未合入 `main`
+- `7c72ce9`（LegendBox 绝对路径 src 导致 Windows vitest 挂掉的独立 fix）待 cherry-pick 回 `refactor/vite`
+- 旧站 `site/` 目录、旧 Cloudflare Pages 项目、Vercel 镜像的去留未决定

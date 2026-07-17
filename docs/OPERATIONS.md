@@ -65,6 +65,8 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 - [ ] 生产切换验证通过后：删除 `site/` 旧目录；旧 Pages 项目观察一段时间后下线
 - [ ] 端到端演练一次「更新即生效」：改一张图 → push → 部署后普通刷新即见新图
 
+后台管理（Phase 2）相关的待办清单单独维护在 [ADMIN-BACKEND.md §13.4](ADMIN-BACKEND.md#134-尚待验收--待办)，含 Cron secrets、CI secrets、分支合并、后台端到端验收等，此处不重复。
+
 ## 7. 已知事项
 
 - `maps/` 目录（79MB，含 48MB 一图流源图）只做裁图来源，不参与部署。
