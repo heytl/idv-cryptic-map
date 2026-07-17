@@ -79,8 +79,11 @@ export default defineConfig({
             options: { cacheName: 'maps-config', networkTimeoutSeconds: 3 },
           },
         ],
-        // /admin(后台)、/api、/r2 不归前台 SW 管，避免离线兜底劫持这些路径
-        navigateFallbackDenylist: [/^\/_vercel\//, /^\/admin/, /^\/api\//, /^\/r2\//],
+        // 前台是纯 hash 路由（createWebHashHistory），真实 pathname 永远只有 "/"——
+        // 用白名单而非黑名单兜底导航：只有 "/" 允许被 SW 接管离线兜底，其余一律放行给网络，
+        // 天然免疫 /admin、/api、/r2、/cdn-cgi（Access 登录回调）等任何现在或未来的系统路径，
+        // 不必逐个记黑名单（History 曾因漏记 /cdn-cgi 导致 Access 登录回调被 SW 缓存壳子劫持）
+        navigateFallbackAllowlist: [/^\/$/],
       },
     }),
   ],
