@@ -1,0 +1,398 @@
+{
+  "version": 6,
+  "updatedAt": "2026-07-10",
+  "maps": [
+    {
+      "id": 1,
+      "direction": "左",
+      "name": "左-Y门",
+      "displayName": "左-Y门",
+      "remarks": "左侧入口，呈现Y字形墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/1a38704b.webp",
+        "entryThumb": "/r2/maps/entry-thumb/ebc109da.webp",
+        "floor1": "/r2/maps/floor1/56f5d9ff.webp",
+        "floor2": "/r2/maps/floor2/9b0b993f.webp",
+        "full": "/r2/maps/full/64e33f48.webp"
+      }
+    },
+    {
+      "id": 2,
+      "direction": "左",
+      "name": "左-锤子门",
+      "displayName": "左-锤子门",
+      "remarks": "左侧入口，呈现锤子形状墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/0a14e370.webp",
+        "entryThumb": "/r2/maps/entry-thumb/94d5cc6e.webp",
+        "floor1": "/r2/maps/floor1/8a3ddd50.webp",
+        "floor2": "/r2/maps/floor2/b350c3f3.webp",
+        "full": "/r2/maps/full/18785ff4.webp"
+      }
+    },
+    {
+      "id": 3,
+      "direction": "左",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "左侧入口，呈现倒T字形墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/aa7674c6.webp",
+        "entryThumb": "/r2/maps/entry-thumb/c8d3e66d.webp",
+        "floor1": "/r2/maps/floor1/67137475.webp",
+        "floor2": "/r2/maps/floor2/0757dfa6.webp",
+        "full": "/r2/maps/full/b260897e.webp"
+      }
+    },
+    {
+      "id": 4,
+      "direction": "左",
+      "name": "左-对角门",
+      "displayName": "左-对角门",
+      "remarks": "左侧入口，呈现对角线墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/6c221dd3.webp",
+        "entryThumb": "/r2/maps/entry-thumb/ffd17584.webp",
+        "floor1": "/r2/maps/floor1/a632573c.webp",
+        "floor2": "/r2/maps/floor2/e4fe8db9.webp",
+        "full": "/r2/maps/full/9c4e2ec5.webp"
+      }
+    },
+    {
+      "id": 5,
+      "direction": "左",
+      "name": "左-音叉门",
+      "displayName": "左-音叉门",
+      "remarks": "左侧入口，呈现音叉状对称墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/b0d66966.webp",
+        "entryThumb": "/r2/maps/entry-thumb/b2a20c63.webp",
+        "floor1": "/r2/maps/floor1/24ab1a40.webp",
+        "floor2": "/r2/maps/floor2/5003b538.webp",
+        "full": "/r2/maps/full/33eda373.webp"
+      }
+    },
+    {
+      "id": 6,
+      "direction": "左",
+      "name": "左-罐子门",
+      "displayName": "左-罐子门",
+      "remarks": "左侧入口，呈现罐子状墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/a22fd2f1.webp",
+        "entryThumb": "/r2/maps/entry-thumb/7f6e6b37.webp",
+        "floor1": "/r2/maps/floor1/d0ae5686.webp",
+        "floor2": "/r2/maps/floor2/50023234.webp",
+        "full": "/r2/maps/full/e36561e5.webp"
+      }
+    },
+    {
+      "id": 7,
+      "direction": "左",
+      "name": "左-对T门",
+      "displayName": "左-对T门",
+      "remarks": "左侧入口，呈现两个相对的T形墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/62ef6248.webp",
+        "entryThumb": "/r2/maps/entry-thumb/b9f7ca48.webp",
+        "floor1": "/r2/maps/floor1/0aa78555.webp",
+        "floor2": "/r2/maps/floor2/56671c86.webp",
+        "full": "/r2/maps/full/6448e9c7.webp"
+      }
+    },
+    {
+      "id": 24,
+      "direction": "左",
+      "name": "左-Y青蛙房",
+      "displayName": "左-Y青蛙房（新）",
+      "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构",
+      "images": {
+        "entry": "/r2/maps/entry/39ecc8e1.webp",
+        "entryThumb": "/r2/maps/entry-thumb/315e6e68.webp",
+        "floor1": "/r2/maps/floor1/35dbb8a7.webp",
+        "floor2": "/r2/maps/floor2/71a750d2.webp",
+        "full": "/r2/maps/full/80e6eaa9.webp"
+      }
+    },
+    {
+      "id": 27,
+      "direction": "左",
+      "name": "左-锤灯笼门",
+      "displayName": "左-锤灯笼门（新）",
+      "remarks": "左侧入口，锤子形通道与灯笼状墙体组合结构",
+      "images": {
+        "entry": "/r2/maps/entry/ea7a76be.webp",
+        "entryThumb": "/r2/maps/entry-thumb/9f30b845.webp",
+        "floor1": "/r2/maps/floor1/820a3560.webp",
+        "floor2": "/r2/maps/floor2/0359e116.webp",
+        "full": "/r2/maps/full/42ba933c.webp"
+      }
+    },
+    {
+      "id": 8,
+      "direction": "右",
+      "name": "右-左上右下门",
+      "displayName": "右-左上右下门",
+      "remarks": "右侧入口，左上及右下方向的侧门结构",
+      "images": {
+        "entry": "/r2/maps/entry/c6f9ca1c.webp",
+        "entryThumb": "/r2/maps/entry-thumb/6bdfd5f6.webp",
+        "floor1": "/r2/maps/floor1/f40edc9d.webp",
+        "floor2": "/r2/maps/floor2/8b5dcf9e.webp",
+        "full": "/r2/maps/full/68459dc4.webp"
+      }
+    },
+    {
+      "id": 9,
+      "direction": "右",
+      "name": "右-双L门",
+      "displayName": "右-双L门",
+      "remarks": "右侧入口，呈现双L型拐角墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/e4896fd1.webp",
+        "entryThumb": "/r2/maps/entry-thumb/99938da8.webp",
+        "floor1": "/r2/maps/floor1/f3b84407.webp",
+        "floor2": "/r2/maps/floor2/31f38ebf.webp",
+        "full": "/r2/maps/full/775803ce.webp"
+      }
+    },
+    {
+      "id": 10,
+      "direction": "右",
+      "name": "右-锤子门",
+      "displayName": "右-锤子门",
+      "remarks": "右侧入口，呈现锤子形状墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/72dabbb1.webp",
+        "entryThumb": "/r2/maps/entry-thumb/32b9d20a.webp",
+        "floor1": "/r2/maps/floor1/9633dbe6.webp",
+        "floor2": "/r2/maps/floor2/b2b4b334.webp",
+        "full": "/r2/maps/full/1062a6d1.webp"
+      }
+    },
+    {
+      "id": 11,
+      "direction": "右",
+      "name": "右-骑士门",
+      "displayName": "右-骑士门",
+      "remarks": "右侧入口，墙体轮廓形似骑士棋子",
+      "images": {
+        "entry": "/r2/maps/entry/a5172cd4.webp",
+        "entryThumb": "/r2/maps/entry-thumb/d20e0953.webp",
+        "floor1": "/r2/maps/floor1/140beddf.webp",
+        "floor2": "/r2/maps/floor2/023ebd2e.webp",
+        "full": "/r2/maps/full/73a85e21.webp"
+      }
+    },
+    {
+      "id": 12,
+      "direction": "右",
+      "name": "右-L门",
+      "displayName": "右-L门",
+      "remarks": "右侧入口，呈现L形墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/1d97672f.webp",
+        "entryThumb": "/r2/maps/entry-thumb/7474dc04.webp",
+        "floor1": "/r2/maps/floor1/cc8b72d3.webp",
+        "floor2": "/r2/maps/floor2/96dc04e3.webp",
+        "full": "/r2/maps/full/073a380e.webp"
+      }
+    },
+    {
+      "id": 26,
+      "direction": "右",
+      "name": "右-三L门",
+      "displayName": "右-三L门（新）",
+      "remarks": "右侧入口，三个L形拐角墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/3b81943e.webp",
+        "entryThumb": "/r2/maps/entry-thumb/fb811088.webp",
+        "floor1": "/r2/maps/floor1/b08f5bd0.webp",
+        "floor2": "/r2/maps/floor2/bb087ca1.webp",
+        "full": "/r2/maps/full/eade262d.webp"
+      }
+    },
+    {
+      "id": 13,
+      "direction": "南",
+      "name": "南-三缺一门",
+      "displayName": "南-三缺一门",
+      "remarks": "南侧入口，三缺一侧墙体结构",
+      "images": {
+        "entry": "/r2/maps/entry/846b2c2d.webp",
+        "entryThumb": "/r2/maps/entry-thumb/ddae3dbd.webp",
+        "floor1": "/r2/maps/floor1/03bc19d0.webp",
+        "floor2": "/r2/maps/floor2/99d64725.webp",
+        "full": "/r2/maps/full/7c4e9323.webp"
+      }
+    },
+    {
+      "id": 14,
+      "direction": "南",
+      "name": "南-十字门",
+      "displayName": "南-十字门",
+      "remarks": "南侧入口，标准十字形门体与墙体",
+      "images": {
+        "entry": "/r2/maps/entry/48255ba8.webp",
+        "entryThumb": "/r2/maps/entry-thumb/6c5c89ed.webp",
+        "floor1": "/r2/maps/floor1/bec4b157.webp",
+        "floor2": "/r2/maps/floor2/2538bd4c.webp",
+        "full": "/r2/maps/full/61719348.webp"
+      }
+    },
+    {
+      "id": 15,
+      "direction": "南",
+      "name": "南-L门",
+      "displayName": "南-L门",
+      "remarks": "南侧入口，L形侧门通道结构",
+      "images": {
+        "entry": "/r2/maps/entry/61540e39.webp",
+        "entryThumb": "/r2/maps/entry-thumb/07f003b4.webp",
+        "floor1": "/r2/maps/floor1/cbe3ae6b.webp",
+        "floor2": "/r2/maps/floor2/dd17b84e.webp",
+        "full": "/r2/maps/full/b0927261.webp"
+      }
+    },
+    {
+      "id": 16,
+      "direction": "南",
+      "name": "南-红门",
+      "displayName": "南-红门",
+      "remarks": "南侧入口，红色标记危险门体",
+      "images": {
+        "entry": "/r2/maps/entry/eb75c0e9.webp",
+        "entryThumb": "/r2/maps/entry-thumb/55025452.webp",
+        "floor1": "/r2/maps/floor1/0a7448d7.webp",
+        "floor2": "/r2/maps/floor2/b2bcc56d.webp",
+        "full": "/r2/maps/full/4262756e.webp"
+      }
+    },
+    {
+      "id": 25,
+      "direction": "南",
+      "name": "南-orz门",
+      "displayName": "南-orz门（新）",
+      "remarks": "南侧入口，墙体轮廓形似orz字形",
+      "images": {
+        "entry": "/r2/maps/entry/e38b67da.webp",
+        "entryThumb": "/r2/maps/entry-thumb/c6faecaf.webp",
+        "floor1": "/r2/maps/floor1/9777cc82.webp",
+        "floor2": "/r2/maps/floor2/be6117f3.webp",
+        "full": "/r2/maps/full/05edd21b.webp"
+      }
+    },
+    {
+      "id": 17,
+      "direction": "北",
+      "name": "北-1门",
+      "displayName": "北-1门",
+      "remarks": "北侧入口，单一侧门通道",
+      "images": {
+        "entry": "/r2/maps/entry/2bdf250e.webp",
+        "entryThumb": "/r2/maps/entry-thumb/f8ca74b0.webp",
+        "floor1": "/r2/maps/floor1/0981a1a8.webp",
+        "floor2": "/r2/maps/floor2/eec81318.webp",
+        "full": "/r2/maps/full/8d20fc2c.webp"
+      }
+    },
+    {
+      "id": 18,
+      "direction": "北",
+      "name": "北-4门",
+      "displayName": "北-4门",
+      "remarks": "北侧入口，4扇侧门结构",
+      "images": {
+        "entry": "/r2/maps/entry/af5cd3bb.webp",
+        "entryThumb": "/r2/maps/entry-thumb/3633dd4e.webp",
+        "floor1": "/r2/maps/floor1/338e7601.webp",
+        "floor2": "/r2/maps/floor2/df2d2b9f.webp",
+        "full": "/r2/maps/full/149d87f9.webp"
+      }
+    },
+    {
+      "id": 19,
+      "direction": "北",
+      "name": "北-红门",
+      "displayName": "北-红门",
+      "remarks": "北侧入口，红色标记危险门体",
+      "images": {
+        "entry": "/r2/maps/entry/8c05a78b.webp",
+        "entryThumb": "/r2/maps/entry-thumb/bdeba04c.webp",
+        "floor1": "/r2/maps/floor1/7a998697.webp",
+        "floor2": "/r2/maps/floor2/8bd0365b.webp",
+        "full": "/r2/maps/full/20a9f472.webp"
+      }
+    },
+    {
+      "id": 20,
+      "direction": "北",
+      "name": "北-凹门",
+      "displayName": "北-凹门",
+      "remarks": "北侧入口，呈现凹字形墙体包围结构",
+      "images": {
+        "entry": "/r2/maps/entry/4e3c34c4.webp",
+        "entryThumb": "/r2/maps/entry-thumb/d8dcee70.webp",
+        "floor1": "/r2/maps/floor1/2e9f2e52.webp",
+        "floor2": "/r2/maps/floor2/04e31649.webp",
+        "full": "/r2/maps/full/585df652.webp"
+      }
+    },
+    {
+      "id": 21,
+      "direction": "北",
+      "name": "北-T门",
+      "displayName": "北-T门",
+      "remarks": "北侧入口，呈现T字形墙体接口",
+      "images": {
+        "entry": "/r2/maps/entry/f4dde24b.webp",
+        "entryThumb": "/r2/maps/entry-thumb/53fe7d0a.webp",
+        "floor1": "/r2/maps/floor1/87d7513c.webp",
+        "floor2": "/r2/maps/floor2/8a8a38dd.webp",
+        "full": "/r2/maps/full/5baef489.webp"
+      }
+    },
+    {
+      "id": 22,
+      "direction": "北",
+      "name": "北-红对角门",
+      "displayName": "北-红对角门",
+      "remarks": "北侧入口，带有红色标识的对角侧门",
+      "images": {
+        "entry": "/r2/maps/entry/5b6161b5.webp",
+        "entryThumb": "/r2/maps/entry-thumb/64147a23.webp",
+        "floor1": "/r2/maps/floor1/887af021.webp",
+        "floor2": "/r2/maps/floor2/031049c7.webp",
+        "full": "/r2/maps/full/92e71ef8.webp"
+      }
+    },
+    {
+      "id": 23,
+      "direction": "北",
+      "name": "北-1沙发门",
+      "displayName": "北-1沙发门（新）",
+      "remarks": "北侧入口，单门通道变体，门内带沙发标志物",
+      "images": {
+        "entry": "/r2/maps/entry/303a22c0.webp",
+        "entryThumb": "/r2/maps/entry-thumb/0b456328.webp",
+        "floor1": "/r2/maps/floor1/504fb727.webp",
+        "floor2": "/r2/maps/floor2/f1914eec.webp",
+        "full": "/r2/maps/full/0f5beec5.webp"
+      }
+    },
+    {
+      "id": 28,
+      "direction": "北",
+      "name": "北-4安全门",
+      "displayName": "北-4安全门（新）",
+      "remarks": "北侧入口，北-4门变体，邻接安全门结构",
+      "images": {
+        "entry": "/r2/maps/entry/8c2f0ed4.webp",
+        "entryThumb": "/r2/maps/entry-thumb/30ddb3b9.webp",
+        "floor1": "/r2/maps/floor1/f8300357.webp",
+        "floor2": "/r2/maps/floor2/ef39de31.webp",
+        "full": "/r2/maps/full/bb4d0fc3.webp"
+      }
+    }
+  ]
+}

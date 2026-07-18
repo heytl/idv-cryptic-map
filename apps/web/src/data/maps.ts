@@ -2,13 +2,22 @@
 // 地图数据访问层：组件只从这里取数据，不直接碰 maps.json / 图片路径。
 //
 // Phase 2（后台管理）数据流：
-//   1) 模块加载时先用打包进产物的 maps.json 同步建好 `maps`（离线 / file:// / 测试兜底）
+//   1) 模块加载时先用打包进产物的兜底数据同步建好 `maps`（离线 / file:// / 测试兜底；
+//      有 Cron 快照 maps.snapshot.json 时优先，否则用 maps.json）
 //   2) main.ts 在挂载前 await initMaps()：fetch 同源 /maps.json（Worker 从 KV 下发，
 //      未接管时为构建期静态快照），成功则原地替换 `maps` 内容——组件零改动
 //   3) 远端数据任何一处不合法都整体丢弃，回退打包数据，绝不带病渲染
 // ==========================================================================
 import { ref } from 'vue';
 import rawData from './maps.json';
+
+// Cron 快照（workers/snapshot.ts 每日回写仓库）存在时优先作打包兜底数据，
+// 让内嵌兜底滞后 ≤1 天；未开通回写（文件不存在）或快照不合法时退回 maps.json。
+// glob 对不存在的文件返回空对象，接线可先于 secrets 开通合入。
+const snapshotModules = import.meta.glob<{ updatedAt?: string; maps?: RemoteMap[] }>(
+  './maps.snapshot.json',
+  { eager: true, import: 'default' },
+);
 
 // 构建期生成 逻辑路径 → 哈希 URL 清单；只有被 maps.json 引用的图片才会进产物
 // entry-thumb 由 scripts/gen-thumbs.mjs 生成（build/dev/test 前置步骤）
@@ -68,7 +77,7 @@ interface RemoteMap {
   };
 }
 
-function toMapItem(m: RemoteMap): MapItem {
+function toMapItem(m: RemoteMap, preferBundled = false): MapItem {
   if (
     typeof m.id !== 'number' ||
     !DIRECTIONS.includes(m.direction) ||
@@ -84,6 +93,19 @@ function toMapItem(m: RemoteMap): MapItem {
     displayName: m.displayName,
     remarks: m.remarks ?? '',
   };
+  // 打包兜底场景优先用产物内的本地图片：快照里的 images 是 /r2 相对 URL，
+  // 离线首访 / Vercel 镜像 / Worker 摘除时均不可达；本地能解析到的一律用本地
+  // （后台换过图会略旧，但可用性优先），只有产物里没有的新图才落到 /r2 URL
+  if (preferBundled && imgUrls[`../assets/maps/entry/${m.name}.webp`]) {
+    return {
+      ...base,
+      entryImg: resolveImg('entry', m.name),
+      entryThumbImg: imgUrls[`../assets/maps/entry-thumb/${m.name}.webp`] ?? resolveImg('entry', m.name),
+      floor1Img: resolveImg('floor1', m.name),
+      floor2Img: resolveImg('floor2', m.name),
+      fullImg: resolveImg('full', m.name),
+    };
+  }
   if (m.images) {
     // KV 时代：图片为 R2 直出的完整 URL（内容哈希文件名，天然缓存穿透）
     const { entry, entryThumb, floor1, floor2, full } = m.images;
@@ -103,11 +125,31 @@ function toMapItem(m: RemoteMap): MapItem {
   };
 }
 
+/** 打包兜底数据：快照优先（按逻辑名优先本地图），不合法整份丢弃退回 maps.json */
+function buildBundled(): { updatedAt: string; items: MapItem[] } {
+  const snapshot = Object.values(snapshotModules)[0];
+  if (snapshot && Array.isArray(snapshot.maps) && snapshot.maps.length > 0) {
+    try {
+      const items = snapshot.maps
+        .filter((m) => m.published !== false && !m.deletedAt)
+        .map((m) => toMapItem(m, true));
+      return {
+        updatedAt: typeof snapshot.updatedAt === 'string' ? snapshot.updatedAt : rawData.updatedAt,
+        items,
+      };
+    } catch {
+      // 快照不合法：退回 maps.json，站点照常可用
+    }
+  }
+  return { updatedAt: rawData.updatedAt, items: (rawData.maps as RemoteMap[]).map((m) => toMapItem(m)) };
+}
+const bundled = buildBundled();
+
 /** 页脚“地图数据更新于”：打包值兜底，initMaps 成功后由 /maps.json 下发值覆盖 */
-export const mapsUpdatedAt = ref<string>(rawData.updatedAt);
+export const mapsUpdatedAt = ref<string>(bundled.updatedAt);
 
 /** 同步可用的打包数据；initMaps 成功后原地替换为线上数据（挂载前完成，组件无感知） */
-export const maps: MapItem[] = (rawData.maps as RemoteMap[]).map(toMapItem);
+export const maps: MapItem[] = bundled.items;
 
 /**
  * 挂载前调用：拉取同源 /maps.json 覆盖打包数据。
@@ -121,7 +163,7 @@ export async function initMaps(): Promise<void> {
     if (!Array.isArray(data.maps) || data.maps.length === 0) return;
     const next = data.maps
       .filter((m) => m.published !== false && !m.deletedAt)
-      .map(toMapItem);
+      .map((m) => toMapItem(m));
     maps.splice(0, maps.length, ...next);
     if (typeof data.updatedAt === 'string') mapsUpdatedAt.value = data.updatedAt;
   } catch {
