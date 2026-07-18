@@ -1,10 +1,36 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 
 const MAPS_JSON = fileURLToPath(new URL('./src/data/maps.json', import.meta.url));
+const MAPS_SNAPSHOT = fileURLToPath(new URL('./src/data/maps.snapshot.json', import.meta.url));
+const MAPS_ASSETS_DIR = fileURLToPath(new URL('./src/assets/maps', import.meta.url));
+
+// 静态 /maps.json 的数据源：Cron 快照存在时优先（滞后 ≤1 天），否则用 maps.json。
+// 快照里的 images 是 /r2 相对 URL，纯静态场景（Vercel 镜像 / Worker 摘除 / vite dev）
+// 不可达——本地资源齐全的记录删掉 images，让前端按逻辑名走产物图；只有产物里
+// 没有的新图保留 /r2 URL。快照不合法时整份退回 maps.json。
+function readMapsJson(): string {
+  if (!existsSync(MAPS_SNAPSHOT)) return readFileSync(MAPS_JSON, 'utf-8');
+  try {
+    const snapshot = JSON.parse(readFileSync(MAPS_SNAPSHOT, 'utf-8')) as {
+      maps?: { name?: string; images?: unknown }[];
+    };
+    if (!Array.isArray(snapshot.maps) || snapshot.maps.length === 0) throw new Error('快照为空');
+    for (const m of snapshot.maps) {
+      const kinds = ['entry', 'floor1', 'floor2', 'full'];
+      if (kinds.every((k) => existsSync(join(MAPS_ASSETS_DIR, k, `${m.name}.webp`)))) {
+        delete m.images;
+      }
+    }
+    return JSON.stringify(snapshot, null, 2) + '\n';
+  } catch {
+    return readFileSync(MAPS_JSON, 'utf-8');
+  }
+}
 
 // 向 dist 输出 /maps.json 静态快照（与打包进 JS 的兜底数据同源）：
 // Worker 未接管或 KV 无数据时，该 URL 由静态资源服务，前端 fetch 路径始终闭环；
@@ -13,13 +39,13 @@ function mapsJsonSnapshot(): Plugin {
   return {
     name: 'maps-json-snapshot',
     generateBundle() {
-      this.emitFile({ type: 'asset', fileName: 'maps.json', source: readFileSync(MAPS_JSON, 'utf-8') });
+      this.emitFile({ type: 'asset', fileName: 'maps.json', source: readMapsJson() });
     },
     configureServer(server) {
       server.middlewares.use('/maps.json', (_req, res) => {
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache');
-        res.end(readFileSync(MAPS_JSON, 'utf-8'));
+        res.end(readMapsJson());
       });
     },
   };
