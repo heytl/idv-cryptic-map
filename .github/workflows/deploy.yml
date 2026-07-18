@@ -1,8 +1,10 @@
 name: Test & Deploy
 
+# 双版本并行期：新版（Worker + 后台）从 feat/admin-backend 部署，旧版仍走 main 的
+# 原有渠道；时机成熟合并后删掉 feat/admin-backend 触发即可
 on:
   push:
-    branches: [main]
+    branches: [main, feat/admin-backend]
   pull_request:
 
 concurrency:
@@ -42,9 +44,9 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: versions upload
 
-      # main：部署生产
+      # 部署分支：部署生产（并行期为 feat/admin-backend；合并后为 main）
       - name: Deploy to Cloudflare Workers
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/admin-backend')
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

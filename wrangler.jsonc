@@ -3,7 +3,7 @@
 // - 生产 KV/R2 绑定待 Phase 2.0 资源开通后填入真实 id（见 docs/ADMIN-BACKEND.md §7）；
 //   未绑定期间 Worker 自动回退静态快照，随时可安全部署
 // - 本地开发用 env.dev + `wrangler dev --env dev --local`（本地模拟存储，id 仅占位）
-// - Cron 快照回写需 secrets：wrangler secret put GITHUB_TOKEN / GITHUB_REPO；未配置时跳过
+// - Cron 快照回写需 secret：wrangler secret put GITHUB_TOKEN（仓库/分支在下方 vars）；未配置时跳过
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "idv-cryptic-map",
@@ -21,6 +21,10 @@
   "vars": {
     // img 子域绑定 R2 后改为 https://img.<domain>；过渡期由本 Worker /r2/* 同源出图
     "IMG_BASE_URL": "/r2",
+    // Cron 快照回写目标（配合 secret GITHUB_TOKEN 生效）；双版本并行期回写到
+    // 部署分支（main 还是旧站结构），合并后删掉 GITHUB_BRANCH 回默认 main
+    "GITHUB_REPO": "heytl/idv-cryptic-map",
+    "GITHUB_BRANCH": "feat/admin-backend",
     // Cloudflare Access（Zero Trust 应用 idv-map-admin，保护 /admin 与 /api）
     "ACCESS_TEAM_DOMAIN": "https://zwdwrg.cloudflareaccess.com",
     "ACCESS_AUD": "4e19758aa55c7ac99c86bd294f3947a4de492b3042272ad38b1318ae10328bee"
