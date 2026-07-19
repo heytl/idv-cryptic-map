@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import OfflineCache from './components/OfflineCache.vue';
 import { mapsUpdatedAt, previewError, previewKey, previewVersion } from './data/maps';
 
 const route = useRoute();
@@ -47,6 +48,11 @@ watchEffect(() => {
         </a>
         <span class="footer-divider">·</span>
         <span class="footer-slogan">本项目开源免费，欢迎 Star 与反馈</span>
+        <!-- 预览历史版本时隐藏：避免把历史图片预热进离线缓存 -->
+        <template v-if="!previewKey">
+          <span class="footer-divider">·</span>
+          <OfflineCache />
+        </template>
       </p>
     </footer>
   </div>
