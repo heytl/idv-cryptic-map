@@ -12,13 +12,16 @@
 import { handleApi, handleR2 } from './api';
 import { requireAuth } from './auth';
 import { runSnapshot } from './snapshot';
-import { CONFIG_KEY, jsonError, type Env, type StoredConfig } from './types';
+import { CONFIG_KEY, jsonError, toPublicConfig, type Env, type StoredConfig } from './types';
 
 export default {
   async fetch(request, env): Promise<Response> {
     const { pathname } = new URL(request.url);
     if (pathname === '/maps.json') return handleMapsJson(request, env);
     if (pathname.startsWith('/r2/')) return handleR2(request, env);
+    // Vercel 统计脚本仅镜像部署存在；这里返回真 404 让 <script> 静默失败，
+    // 避免 SPA fallback 以 200 回 HTML 造成页面 SyntaxError
+    if (pathname.startsWith('/_vercel/')) return new Response(null, { status: 404 });
     if (pathname.startsWith('/api/')) {
       const denied = await requireAuth(request, env);
       return denied ?? handleApi(request, env);
@@ -54,14 +57,5 @@ async function handleMapsJson(request: Request, env: Env): Promise<Response> {
     return new Response(null, { status: 304, headers });
   }
 
-  const body = {
-    version: config.version,
-    updatedAt: config.updatedAt,
-    maps: config.maps
-      .filter((m) => m.published !== false && !m.deletedAt)
-      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
-      // 后台专用字段不下发
-      .map(({ sort: _sort, published: _published, deletedAt: _deletedAt, sourceKey: _sourceKey, ...pub }) => pub),
-  };
-  return new Response(JSON.stringify(body), { headers });
+  return new Response(JSON.stringify(toPublicConfig(config)), { headers });
 }
