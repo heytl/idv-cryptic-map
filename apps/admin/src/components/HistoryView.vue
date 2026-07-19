@@ -46,6 +46,7 @@ async function doRestore(key: string) {
     <div v-for="b in backups" :key="b.key" class="map-card history-row">
       <span class="grow">{{ describe(b.key) }}</span>
       <span class="muted">{{ (b.size / 1024).toFixed(1) }} KB</span>
+      <n-button size="tiny" tag="a" :href="`/?preview=${encodeURIComponent(b.key)}`" target="_blank">预览</n-button>
       <n-popconfirm @positive-click="doRestore(b.key)">
         <template #trigger>
           <n-button size="tiny" :disabled="busy">恢复</n-button>

@@ -151,11 +151,37 @@ export const mapsUpdatedAt = ref<string>(bundled.updatedAt);
 /** 同步可用的打包数据；initMaps 成功后原地替换为线上数据（挂载前完成，组件无感知） */
 export const maps: MapItem[] = bundled.items;
 
+// ---- 历史版本预览（管理员用）----
+// URL 带 ?preview=backups/... 时改拉 /api/preview（Access 保护，须已登录后台）。
+// guard：本模块也在 vitest(node) 里加载，不能在 import 期碰 window。
+export const previewKey =
+  typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('preview') : null;
+/** >0 表示预览数据已就位（值为该备份的版本号） */
+export const previewVersion = ref(0);
+/** 预览加载失败原因；此时页面展示的是当前数据而非历史版本，横幅需明示 */
+export const previewError = ref('');
+
 /**
  * 挂载前调用：拉取同源 /maps.json 覆盖打包数据。
  * 失败（离线、file://、Worker 未接管返回非 JSON、数据不合法）一律静默回退打包数据。
+ * 预览模式改拉 /api/preview，失败时不静默——横幅明确告知看到的不是历史版本。
  */
 export async function initMaps(): Promise<void> {
+  if (previewKey) {
+    try {
+      const res = await fetch(`/api/preview?key=${encodeURIComponent(previewKey)}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status === 401 ? '未登录后台（Access）' : `HTTP ${res.status}`);
+      const data = (await res.json()) as { version?: number; updatedAt?: string; maps?: RemoteMap[] };
+      if (!Array.isArray(data.maps)) throw new Error('备份数据不合法');
+      maps.splice(0, maps.length, ...data.maps.map((m) => toMapItem(m)));
+      if (typeof data.updatedAt === 'string') mapsUpdatedAt.value = data.updatedAt;
+      previewVersion.value = data.version ?? -1;
+    } catch (e) {
+      previewError.value = e instanceof Error ? e.message : '加载失败';
+    }
+    return;
+  }
+
   try {
     const res = await fetch(`${import.meta.env.BASE_URL}maps.json`, { cache: 'no-cache' });
     if (!res.ok) return;
