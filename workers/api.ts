@@ -7,6 +7,7 @@ import {
   KIND_DIR,
   jsonError,
   jsonResponse,
+  toPublicConfig,
   validateMaps,
   type Env,
   type ImgKind,
@@ -30,6 +31,7 @@ export async function handleApi(request: Request, env: Env): Promise<Response> {
   if (pathname === '/api/maps' && request.method === 'PUT') return putMaps(request, env);
   if (pathname === '/api/images' && request.method === 'POST') return postImages(request, env);
   if (pathname === '/api/backups' && request.method === 'GET') return listBackups(env);
+  if (pathname === '/api/preview' && request.method === 'GET') return previewBackup(request, env);
   if (pathname === '/api/restore' && request.method === 'POST') return restoreBackup(request, env);
   return jsonError(404, 'not_found');
 }
@@ -138,6 +140,17 @@ async function writeBackup(env: Env, config: StoredConfig): Promise<void> {
   const keys = list.objects.map((o) => o.key).sort(); // 时间戳前缀，字典序即时间序
   const excess = keys.slice(0, Math.max(0, keys.length - BACKUP_KEEP));
   if (excess.length > 0) await env.MEDIA!.delete(excess);
+}
+
+/** 历史版本预览：读某份备份，套用与 /maps.json 相同的公开转换（前台 ?preview= 用） */
+async function previewBackup(request: Request, env: Env): Promise<Response> {
+  const key = new URL(request.url).searchParams.get('key') ?? '';
+  // 只允许读备份目录，防任意 R2 键探测
+  if (!key.startsWith(BACKUP_PREFIX)) return jsonError(400, 'bad_key');
+  const obj = await env.MEDIA!.get(key);
+  if (!obj) return jsonError(404, 'backup_not_found');
+  const config = (await obj.json()) as StoredConfig;
+  return jsonResponse(toPublicConfig(config), 200, { 'Cache-Control': 'no-store' });
 }
 
 async function listBackups(env: Env): Promise<Response> {

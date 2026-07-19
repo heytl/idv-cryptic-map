@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import { mapsUpdatedAt } from './data/maps';
+import { mapsUpdatedAt, previewError, previewKey, previewVersion } from './data/maps';
 
 const route = useRoute();
 
@@ -14,6 +14,16 @@ watchEffect(() => {
 <template>
   <!-- 提灯光晕背景 -->
   <div class="glow-bg"></div>
+
+  <!-- 历史版本预览横幅（管理员从后台“预览”进入；普通访问不渲染） -->
+  <div v-if="previewKey" class="preview-banner" :class="{ error: previewError }">
+    <template v-if="previewError">历史版本预览加载失败：{{ previewError }}——当前展示的是线上最新数据</template>
+    <template v-else-if="previewVersion > 0">
+      正在预览历史版本 v{{ previewVersion }}（数据更新于 {{ mapsUpdatedAt }}）· 只读，不影响线上
+    </template>
+    <template v-else>历史版本加载中…</template>
+    <a href="/">返回当前版本</a>
+  </div>
 
   <div class="app-container">
     <!-- 头部栏 -->
@@ -41,3 +51,28 @@ watchEffect(() => {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 8px 14px;
+  padding-top: calc(8px + env(safe-area-inset-top));
+  text-align: center;
+  font-size: 13px;
+  background: #3a2f14;
+  color: #e8c576;
+  border-bottom: 1px solid #8a6a2e;
+}
+.preview-banner.error {
+  background: #3a2020;
+  color: #e08a8a;
+  border-bottom-color: #e05d5d;
+}
+.preview-banner a {
+  margin-left: 12px;
+  color: inherit;
+  text-decoration: underline;
+}
+</style>

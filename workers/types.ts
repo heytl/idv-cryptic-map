@@ -95,3 +95,15 @@ export function validateMaps(maps: unknown): string | null {
   }
   return null;
 }
+
+/** /maps.json 与 /api/preview 共用的公开数据形态：过滤草稿/已删、按 sort 排序、剥掉后台字段 */
+export function toPublicConfig(config: StoredConfig): { version: number; updatedAt: string; maps: object[] } {
+  return {
+    version: config.version,
+    updatedAt: config.updatedAt,
+    maps: config.maps
+      .filter((m) => m.published !== false && !m.deletedAt)
+      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+      .map(({ sort: _sort, published: _published, deletedAt: _deletedAt, sourceKey: _sourceKey, ...pub }) => pub),
+  };
+}
