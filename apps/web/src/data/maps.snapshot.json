@@ -1,6 +1,6 @@
 {
-  "version": 6,
-  "updatedAt": "2026-07-10",
+  "version": 7,
+  "updatedAt": "2026-07-19",
   "maps": [
     {
       "id": 1,
@@ -385,7 +385,7 @@
       "direction": "北",
       "name": "北-4安全门",
       "displayName": "北-4安全门（新）",
-      "remarks": "北侧入口，北-4门变体，邻接安全门结构",
+      "remarks": "北侧入口，北-4门变体，邻接安全门结构 New",
       "images": {
         "entry": "/r2/maps/entry/8c2f0ed4.webp",
         "entryThumb": "/r2/maps/entry-thumb/30ddb3b9.webp",
