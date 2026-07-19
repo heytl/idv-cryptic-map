@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // 裁剪工作台：一张原图 → 三个可调框（1楼/2楼/入口）→ 导出 5 张 WebP
 // （entry/entryThumb/floor1/floor2/full，全图由 1楼+2楼 自动纵向合成）
-// 框体拖拽用 Pointer Events + touch-action:none，鼠标/触屏（iPad）通用
+// 框体拖拽逻辑见 cropBox.ts（鼠标/触屏通用）；source 可以是新上传文件或留档原图 Blob
 import { NButton, NCheckbox, NModal, useMessage } from 'naive-ui';
 import { onBeforeUnmount, reactive, ref } from 'vue';
+import { createBoxDrag } from '../cropBox';
 import { composeFull, crop, loadImage, makeThumb, type Rect } from '../imageTools';
 import type { ImgKind } from '../types';
 
-const props = defineProps<{ source: File }>();
+const props = defineProps<{ source: Blob }>();
 const emit = defineEmits<{
   done: [blobs: Partial<Record<ImgKind, Blob>>];
   cancel: [];
@@ -41,54 +42,12 @@ function onImgLoad() {
   Object.assign(boxes.entry, { x: Math.round((natural.w - s) / 2), y: Math.round((natural.h - s) / 2), w: s, h: s });
 }
 
-/** 显示坐标 = 自然坐标 × scale */
-function scale(): number {
-  return imgEl.value ? imgEl.value.clientWidth / natural.w : 1;
-}
-
-function boxStyle(key: BoxKey) {
-  const s = scale();
-  const b = boxes[key];
-  return { left: `${b.x * s}px`, top: `${b.y * s}px`, width: `${b.w * s}px`, height: `${b.h * s}px` };
-}
-
-// 指针拖拽：move（框体）或 resize（右下角手柄）
-let drag: { key: BoxKey; mode: 'move' | 'resize'; startX: number; startY: number; orig: Rect } | null = null;
-
-function onPointerDown(e: PointerEvent, key: BoxKey, mode: 'move' | 'resize') {
-  e.preventDefault();
-  e.stopPropagation();
-  drag = { key, mode, startX: e.clientX, startY: e.clientY, orig: { ...boxes[key] } };
-  window.addEventListener('pointermove', onPointerMove);
-  window.addEventListener('pointerup', onPointerUp, { once: true });
-}
-
-function onPointerMove(e: PointerEvent) {
-  if (!drag) return;
-  const s = scale();
-  const dx = (e.clientX - drag.startX) / s;
-  const dy = (e.clientY - drag.startY) / s;
-  const b = boxes[drag.key];
-  const o = drag.orig;
-  if (drag.mode === 'move') {
-    b.x = clamp(o.x + dx, 0, natural.w - b.w);
-    b.y = clamp(o.y + dy, 0, natural.h - b.h);
-  } else {
-    b.w = clamp(o.w + dx, 40, natural.w - b.x);
-    b.h = drag.key === 'entry' && entryLocked.value ? b.w : clamp(o.h + dy, 40, natural.h - b.y);
-    if (b.y + b.h > natural.h) b.h = natural.h - b.y;
-    if (drag.key === 'entry' && entryLocked.value) b.w = b.h; // 高度被钳制时保持方形
-  }
-}
-
-function onPointerUp() {
-  drag = null;
-  window.removeEventListener('pointermove', onPointerMove);
-}
-
-function clamp(v: number, min: number, max: number): number {
-  return Math.min(Math.max(v, min), Math.max(min, max));
-}
+const { onPointerDown, boxStyle } = createBoxDrag<BoxKey>({
+  boxes,
+  natural: () => natural,
+  scale: () => (imgEl.value ? imgEl.value.clientWidth / natural.w : 1),
+  lockSquare: (key) => key === 'entry' && entryLocked.value,
+});
 
 async function exportAll() {
   exporting.value = true;
