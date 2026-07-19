@@ -13,7 +13,9 @@
     "directory": "./apps/web/dist",
     "not_found_handling": "single-page-application",
     "binding": "ASSETS",
-    "run_worker_first": ["/maps.json", "/api/*", "/r2/*"]
+    // /_vercel/* 进 Worker 返回真 404：index.html 里的 Vercel 统计脚本在本部署
+    // 不存在，若走 SPA fallback 会以 200 回 HTML，触发页面 SyntaxError 噪音
+    "run_worker_first": ["/maps.json", "/api/*", "/r2/*", "/_vercel/*"]
   },
   "triggers": {
     "crons": ["0 4 * * *"]
@@ -42,7 +44,7 @@
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/api/*", "/r2/*"]
+        "run_worker_first": ["/maps.json", "/api/*", "/r2/*", "/_vercel/*"]
       },
       "vars": {
         "IMG_BASE_URL": "/r2",
