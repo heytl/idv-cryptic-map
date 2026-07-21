@@ -361,6 +361,7 @@ const highlightOverlay = document.getElementById("highlight-overlay");
 const mapViewport = document.getElementById("map-viewport");
 const mapWrapper = document.getElementById("map-wrapper");
 const backBtn = document.getElementById("back-btn");
+const appLogo = document.getElementById("app-logo");
 
 // ==========================================================================
 // Hash 路由：#/ 目录页 | #/dir/左 目录页+筛选 | #/map/左-Y门/1 攻略页+楼层
@@ -446,6 +447,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       location.hash = "#/";
     }
+  });
+
+  // 4.1 点击头部标题（Logo）返回手记目录
+  appLogo.addEventListener("click", () => {
+    location.hash = "#/";
   });
 
   // 5. 地图缩放与拖拽初始化
