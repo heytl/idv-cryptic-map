@@ -35,9 +35,14 @@
   "kv_namespaces": [{ "binding": "CONFIG", "id": "d33cc5d1354f441287b216b2c7a96d9f" }],
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
   // 主站自定义域（部署时自动建 DNS 记录）；workers.dev 关闭，避免绕过 Access 的重复入口
+  // 正式域名切换为 idv-map.321666.xyz（原 main 静态站域名，2026-07-21 确定）；
+  // new-map.321666.xyz 暂留作观察期回退入口，确认无误后删掉这条
   "workers_dev": false,
   "preview_urls": true,
-  "routes": [{ "pattern": "new-map.321666.xyz", "custom_domain": true }],
+  "routes": [
+    { "pattern": "idv-map.321666.xyz", "custom_domain": true },
+    { "pattern": "new-map.321666.xyz", "custom_domain": true }
+  ],
   "env": {
     "dev": {
       "assets": {
