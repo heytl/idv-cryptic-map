@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import OfflineCache from './components/OfflineCache.vue';
 import { mapsUpdatedAt, previewError, previewKey, previewVersion } from './data/maps';
 
 const route = useRoute();
+const router = useRouter();
+
+const goHome = () => {
+  router.push('/');
+};
 
 // 旧站通过 body.strategy-view-active 调整整体布局，保持该约定
 watchEffect(() => {
@@ -30,7 +35,7 @@ watchEffect(() => {
     <!-- 头部栏 -->
     <header class="app-header">
       <div class="header-decoration left-deco"></div>
-      <h1 class="app-title"><span class="en-font">CRYPTIC HANDBOOK</span><br>加页手记解密手册</h1>
+      <h1 class="app-title" @click="goHome"><span class="en-font">CRYPTIC HANDBOOK</span><br>加页手记解密手册</h1>
       <div class="header-decoration right-deco"></div>
     </header>
 
