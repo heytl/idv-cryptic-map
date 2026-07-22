@@ -276,8 +276,18 @@ body.strategy-view-active .header-decoration {
   flex-wrap: wrap;
 }
 
+/* 选中态 Tab 数字字号：适当缩小，保持软暖沉稳 */
+.tab-count-num {
+  font-size: 0.82em;
+  opacity: 0.85;
+  font-weight: normal;
+}
+
 /* 哥特风格按钮 */
 .tab-btn, .gothic-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background-color: var(--bg-mid);
   color: var(--gold);
   border: 1px solid var(--gold-dark);
@@ -287,7 +297,7 @@ body.strategy-view-active .header-decoration {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 3px 6px rgba(0,0,0,0.3);
   border-radius: 2px;
   font-size: 0.95rem;
