@@ -22,6 +22,16 @@ const filteredMaps = computed(() =>
   filter.value === 'all' ? maps : maps.filter((m) => m.direction === filter.value),
 );
 
+const directionCounts = computed(() => {
+  const c: Record<string, number> = {
+    all: maps.length,
+  };
+  for (const dir of DIRECTIONS) {
+    c[dir] = maps.filter((m) => m.direction === dir).length;
+  }
+  return c;
+});
+
 // 筛选写入 hash（replace：筛选状态可随刷新还原且不产生历史记录，与旧站一致）
 function setFilter(dir: string) {
   router.replace(dir === 'all' ? '/' : `/dir/${dir}`);
@@ -44,7 +54,7 @@ function setFilter(dir: string) {
         <!-- 方向过滤器 -->
         <div class="tabs-container">
           <div class="tabs-label">侧门入口方向过滤:</div>
-          <DirectionTabs :filter="filter" @change="setFilter" />
+          <DirectionTabs :filter="filter" :counts="directionCounts" @change="setFilter" />
           <DensitySwitch v-model="compact" />
         </div>
 
