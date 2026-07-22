@@ -84,6 +84,7 @@ body {
   color: var(--gold);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
   line-height: 1.3;
+  cursor: pointer;
 }
 
 .app-title span {
