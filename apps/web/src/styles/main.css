@@ -817,12 +817,13 @@ body.strategy-view-active .header-decoration {
 /* 地图悬浮工具栏 */
 .map-floating-controls {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   z-index: 10;
+  transition: top 0.3s ease;
 }
 
 .tool-btn {
@@ -832,21 +833,40 @@ body.strategy-view-active .header-decoration {
   background-color: var(--bg-mid);
   border: 2px solid var(--gold);
   color: var(--gold);
-  font-size: 1.2rem;
-  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0.6;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.tool-btn:hover {
+.tool-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+/* 仅在支持鼠标悬停的设备上触发 :hover 样式，避免移动端点击后持续高亮残留 */
+@media (hover: hover) and (pointer: fine) {
+  .tool-btn:hover {
+    background-color: var(--gold);
+    color: var(--bg-dark);
+    border-color: var(--gold-light);
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.tool-btn:active {
   background-color: var(--gold);
   color: var(--bg-dark);
-  transform: scale(1.05);
+  border-color: var(--gold-light);
+  transform: scale(0.92);
   opacity: 1;
 }
 
@@ -1024,6 +1044,37 @@ body.strategy-view-active .header-decoration {
 
   .map-viewport {
     min-height: 350px; /* 减小视口高度 */
+  }
+
+  /* 移动端地图功能按钮贴边调紧（8px） */
+  .map-floating-controls {
+    top: 8px;
+    right: 8px;
+    gap: 8px;
+  }
+
+  .tool-btn {
+    width: 34px;
+    height: 34px;
+    border-width: 1.5px;
+  }
+
+  .tool-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .fullscreen-close-btn {
+    top: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    line-height: 30px;
+  }
+
+  .map-viewport.in-page-fullscreen .map-floating-controls {
+    top: 48px;
   }
 }
 

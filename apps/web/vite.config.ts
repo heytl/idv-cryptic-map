@@ -58,6 +58,9 @@ export default defineConfig({
     VitePWA({
       // 后台发现新版本自动激活（配合下方 skipWaiting），保证“部署即生效”
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true, // 允许在 pnpm dev 开发模式下调试 PWA 和 Service Worker
+      },
       manifest: {
         name: '加页手记解密手册',
         short_name: '加页手记',
@@ -115,6 +118,7 @@ export default defineConfig({
   ],
   server: {
     port: 5210,
+    host: true, // 监听 0.0.0.0 开启局域网 IP 访问（手机可通过 http://192.168.x.x:5210 调试）
   },
   build: {
     // 禁用小资源 base64 内联：缩略图保持独立文件，

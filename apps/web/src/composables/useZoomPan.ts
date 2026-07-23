@@ -25,6 +25,7 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     x: 0,
     y: 0,
     fitScale: 1, // 当前图片在视口内自适应铺满的基准比例
+    rotation: 0, // 旋转角度 (0, 90, 180, 270)
   });
 
   // 当前地图图片的自然尺寸 (带兜底值)
@@ -32,6 +33,18 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     return {
       width: img.value?.naturalWidth || 900,
       height: img.value?.naturalHeight || 750,
+    };
+  }
+
+  // 获取考虑当前旋转状态后的有效地图尺寸
+  function getEffectiveMapSize() {
+    const { width: mapW, height: mapH } = getMapSize();
+    const isRotated = (state.rotation % 180 !== 0);
+    return {
+      mapW,
+      mapH,
+      effW: isRotated ? mapH : mapW,
+      effH: isRotated ? mapW : mapH,
     };
   }
 
@@ -49,9 +62,9 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     if (!vp) return;
     const viewW = vp.clientWidth;
     const viewH = vp.clientHeight;
-    const { width, height } = getMapSize();
-    const scaledW = width * state.scale;
-    const scaledH = height * state.scale;
+    const { effW, effH } = getEffectiveMapSize();
+    const scaledW = effW * state.scale;
+    const scaledH = effH * state.scale;
 
     if (scaledW <= viewW) {
       state.x = (viewW - scaledW) / 2;
@@ -66,11 +79,31 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     }
   }
 
-  // 应用 transform 到 DOM (统一在此处做边界约束，任何入口都不会越界)
+  // 应用 transform 到 DOM (统一在此处做边界约束与旋转偏移)
   function applyTransform() {
     clampPosition();
     if (wrapper.value) {
-      wrapper.value.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+      const { mapW, mapH } = getEffectiveMapSize();
+      const s = state.scale;
+      const r = state.rotation;
+
+      let offsetX = 0;
+      let offsetY = 0;
+      if (r === 90) {
+        offsetX = mapH * s;
+        offsetY = 0;
+      } else if (r === 180) {
+        offsetX = mapW * s;
+        offsetY = mapH * s;
+      } else if (r === 270) {
+        offsetX = 0;
+        offsetY = mapW * s;
+      }
+
+      const tx = state.x + offsetX;
+      const ty = state.y + offsetY;
+
+      wrapper.value.style.transform = `translate(${tx}px, ${ty}px) scale(${s}) rotate(${r}deg)`;
     }
   }
 
@@ -92,21 +125,45 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, state.scale * factor);
   }
 
-  // 重置平移缩放 (铺满自适应并居中，同时刷新缩放基准比例)
-  function reset() {
+  // 顺时针旋转地图 90 度
+  function rotateMap() {
     const vp = viewport.value;
     if (!vp) return;
+    state.rotation = (state.rotation + 90) % 360;
+
     const viewW = vp.clientWidth;
     const viewH = vp.clientHeight;
-    const { width: mapW, height: mapH } = getMapSize();
+    const { effW, effH } = getEffectiveMapSize();
+
+    // 重新计算在当前旋转方向下的自适应铺满基准
+    state.fitScale = Math.min(viewW / effW, viewH / effH);
+    state.scale = clampScale(state.scale);
+
+    // 水平与垂直居中
+    state.x = (viewW - effW * state.scale) / 2;
+    state.y = (viewH - effH * state.scale) / 2;
+
+    applyTransform();
+  }
+
+  // 重置平移缩放 (铺满自适应并居中，resetRotation 控制是否重置旋转角度)
+  function reset(resetRotation = false) {
+    const vp = viewport.value;
+    if (!vp) return;
+    if (resetRotation) {
+      state.rotation = 0;
+    }
+    const viewW = vp.clientWidth;
+    const viewH = vp.clientHeight;
+    const { effW, effH } = getEffectiveMapSize();
 
     // 选择最限制的轴向比例作为自适应铺满基准
-    state.fitScale = Math.min(viewW / mapW, viewH / mapH);
+    state.fitScale = Math.min(viewW / effW, viewH / effH);
     state.scale = state.fitScale;
 
     // 水平与垂直完全居中对齐
-    state.x = (viewW - mapW * state.scale) / 2;
-    state.y = (viewH - mapH * state.scale) / 2;
+    state.x = (viewW - effW * state.scale) / 2;
+    state.y = (viewH - effH * state.scale) / 2;
 
     applyTransform();
   }
@@ -237,5 +294,5 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
     }
   });
 
-  return { state, reset, zoomByFactor };
+  return { state, reset, rotateMap, zoomByFactor };
 }
