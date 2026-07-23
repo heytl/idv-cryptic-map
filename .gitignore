@@ -9,6 +9,7 @@ Thumbs.db
 # Node dependencies
 node_modules/
 dist/
+dev-dist/
 .svelte-kit/
 .next/
 out/

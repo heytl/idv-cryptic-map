@@ -77,13 +77,49 @@ function onViewportClick(e: MouseEvent) {
     </div>
     <!-- 遮罩图层，制造神秘感 -->
     <div class="vignette-overlay"></div>
-  </div>
 
-  <!-- 地图浮动工具栏 -->
-  <div class="map-floating-controls">
-    <button class="tool-btn zoom-in-btn" title="放大" @click="zoom.zoomByFactor(ZOOM_CONFIG.buttonZoomFactor)"><span class="icon">+</span></button>
-    <button class="tool-btn zoom-out-btn" title="缩小" @click="zoom.zoomByFactor(1 / ZOOM_CONFIG.buttonZoomFactor)"><span class="icon">-</span></button>
-    <button class="tool-btn fullscreen-btn" title="地图全屏" @click="toggleFullscreen"><span class="icon">⤢</span></button>
-    <button class="tool-btn reset-btn" title="重置自适应" @click="zoom.reset()"><span class="icon">⟲</span></button>
+    <!-- 地图浮动工具栏 -->
+    <div class="map-floating-controls">
+      <button class="tool-btn fullscreen-btn" title="全屏查看" aria-label="全屏查看" @click.stop="toggleFullscreen">
+        <svg v-if="!isFullscreen" class="fullscreen-icon-expand" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6"></path>
+          <path d="M9 21H3v-6"></path>
+          <path d="M21 3l-7 7"></path>
+          <path d="M3 21l7-7"></path>
+        </svg>
+        <svg v-else class="fullscreen-icon-compress" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 14h6v6"></path>
+          <path d="M20 10h-6V4"></path>
+          <path d="M14 10l7-7"></path>
+          <path d="M10 14l-7 7"></path>
+        </svg>
+      </button>
+      <button class="tool-btn rotate-btn" title="顺时针旋转 90°" aria-label="顺时针旋转 90°" @click.stop="zoom.rotateMap()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+          <polyline points="21 3 21 8 16 8"></polyline>
+        </svg>
+      </button>
+      <button class="tool-btn reset-btn" title="重置视角与居中" aria-label="重置视角与居中" @click.stop="zoom.reset(true)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9V5a2 2 0 0 1 2-2h4"></path>
+          <path d="M15 3h4a2 2 0 0 1 2 2v4"></path>
+          <path d="M21 15v4a2 2 0 0 1-2 2h-4"></path>
+          <path d="M9 21H5a2 2 0 0 1-2-2v-4"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+      <button class="tool-btn zoom-in-btn" title="放大地图" aria-label="放大地图" @click.stop="zoom.zoomByFactor(ZOOM_CONFIG.buttonZoomFactor)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+      <button class="tool-btn zoom-out-btn" title="缩小地图" aria-label="缩小地图" @click.stop="zoom.zoomByFactor(1 / ZOOM_CONFIG.buttonZoomFactor)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
