@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "updatedAt": "2026-07-19",
+  "version": 8,
+  "updatedAt": "2026-07-25",
   "maps": [
     {
       "id": 1,
@@ -23,8 +23,8 @@
       "displayName": "左-锤子门",
       "remarks": "左侧入口，呈现锤子形状墙体结构",
       "images": {
-        "entry": "/r2/maps/entry/0a14e370.webp",
-        "entryThumb": "/r2/maps/entry-thumb/94d5cc6e.webp",
+        "entry": "/r2/maps/entry/617bc883.webp",
+        "entryThumb": "/r2/maps/entry-thumb/3186bb31.webp",
         "floor1": "/r2/maps/floor1/8a3ddd50.webp",
         "floor2": "/r2/maps/floor2/b350c3f3.webp",
         "full": "/r2/maps/full/18785ff4.webp"
