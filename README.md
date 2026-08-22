@@ -30,7 +30,7 @@ idv-cryptic-map/
 │   │   ├── components/          # 地图视口、楼层切换、方向筛选等组件
 │   │   ├── composables/         # useZoomPan 缩放拖拽交互
 │   │   ├── data/
-│   │   │   ├── maps.json        # ★ 唯一数据源（地图元数据 + 房间坐标 + updatedAt）
+│   │   │   ├── maps.json        # ★ 唯一数据源（地图元数据 + updatedAt）
 │   │   │   └── maps.ts          # 数据访问层（逻辑名 → 构建哈希 URL）
 │   │   ├── assets/maps/         # entry/floor1/floor2/full 各 28 张 webp
 │   │   ├── assets/fonts/        # 子集化后的自托管字体
@@ -38,7 +38,7 @@ idv-cryptic-map/
 │   ├── scripts/
 │   │   ├── gen-thumbs.mjs       # 构建前自动生成目录页缩略图（sharp）
 │   │   ├── subset-fonts.mjs     # 字体子集化（新增文案缺字时重跑）
-│   │   ├── verify-e2e.mjs       # 34 项交互验收（Playwright 驱动本机 Chrome）
+│   │   ├── verify-e2e.mjs       # 31 项交互验收（Playwright 驱动本机 Chrome）
 │   │   └── verify-pwa.mjs       # PWA 离线验收
 │   └── public/                  # _headers 缓存策略 / 图标 / PWA 图标
 ├── maps/                        # 原始图片素材（仅作裁剪源，不参与部署）
@@ -46,8 +46,19 @@ idv-cryptic-map/
 ├── wrangler.jsonc               # Cloudflare Workers 部署配置
 ├── vercel.json                  # Vercel 部署配置（备用镜像）
 ├── .github/workflows/deploy.yml # CI：PR 预览 + main 自动部署
-└── docs/REFACTOR.md             # 重构实施文档（含各阶段验收记录）
+└── docs/                        # 项目文档（见下方「文档」一节）
 ```
+
+---
+
+## 📚 文档
+
+完整文档见 [docs/](docs/README.md)：
+
+* [架构总览](docs/ARCHITECTURE.md) — 技术栈、数据流、缓存与 PWA 机制
+* [后台管理设计](docs/ADMIN-BACKEND.md) — Phase 2：KV/R2/Access 全动态方案（设计定稿，待实施）
+* [运维手册](docs/OPERATIONS.md) — 地图更新、发布与回滚、上线待办
+* [重构实施记录](docs/REFACTOR.md) — Phase 0–7 过程与验收（历史存档）
 
 ---
 
