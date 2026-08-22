@@ -1,6 +1,6 @@
 # 架构总览（当前实现）
 
-> 对应 `refactor/vite` 分支（重构 Phase 0–7 已完成）。重构过程与验收记录见 [REFACTOR.md](REFACTOR.md)；下一阶段后台管理设计见 [ADMIN-BACKEND.md](ADMIN-BACKEND.md)。
+> 文档随 `feat/admin-backend` 分支维护。以下架构为 Vite 重构阶段（Phase 0–7，原 `refactor/vite` 分支）的实现，重构过程与验收记录见 [REFACTOR.md](REFACTOR.md)。**Phase 2 上线后数据层已改为 KV/R2 全动态**（见 [ADMIN-BACKEND.md](ADMIN-BACKEND.md)）——本文件 §2 文件树与 §3「数据流」中 maps.json 相关描述已部分过时，架构变更请以 ADMIN-BACKEND.md 与生产实际为准。
 
 ## 1. 技术栈与部署拓扑
 
@@ -12,13 +12,13 @@
 | 离线 | vite-plugin-pwa（autoUpdate） |
 | 测试 | Vitest 单测 + Playwright 驱动的 E2E/PWA 验收脚本 |
 | 部署 | **Cloudflare Workers 静态资源托管**（主力）+ Vercel（备用镜像） |
-| CI | GitHub Actions：PR → 测试/构建/上传预览版本；push main → `wrangler deploy` |
+| CI | GitHub Actions：PR → 测试/构建/上传预览版本；push `feat/admin-backend` → `wrangler deploy`（并行期新版；旧版 main 由旧 Pages 项目承载） |
 
 ```mermaid
 flowchart LR
   Dev[开发者 git push] --> CI[GitHub Actions<br>pnpm test + build]
   CI -->|PR| PV[Workers 预览 URL]
-  CI -->|main| CF[Cloudflare Workers<br>静态资源托管]
+  CI -->|feat/admin-backend| CF[Cloudflare Workers<br>静态资源托管]
   GH[GitHub 仓库] --> VC[Vercel 备用镜像]
   U((用户)) --> CF
   U -.容灾.-> VC
@@ -33,7 +33,7 @@ idv-cryptic-map/
 │   │                          # verify-e2e（31 项验收）/ verify-pwa（离线 5 项）
 │   ├── public/                # _headers（缓存头）、PWA 图标、图例 icons
 │   └── src/
-│       ├── data/maps.json     # ★ 唯一数据源（地图元数据 + updatedAt）
+│       ├── data/maps.json     # ★ 构建期快照（兜底数据源；线上真源为 KV，见 ADMIN-BACKEND.md）
 │       ├── data/maps.ts       # 数据访问层（未来切 API 的唯一隔离点）
 │       ├── assets/maps/       # entry / entry-thumb(生成) / floor1 / floor2 / full，28×4 webp
 │       ├── assets/fonts/      # 子集化 woff2 ×3（共约 529KB）
@@ -46,9 +46,11 @@ idv-cryptic-map/
 └── .github/workflows/deploy.yml
 ```
 
-`site/` 旧站目录保留至生产切换验证通过后删除（见 OPERATIONS「上线待办」）。
+`site/` 旧站目录已于 2026-08-22 删除（新构建零引用；旧版在 main 分支与旧 Pages 项目保留）。
 
 ## 3. 数据流：单一数据源
+
+> ⚠️ **已过时**：Phase 2 后数据真源为 KV（Worker `GET /maps.json` 动态读取，图片多级/图面 URL 由数据下发），本节的 `import.meta.glob` 静态解析仅描述重构阶段实现，见 [ADMIN-BACKEND.md](ADMIN-BACKEND.md) §3 / §9。
 
 ```mermaid
 flowchart LR
