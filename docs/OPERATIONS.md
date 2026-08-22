@@ -1,6 +1,6 @@
 # 运维手册
 
-> 现行流程（静态架构版）。后台管理（[ADMIN-BACKEND.md](ADMIN-BACKEND.md)）上线后，「地图更新」一节将被网页后台操作取代，其余仍适用。
+> 现行流程。后台管理已上线：日常「改图 / 换图 / 新增」直接在网页后台完成（[ADMIN-BACKEND.md](ADMIN-BACKEND.md)），§1 本地流程仅作应急备用；其余各节仍适用。（2026-08-22 同步）
 
 ## 1. 地图更新流程
 
@@ -22,10 +22,13 @@
 
 ## 2. 分支与发布
 
-| 分支 | 用途 | CI 行为 |
+双版本并行期（2026-07 起，合并时机待定）：
+
+| 分支 | 用途 | 发布渠道 |
 |------|------|---------|
+| feat/admin-backend | **新版生产**：Worker + 后台，`idv-map.321666.xyz` | push 即 test + build + `wrangler deploy` |
+| main | 旧版纯静态站，由旧 Cloudflare Pages 项目承载 | 不走本仓库 CI（main 已无 pnpm workspace） |
 | dev / 功能分支 | 日常开发 | PR 时：test + build + 上传 Workers 预览版本（预览 URL 见 CI 日志） |
-| main | 生产 | push 即 `wrangler deploy` 上线 |
 
 - 合并前在预览 URL 用手机真机过一遍核心交互（缩放拖拽最易回归）。
 - Vercel 镜像跟随仓库自动构建，无需额外操作。
@@ -52,20 +55,23 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 
 按影响面从小到大：
 
-1. **代码问题**：`git revert` 问题提交 → push main 重新部署（几分钟）。
+1. **代码问题**：`git revert` 问题提交 → push `feat/admin-backend` 重新部署（几分钟）。
 2. **急停**：`npx wrangler rollback` 直接回退 Worker 上一版本（不动 git）。
 3. **Service Worker 故障**（缓存坏死难恢复）：vite-plugin-pwa 开 `selfDestroying: true` 发一版自毁 SW，全体用户退回纯在线模式，修复后再关掉。
 4. **切换期兜底**：旧 Cloudflare Pages 项目在观察期内保留，可把域名指回旧站。
 
 ## 6. 上线待办（一次性手动步骤）
 
-- [ ] GitHub repo Secrets：`CLOUDFLARE_API_TOKEN`（Workers 编辑权限）、`CLOUDFLARE_ACCOUNT_ID`
-- [ ] Cloudflare Dashboard：Worker `idv-cryptic-map` 绑定正式域名；打开 **Preview URLs** 开关（PR 预览依赖）
-- [ ] Vercel：确认 `vercel.json` 新构建配置生效、Analytics 正常
-- [ ] 生产切换验证通过后：删除 `site/` 旧目录；旧 Pages 项目观察一段时间后下线
-- [ ] 端到端演练一次「更新即生效」：改一张图 → push → 部署后普通刷新即见新图
+- [x] GitHub repo Secrets：`CLOUDFLARE_API_TOKEN`（Workers 编辑权限）、`CLOUDFLARE_ACCOUNT_ID`（2026-07-19 配置验证，自动部署多次成功）
+- [x] Cloudflare Dashboard：Worker 绑定正式域名 `idv-map.321666.xyz`（2026-07-21）；`new-map.321666.xyz` 暂留回退入口
+- [ ] PR 预览依赖的 Workers **Preview URLs** 开关：如遇 CI 预览 URL 打不开，到 Dashboard 检查
+- [ ] 旧站清理（2026-08-22 建议）：
+  - **删** 本分支 `site/` 目录——26MB、新构建零引用，纯仓库死重；旧版在 main 有完整副本，git 历史亦永存，删之无损；
+  - **留** 旧 Cloudflare Pages 项目——它正承载仍在运行的旧版静态站；
+  - **留** Vercel 项目——注意它若跟随 main 构建则镜像的是旧站（main 的 vercel.json 输出 `site/`），若已切到本分支则是新版静态壳（数据滞后 ≤1 天的降级链路）。两种身份都无持有成本，等旧版退役时一并处理。
+- [x] 端到端演练「更新即生效」：已由后台路径覆盖（2026-07-18 Phase 2 端到端验收通过）
 
-后台管理（Phase 2）相关的待办清单单独维护在 [ADMIN-BACKEND.md §13.4](ADMIN-BACKEND.md#134-尚待验收--待办)，含 Cron secrets、CI secrets、分支合并、后台端到端验收等，此处不重复。
+后台管理（Phase 2）遗留事项的清账记录见 [ADMIN-BACKEND.md §13.4](ADMIN-BACKEND.md)。
 
 ## 7. 已知事项
 

@@ -30,7 +30,7 @@ idv-cryptic-map/
 │   │   ├── components/          # 地图视口、楼层切换、方向筛选等组件
 │   │   ├── composables/         # useZoomPan 缩放拖拽交互
 │   │   ├── data/
-│   │   │   ├── maps.json        # ★ 唯一数据源（地图元数据 + updatedAt）
+│   │   │   ├── maps.json        # ★ 构建期快照（兜底数据源；线上真源为 KV，见 docs/ADMIN-BACKEND.md）
 │   │   │   └── maps.ts          # 数据访问层（逻辑名 → 构建哈希 URL）
 │   │   ├── assets/maps/         # entry/floor1/floor2/full 各 28 张 webp
 │   │   ├── assets/fonts/        # 子集化后的自托管字体
@@ -45,7 +45,7 @@ idv-cryptic-map/
 ├── crop_images.py               # 原图裁剪脚本（输出到 apps/web/src/assets/maps）
 ├── wrangler.jsonc               # Cloudflare Workers 部署配置
 ├── vercel.json                  # Vercel 部署配置（备用镜像）
-├── .github/workflows/deploy.yml # CI：PR 预览 + main 自动部署
+├── .github/workflows/deploy.yml # CI：PR 预览 + 生产分支自动部署
 └── docs/                        # 项目文档（见下方「文档」一节）
 ```
 
@@ -56,7 +56,7 @@ idv-cryptic-map/
 完整文档见 [docs/](docs/README.md)：
 
 * [架构总览](docs/ARCHITECTURE.md) — 技术栈、数据流、缓存与 PWA 机制
-* [后台管理设计](docs/ADMIN-BACKEND.md) — Phase 2：KV/R2/Access 全动态方案（设计定稿，待实施）
+* [后台管理设计](docs/ADMIN-BACKEND.md) — Phase 2：KV/R2/Access 全动态方案（已上线）
 * [运维手册](docs/OPERATIONS.md) — 地图更新、发布与回滚、上线待办
 * [重构实施记录](docs/REFACTOR.md) — Phase 0–7 过程与验收（历史存档）
 

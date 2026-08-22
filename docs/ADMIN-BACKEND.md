@@ -2,7 +2,7 @@
 
 > 2026-07-14/15 逐项确认设计定稿，2026-07-16/17 全部实施并生产验证通过。目标：网页后台管理地图资源与配置，改动**秒级生效**，不依赖本地脚本与 git 操作。
 > 前置阅读：[ARCHITECTURE.md](ARCHITECTURE.md)（当前静态架构）。
-> 代码在 `feat/admin-backend` 分支（已推送远程，未合并 `refactor/vite`/`main`）。生产地址：`https://new-map.321666.xyz/admin/`（临时子域，见 §12 #1）。当前实施状态见 §11；已知遗留见 §13。
+> 代码在 `feat/admin-backend` 分支（新版生产部署分支，与旧版 main 并行运行，暂不合并——用户拍板）。生产地址：`https://idv-map.321666.xyz/admin/`（正式域名，2026-07-21 绑定，原旧站域名；`new-map.321666.xyz` 暂留作观察期回退入口）。当前实施状态见 §11；已知遗留见 §13，上线后迭代见 §14。
 
 ## 1. 路线决策记录
 
@@ -195,7 +195,7 @@ export async function loadMaps(): Promise<MapItem[]> {
 
 | # | 事项 | 默认建议 |
 |---|------|---------|
-| 1 | 主站用根域还是 `map.` 子域；图片子域名 | **已用临时子域上线**：`new-map.321666.xyz`（用户明确后续可改为正式域名/子域，届时同步改 `wrangler.jsonc` 的 `routes`）；图片**未走子域直出**，改为同 Worker `/r2/*` 同源出图（见 §4 实现补充）——img 子域会公开整个 R2 桶（含 `backups/`），且相对 URL 让换域名零成本，主动放弃了原设计里的 `img.<domain>` 方案 |
+| 1 | 主站用根域还是 `map.` 子域；图片子域名 | ✅ **已定**（2026-07-21）：正式域名 `idv-map.321666.xyz`——即原旧站静态域名，由 Worker 接管；此前曾以临时子域 `new-map.321666.xyz` 上线，该子域暂留作观察期回退入口。图片**不走子域直出**，为同 Worker `/r2/*` 同源出图（见 §4 实现补充）——img 子域会公开整个 R2 桶（含 `backups/`），且相对 URL 让换域名零成本，主动放弃了原设计里的 `img.<domain>` 方案 |
 | 2 | 入口小图裁剪框比例 | 现有 28 张 entry 图实测均 ≈1:1（1.00–1.03），**默认锁定 1:1、可手动解锁**，保证目录卡片整齐 |
 | 3 | `maps/` 历史原始素材（~79MB，含 48MB 一图流）是否批量入 R2 `sources/` | **建议入**：此后重新裁剪全程网页操作；额度占用 < 1GB 无压力 |
 
@@ -225,12 +225,29 @@ export async function loadMaps(): Promise<MapItem[]> {
 
 2026-07-17 与用户确认：暂不实施，留作后台加真实路由时的技术债。
 
-### 13.4 尚待验收 / 待办
+### 13.4 遗留待办清账
 
-- `apps/admin` 的编辑保存、裁剪工作台上传、版本历史恢复三条链路尚未在生产环境端到端走过一遍（本地 `wrangler dev --env dev --local` 曾验证通过，生产环境仅验证了登录+列表渲染）
-- `GITHUB_TOKEN`/`GITHUB_REPO` secrets 未配置，Cron 快照回写（§8.2）尚未实际跑过
-- `maps.snapshot.json` 接入打包兜底数据的接线未做
-- CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）未配置，`.github/workflows/deploy.yml` 尚不能自动部署
-- 分支未合并：`feat/admin-backend` 已推送远程，未合入 `refactor/vite`/`main`；`refactor/vite` 本身也未合入 `main`
-- `7c72ce9`（LegendBox 绝对路径 src 导致 Windows vitest 挂掉的独立 fix）待 cherry-pick 回 `refactor/vite`
-- 旧站 `site/` 目录、旧 Cloudflare Pages 项目、Vercel 镜像的去留未决定
+2026-07-17 记录的待办，截至 2026-08-22 全部落定：
+
+| 事项 | 结果 |
+|------|------|
+| 编辑保存 / 裁剪上传 / 版本历史恢复的生产端到端验收 | ✅ 通过（2026-07-18 用户确认，Phase 2 整体验收完成） |
+| `GITHUB_TOKEN`/`GITHUB_REPO` secrets 与 Cron 快照回写（§8.2） | ✅ 07-19 配置并首跑成功，此后每日快照持续运行 |
+| `maps.snapshot.json` 接入打包兜底数据 | ✅ 已接线（468a642） |
+| CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）与自动部署 | ✅ 07-19 配置验证，多次自动部署成功 |
+| 合入 `main` | ⏸️ 用户拍板暂缓：双版本并行部署期间维持现状，非待办 |
+| `7c72ce9`（LegendBox Windows vitest fix）cherry-pick 回 `refactor/vite` | 📜 不再需要——`refactor/vite` 已被本分支取代归档（2026-08-22 拍板） |
+| 旧站 `site/` 目录、旧 Pages 项目、Vercel 镜像去留 | ⏳ 处理建议见 [OPERATIONS.md](OPERATIONS.md) §6 |
+
+## 14. 上线后功能迭代（2026-07-18 ~ 07-23）
+
+Phase 2 验收通过后的增量迭代（完整清单以 git log 为准）：
+
+| 提交 | 内容 |
+|------|------|
+| a34b4da | 绑定正式域名 `idv-map.321666.xyz`（接管原旧站域名），`new-map.` 留作回退入口 |
+| 722c675 | 「离线缓存全部地图」——一键预热，断网全站可用 |
+| a7640cf | 历史版本预览——后台一键用前台直接查看任意备份 |
+| 633d65f | 图片二次裁剪——单图重新框选 + 留档原图重裁 |
+| ceb3067 | `/_vercel/*` 返回真 404，消除前台页面 SyntaxError 噪音 |
+| 6219025 · 93e408f · 98452a0 · f65b11d | 体验打磨：点击 Logo 返回手记目录、方向 Tab 计数、地图旋转继承与触摸按压态、路由跳转滚动重置等 |
