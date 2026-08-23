@@ -13,6 +13,19 @@ function makeRouter() {
 afterEach(() => mapsV2.splice(0, mapsV2.length));
 
 describe('路由与旧链接兼容', () => {
+  it('#/ 默认进入 V2 困难侧门目录', async () => {
+    const r = makeRouter();
+    await r.push('/');
+    expect(r.currentRoute.value.path).toBe('/v2/hard/side');
+    expect(r.currentRoute.value.name).toBe('catalog-v2');
+  });
+
+  it('#/legacy 保留 V1 目录作为观察期回退入口', async () => {
+    const r = makeRouter();
+    await r.push('/legacy');
+    expect(r.currentRoute.value.name).toBe('catalog-legacy');
+  });
+
   it('#/map/左-Y门 直达攻略页', async () => {
     const r = makeRouter();
     await r.push('/map/左-Y门');
@@ -42,7 +55,7 @@ describe('路由与旧链接兼容', () => {
   it('未知地图名兜底回目录', async () => {
     const r = makeRouter();
     await r.push('/map/不存在的门/1');
-    expect(r.currentRoute.value.path).toBe('/');
+    expect(r.currentRoute.value.path).toBe('/legacy');
   });
 
   it('#/dir/北 目录筛选正常进入', async () => {
@@ -54,13 +67,13 @@ describe('路由与旧链接兼容', () => {
   it('直达非法方向回目录（同记录参数变化的兜底在 CatalogView 组件内处理）', async () => {
     const r = makeRouter();
     await r.push('/dir/东');
-    expect(r.currentRoute.value.path).toBe('/');
+    expect(r.currentRoute.value.path).toBe('/legacy');
   });
 
   it('任意未知路径兜底回目录', async () => {
     const r = makeRouter();
     await r.push('/whatever/xx');
-    expect(r.currentRoute.value.path).toBe('/');
+    expect(r.currentRoute.value.path).toBe('/v2/hard/side');
   });
 
   it('V2 地图无楼层段时默认表示全图', async () => {

@@ -15,7 +15,7 @@ const router = useRouter();
 const map = computed(() => findMapByName(route.params.name as string));
 watchEffect(() => {
   if (route.name === 'map' && !map.value) {
-    router.replace('/');
+    router.replace('/legacy');
   }
 });
 
@@ -43,7 +43,7 @@ function goBack() {
   if (navState.enteredFromCatalog) {
     router.back();
   } else {
-    router.push('/');
+    router.push('/legacy');
   }
 }
 </script>

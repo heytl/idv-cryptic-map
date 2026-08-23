@@ -76,13 +76,15 @@ export async function normalizeV2Route(to: RouteLocationNormalized) {
   return true;
 }
 
-// Hash 路由，与旧站格式逐字符兼容：
-//   #/            目录页
+// Hash 路由：默认首页进入 V2，V1 目录保留为显式回退入口；旧分享链接继续兼容：
+//   #/            V2 困难侧门目录页
+//   #/legacy      V1 目录页（观察期回退入口）
 //   #/dir/左      目录页 + 方向筛选
 //   #/map/左-Y门/1 攻略页 + 楼层（全图时省略第三段）
 // 旧分享链接中的地图名可能带“（新）”展示后缀，findMapByName 两种名字都认
 export const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'catalog', component: CatalogView },
+  { path: '/', redirect: '/v2/hard/side' },
+  { path: '/legacy', name: 'catalog-legacy', component: CatalogView },
   { path: '/v2', redirect: '/v2/hard/side' },
   {
     path: '/v2/:mode/:entrance/:filter?',
@@ -101,14 +103,14 @@ export const routes: RouteRecordRaw[] = [
     beforeEnter: (to) =>
       (DIRECTIONS as readonly string[]).includes(to.params.direction as string)
         ? true
-        : { path: '/', replace: true },
+        : { path: '/legacy', replace: true },
   },
   {
     path: '/map/:name/:floor?',
     name: 'map',
     component: StrategyView,
     beforeEnter: (to) =>
-      findMapByName(to.params.name as string) ? true : { path: '/', replace: true },
+      findMapByName(to.params.name as string) ? true : { path: '/legacy', replace: true },
   },
   // 未知路径兜底回目录（与旧站 applyRoute 行为一致）
   { path: '/:pathMatch(.*)*', redirect: '/' },
