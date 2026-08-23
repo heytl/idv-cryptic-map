@@ -1,18 +1,37 @@
 <script setup lang="ts">
-// 单图二次裁剪：对某一张现有图重新框选（只能裁小，不引入新像素）。
+// 单图裁剪：可裁剪当前成品，也可切换到全图重新框选。
 // 入口图默认锁 1:1；导出仍是 WebP，入口图由调用方顺带重生成缩略图。
 import { NButton, NCheckbox, NModal, useMessage } from 'naive-ui';
-import { reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue';
 import { createBoxDrag } from '../cropBox';
 import { crop, loadImage, type Rect } from '../imageTools';
 
-const props = defineProps<{ src: string; label: string; lockSquare?: boolean }>();
+const props = defineProps<{
+  currentSrc?: string | Blob;
+  fullSrc?: string | Blob;
+  initialFull?: boolean;
+  label: string;
+  lockSquare?: boolean;
+}>();
 const emit = defineEmits<{ done: [blob: Blob]; cancel: [] }>();
 
 const message = useMessage();
 const imgEl = ref<HTMLImageElement>();
 const locked = ref(props.lockSquare ?? false);
 const exporting = ref(false);
+const usingFull = ref(props.initialFull ?? !props.currentSrc);
+const currentObjectUrl = props.currentSrc instanceof Blob ? URL.createObjectURL(props.currentSrc) : '';
+const fullObjectUrl = props.fullSrc instanceof Blob ? URL.createObjectURL(props.fullSrc) : '';
+const displaySrc = computed(() => {
+  const value = usingFull.value ? props.fullSrc : props.currentSrc;
+  if (typeof value === 'string') return value;
+  return usingFull.value ? fullObjectUrl : currentObjectUrl;
+});
+const activeSrc = computed(() => usingFull.value ? props.fullSrc : props.currentSrc);
+onBeforeUnmount(() => {
+  if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+  if (fullObjectUrl) URL.revokeObjectURL(fullObjectUrl);
+});
 
 let natural = { w: 0, h: 0 };
 const boxes = reactive<{ box: Rect }>({ box: { x: 0, y: 0, w: 0, h: 0 } });
@@ -49,9 +68,10 @@ const { onPointerDown, boxStyle } = createBoxDrag<'box'>({
 });
 
 async function exportOne() {
+  if (!activeSrc.value) return;
   exporting.value = true;
   try {
-    const img = await loadImage(props.src);
+    const img = await loadImage(activeSrc.value);
     emit('done', await crop(img, boxes.box));
   } catch (e) {
     message.error(e instanceof Error ? e.message : '裁剪失败');
@@ -65,15 +85,24 @@ async function exportOne() {
   <n-modal
     :show="true"
     preset="card"
-    :title="`二次裁剪 · ${label}`"
+    :title="`裁剪 · ${label}`"
     class="workbench-modal"
     :mask-closable="false"
     @update:show="(v: boolean) => v || emit('cancel')"
     @close="emit('cancel')"
   >
-    <p class="muted" style="margin-top: 0">拖动框体调整位置，拖右下角手柄调整大小。只保留框内区域。</p>
+    <p class="muted" style="margin-top: 0">拖动框体调整位置，拖右下角手柄调整大小。</p>
+    <div v-if="fullSrc" class="crop-source-actions">
+      <span class="muted">裁剪来源：</span>
+      <n-button v-if="currentSrc" size="small" :type="usingFull ? 'default' : 'primary'" @click="usingFull = false">
+        当前图片
+      </n-button>
+      <n-button size="small" :type="usingFull ? 'primary' : 'default'" @click="usingFull = true">
+        从全图裁剪
+      </n-button>
+    </div>
     <div class="workbench-stage">
-      <img ref="imgEl" :src="src" alt="待裁剪图" @load="onImgLoad" />
+      <img :key="displaySrc" ref="imgEl" :src="displaySrc" alt="待裁剪图" @load="onImgLoad" />
       <div class="crop-box single" :style="boxStyle('box')" @pointerdown="onPointerDown($event, 'box', 'move')">
         <span class="tag">{{ label }}</span>
         <span class="handle" @pointerdown="onPointerDown($event, 'box', 'resize')"></span>
@@ -84,7 +113,7 @@ async function exportOne() {
       <n-button size="small" @click="initBox">重置框选</n-button>
       <span class="spacer"></span>
       <n-button @click="emit('cancel')">取消</n-button>
-      <n-button type="primary" :loading="exporting" @click="exportOne">裁剪并替换</n-button>
+      <n-button type="primary" :loading="exporting" @click="exportOne">裁剪并保存</n-button>
     </div>
   </n-modal>
 </template>

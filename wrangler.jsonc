@@ -15,7 +15,7 @@
     "binding": "ASSETS",
     // /_vercel/* 进 Worker 返回真 404：index.html 里的 Vercel 统计脚本在本部署
     // 不存在，若走 SPA fallback 会以 200 回 HTML，触发页面 SyntaxError 噪音
-    "run_worker_first": ["/maps.json", "/api/*", "/r2/*", "/_vercel/*"]
+    "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
   },
   "triggers": {
     "crons": ["0 4 * * *"]
@@ -23,8 +23,8 @@
   "vars": {
     // img 子域绑定 R2 后改为 https://img.<domain>；过渡期由本 Worker /r2/* 同源出图
     "IMG_BASE_URL": "/r2",
-    // Cron 快照回写目标（配合 secret GITHUB_TOKEN 生效）；双版本并行期回写到
-    // 部署分支（main 还是旧站结构），合并后删掉 GITHUB_BRANCH 回默认 main
+    // Cron 快照永久回写 Worker 正式分支（配合 secret GITHUB_TOKEN 生效）。
+    // main 专用于静态页面发布，不接收 Worker 后台快照。
     "GITHUB_REPO": "heytl/idv-cryptic-map",
     "GITHUB_BRANCH": "feat/admin-backend",
     // Cloudflare Access（Zero Trust 应用 idv-map-admin，保护 /admin 与 /api）
@@ -45,11 +45,13 @@
   ],
   "env": {
     "dev": {
+      // 本地/开发环境绝不继承生产自定义域，避免误接管正式流量，也保证 request.url 使用本机 Host。
+      "routes": [],
       "assets": {
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/api/*", "/r2/*", "/_vercel/*"]
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
       },
       "vars": {
         "IMG_BASE_URL": "/r2",
@@ -57,6 +59,33 @@
       },
       "kv_namespaces": [{ "binding": "CONFIG", "id": "local-dev-config" }],
       "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media-dev" }]
+    },
+    "v2-preview": {
+      // V2 联机验收环境：独立 Worker、独立 KV、独立 R2，不绑定任何正式域名。
+      "name": "idv-cryptic-map-v2-preview",
+      "workers_dev": true,
+      "preview_urls": false,
+      "routes": [],
+      // 不继承生产每日快照 Cron，避免测试数据触发任何仓库回写。
+      "triggers": { "crons": [] },
+      "assets": {
+        "directory": "./apps/web/dist",
+        "not_found_handling": "single-page-application",
+        "binding": "ASSETS",
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
+      },
+      // 仅测试 Worker 跳过 Access；正式环境仍按顶层 ACCESS_* 配置鉴权。
+      "vars": {
+        "IMG_BASE_URL": "/r2",
+        "DEV_DISABLE_AUTH": "1",
+        // 显式置空生产变量，避免误触仓库回写或正式 Access。
+        "GITHUB_REPO": "",
+        "GITHUB_BRANCH": "",
+        "ACCESS_TEAM_DOMAIN": "",
+        "ACCESS_AUD": ""
+      },
+      "kv_namespaces": [{ "binding": "CONFIG", "id": "064adcb553b64bfc9cf19f34b6f3098e" }],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media-v2-preview" }]
     }
   }
 }

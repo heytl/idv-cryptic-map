@@ -8,12 +8,13 @@ const route = useRoute();
 const router = useRouter();
 
 const goHome = () => {
-  router.push('/');
+  router.push(route.name === 'map-v2' || route.name === 'catalog-v2' ? '/v2' : '/');
 };
 
 // 旧站通过 body.strategy-view-active 调整整体布局，保持该约定
 watchEffect(() => {
-  document.body.classList.toggle('strategy-view-active', route.name === 'map');
+  document.body.classList.toggle('strategy-view-active', route.name === 'map' || route.name === 'map-v2');
+  document.body.classList.toggle('catalog-v2-view-active', route.name === 'catalog-v2');
 });
 </script>
 

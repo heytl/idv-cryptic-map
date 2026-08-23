@@ -1,11 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { routes } from './routes';
+import { mapsV2 } from './data/maps-v2';
+import { normalizeV2Route, routes } from './routes';
 
 // 旧站分享链接兼容是硬约束：hash 段格式为 /map/<名>/<楼层?> 与 /dir/<方向>
 function makeRouter() {
-  return createRouter({ history: createMemoryHistory(), routes });
+  const router = createRouter({ history: createMemoryHistory(), routes });
+  router.beforeEach(normalizeV2Route);
+  return router;
 }
+
+afterEach(() => mapsV2.splice(0, mapsV2.length));
 
 describe('路由与旧链接兼容', () => {
   it('#/map/左-Y门 直达攻略页', async () => {
@@ -56,5 +61,101 @@ describe('路由与旧链接兼容', () => {
     const r = makeRouter();
     await r.push('/whatever/xx');
     expect(r.currentRoute.value.path).toBe('/');
+  });
+
+  it('V2 地图无楼层段时默认表示全图', async () => {
+    mapsV2.push({
+      id: 101,
+      mode: 'nightmare',
+      name: 'nightmare-y',
+      displayName: 'Y门',
+      remarks: '',
+      sort: 10,
+      legacyNames: [],
+      layout: {
+        full: { url: 'https://map.example/full.webp' },
+        basement: { url: 'https://map.example/basement.webp' },
+        floor1: { url: 'https://map.example/floor1.webp' },
+        floor2: { url: 'https://map.example/floor2.webp' },
+      },
+      entrances: [
+        {
+          id: '101-front',
+          type: 'front',
+          typeLabel: '正门',
+          direction: 'north',
+          directionLabel: '北',
+          imageUrl: 'https://map.example/front.webp',
+          thumbUrl: 'https://map.example/front-thumb.webp',
+        },
+      ],
+    });
+    const r = makeRouter();
+    await r.push('/v2/nightmare/front/map/101');
+    expect(r.currentRoute.value.name).toBe('map-v2');
+    expect(r.currentRoute.value.params.floor).toBe('');
+  });
+
+  it('V2 噩梦地下室路由正常保留', async () => {
+    mapsV2.push({
+      id: 101,
+      mode: 'nightmare',
+      name: 'nightmare-y',
+      displayName: 'Y门',
+      remarks: '',
+      sort: 10,
+      legacyNames: [],
+      layout: { full: { url: 'full' }, basement: { url: 'basement' } },
+      entrances: [{ id: '101-upstairs', type: 'upstairs', typeLabel: '二楼门', direction: 'left', directionLabel: '左', imageUrl: 'image', thumbUrl: 'thumb' }],
+    });
+    const r = makeRouter();
+    await r.push('/v2/nightmare/upstairs/map/101/basement');
+    expect(r.currentRoute.value.params.floor).toBe('basement');
+  });
+
+  it('V2 困难正门目录链接自动回到侧门并保留方向', async () => {
+    const r = makeRouter();
+    await r.push('/v2/hard/front/north');
+    expect(r.currentRoute.value.path).toBe('/v2/hard/side/north');
+  });
+
+  it('V2 同一目录页切换到已停用入口时仍自动回到侧门', async () => {
+    const r = makeRouter();
+    await r.push('/v2/nightmare/front');
+    await r.push('/v2/hard/front/north');
+    expect(r.currentRoute.value.path).toBe('/v2/hard/side/north');
+  });
+
+  it('V2 噩梦正门使用通道作为第三级筛选', async () => {
+    const r = makeRouter();
+    await r.push('/v2/nightmare/front/upperLeft');
+    expect(r.currentRoute.value.path).toBe('/v2/nightmare/front/upperLeft');
+    expect(r.currentRoute.value.params.filter).toBe('upperLeft');
+  });
+
+  it('V2 噩梦正门旧方向筛选自动回到全部通道', async () => {
+    const r = makeRouter();
+    await r.push('/v2/nightmare/front/south');
+    expect(r.currentRoute.value.path).toBe('/v2/nightmare/front');
+  });
+
+  it('V2 困难二楼门详情链接自动切换为同地图侧门', async () => {
+    mapsV2.push({
+      id: 102,
+      mode: 'hard',
+      name: 'hard-y',
+      displayName: '困难Y门',
+      remarks: '',
+      sort: 10,
+      legacyNames: [],
+      layout: { full: { url: 'full' }, floor1: { url: 'floor1' }, floor2: { url: 'floor2' } },
+      entrances: [
+        { id: '102-side', type: 'side', typeLabel: '侧门', direction: 'left', directionLabel: '左', imageUrl: 'side', thumbUrl: 'side-thumb' },
+        { id: '102-upstairs', type: 'upstairs', typeLabel: '二楼门', direction: 'left', directionLabel: '左', imageUrl: 'upstairs', thumbUrl: 'upstairs-thumb' },
+      ],
+    });
+    const r = makeRouter();
+    await r.push('/v2/hard/upstairs/map/102/floor2');
+    expect(r.currentRoute.value.path).toBe('/v2/hard/side/map/102/floor2');
   });
 });

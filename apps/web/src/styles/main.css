@@ -121,6 +121,38 @@ body.strategy-view-active .header-decoration {
   margin: 4px auto;
 }
 
+/* V2 目录页：保留原有双语与装饰线，但压缩为紧凑品牌头部。 */
+body.catalog-v2-view-active .app-container {
+  padding-top: 6px;
+}
+
+body.catalog-v2-view-active .app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 6px;
+  padding: 3px 0;
+}
+
+body.catalog-v2-view-active .app-title {
+  font-size: 1.15rem;
+  line-height: 1.12;
+}
+
+body.catalog-v2-view-active .app-title .en-font {
+  display: inline;
+  font-size: 0.62rem;
+  letter-spacing: 1.4px;
+}
+
+body.catalog-v2-view-active .header-decoration {
+  display: block;
+  width: 72px;
+  height: 2px;
+  margin: 0;
+}
+
 /* 视图面板控制 */
 .view-panel {
   display: none;
@@ -201,6 +233,151 @@ body.strategy-view-active .header-decoration {
   padding: 12px;
   border-radius: 4px;
   position: relative; /* 紧凑视图开关的定位锚点 */
+}
+
+.v2-filter-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: rgba(43, 34, 22, 0.05);
+  border-radius: 4px;
+  position: relative;
+}
+
+/* V2 目录筛选：桌面单行展示全部选项，移动端保留方向直达。 */
+#catalog-v2-view .parchment-card {
+  padding: 6px;
+}
+
+#catalog-v2-view .card-inner {
+  padding: 14px;
+}
+
+.v2-filter-toolbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-bottom: 16px;
+  padding: 6px 76px 6px 10px;
+  border: 1px solid rgba(43, 34, 22, 0.14);
+  border-radius: 6px;
+  background: var(--parchment);
+  background: color-mix(in srgb, var(--parchment) 94%, transparent);
+  box-shadow: 0 4px 12px rgba(43, 34, 22, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.v2-filter-segment,
+.v2-segment-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.v2-filter-segment {
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.v2-segment-buttons {
+  gap: 4px;
+}
+
+.v2-filter-label {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  opacity: 0.72;
+}
+
+.v2-filter-divider {
+  flex: 0 0 1px;
+  align-self: stretch;
+  min-height: 28px;
+  background: rgba(43, 34, 22, 0.18);
+}
+
+.v2-filter-toolbar .tab-btn {
+  min-height: 36px;
+  padding: 6px 11px;
+  border-color: var(--gold-dark);
+  border-radius: 2px;
+  background-color: var(--bg-mid);
+  color: var(--gold);
+  font-size: 0.86rem;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.v2-filter-toolbar .tab-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0.04), transparent 65%);
+  pointer-events: none;
+}
+
+.v2-filter-toolbar .tab-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-hover);
+  box-shadow: 0 5px 12px rgba(195, 161, 104, 0.3);
+}
+
+.v2-filter-toolbar .tab-btn.active {
+  border-color: var(--gold);
+  background-color: var(--gold-dark);
+  color: var(--parchment-light);
+  box-shadow: 0 4px 8px rgba(43, 34, 22, 0.35);
+}
+
+.v2-filter-toolbar .tab-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.v2-direction-filter {
+  min-width: 0;
+}
+
+.v2-result-count {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  opacity: 0.68;
+  white-space: nowrap;
+}
+
+.v2-filter-mobile {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.v2-empty {
+  padding: 32px 12px;
+  text-align: center;
+  color: var(--text-dark);
+  opacity: 0.75;
 }
 
 /* 卡片密度切换器：迷你双段滑块开关，设计语言与楼层切换拉杆一致，
@@ -522,6 +699,41 @@ body.strategy-view-active .header-decoration {
 
 .floor-switch.floor-2-active .switch-slider {
   transform: translateX(136px);
+}
+
+.floor-switch-v2 {
+  width: auto;
+  min-width: 210px;
+}
+
+.floor-switch-v2 .switch-btn {
+  flex: 1 0 auto;
+  min-width: 58px;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  font-family: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.floor-switch-v2 .switch-btn.active {
+  background: var(--gold);
+}
+
+.v2-entrance-switch {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.v2-entrance-switch .tab-btn {
+  padding: 5px 10px;
+  font-size: 0.8rem;
 }
 
 /* 详情分栏容器 */
@@ -950,6 +1162,31 @@ body.strategy-view-active .header-decoration {
     margin-bottom: 15px;
   }
 
+  body.catalog-v2-view-active .app-container {
+    padding-top: 6px;
+  }
+
+  body.catalog-v2-view-active .app-header {
+    margin-bottom: 6px;
+    padding: 2px 0;
+  }
+
+  body.catalog-v2-view-active .app-title {
+    font-size: 1rem;
+    line-height: 1.08;
+  }
+
+  body.catalog-v2-view-active .app-title .en-font {
+    font-size: 0.56rem;
+    letter-spacing: 1.1px;
+  }
+
+  body.catalog-v2-view-active .header-decoration {
+    width: 56px;
+    height: 1px;
+    margin: 0;
+  }
+
   body.strategy-view-active .app-header {
     display: none;
   }
@@ -960,6 +1197,153 @@ body.strategy-view-active .header-decoration {
 
   .catalog-intro {
     margin-bottom: 20px;
+  }
+
+  #catalog-v2-view .parchment-card {
+    padding: 4px;
+  }
+
+  #catalog-v2-view .card-inner {
+    padding: 8px;
+  }
+
+  .v2-filter-toolbar {
+    display: grid;
+    grid-template-columns: 62px 1px 78px minmax(4px, 1fr) 60px;
+    grid-template-rows: 36px 36px;
+    gap: 4px;
+    min-height: 80px;
+    margin-bottom: 10px;
+    padding: 4px;
+    border-radius: 5px;
+  }
+
+  .v2-filter-desktop,
+  .v2-result-count {
+    display: none;
+  }
+
+  .v2-filter-mobile {
+    display: block;
+  }
+
+  .v2-compact-select {
+    position: relative;
+  }
+
+  .v2-compact-select::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 9px;
+    width: 6px;
+    height: 6px;
+    margin-top: -5px;
+    border-right: 1.5px solid var(--gold);
+    border-bottom: 1.5px solid var(--gold);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  .v2-compact-select.mode-select {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .v2-mode-divider {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .v2-compact-select.entrance-select {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .v2-compact-select select {
+    width: 100%;
+    height: 36px;
+    padding: 0 22px 0 9px;
+    border: 1px solid var(--gold-dark);
+    border-radius: 2px;
+    background-color: var(--bg-mid);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.04), transparent 65%);
+    color: var(--gold);
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: bold;
+    line-height: 1;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .v2-compact-select select:focus-visible {
+    border-color: var(--gold);
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    box-shadow: 0 5px 12px rgba(195, 161, 104, 0.3);
+  }
+
+  .v2-filter-divider {
+    align-self: center;
+    min-height: 30px;
+  }
+
+  .v2-direction-divider {
+    display: none;
+  }
+
+  .v2-direction-filter {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+  }
+
+  .v2-direction-filter .v2-filter-label {
+    display: none;
+  }
+
+  .v2-direction-buttons {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .v2-filter-toolbar .v2-direction-buttons .tab-btn {
+    flex: 1 1 0;
+    min-width: 30px;
+    min-height: 36px;
+    padding: 6px 2px;
+    font-size: 0.8rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .v2-filter-toolbar .tab-btn:hover {
+    transform: none;
+  }
+
+  .v2-filter-toolbar .tab-btn:active,
+  .v2-compact-select select:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  .v2-filter-toolbar .density-switch {
+    position: relative;
+    top: auto;
+    right: auto;
+    grid-column: 5;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+    display: flex;
+    width: 60px;
+    height: 26px;
+    transform: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   }
 
   .tabs-container {

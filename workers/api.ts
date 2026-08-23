@@ -202,6 +202,7 @@ export async function handleR2(request: Request, env: Env): Promise<Response> {
     headers: {
       'Content-Type': obj.httpMetadata?.contentType ?? 'image/webp',
       'Cache-Control': obj.httpMetadata?.cacheControl ?? 'public, max-age=31536000, immutable',
+      'Access-Control-Allow-Origin': '*',
       ETag: obj.httpEtag,
     },
   });

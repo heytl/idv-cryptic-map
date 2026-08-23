@@ -59,6 +59,7 @@ export interface StoredConfig {
 }
 
 export const CONFIG_KEY = 'config:current';
+/** V1 历史备份沿用原目录，避免现有版本历史和恢复入口失效。 */
 export const BACKUP_PREFIX = 'backups/';
 export const BACKUP_KEEP = 50;
 

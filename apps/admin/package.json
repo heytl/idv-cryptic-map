@@ -8,6 +8,7 @@
     "build": "vue-tsc -b && vite build"
   },
   "dependencies": {
+    "@idv-map/shared": "workspace:*",
     "naive-ui": "^2.44.1",
     "sortablejs": "^1.15.7",
     "vue": "^3.5.0"

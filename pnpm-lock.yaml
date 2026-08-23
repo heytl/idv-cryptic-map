@@ -11,6 +11,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^5.20260715.1
         version: 5.20260715.1
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -20,6 +23,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@idv-map/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       naive-ui:
         specifier: ^2.44.1
         version: 2.44.1(vue@3.5.39(typescript@5.9.3))
@@ -51,6 +57,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@idv-map/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       vue:
         specifier: ^3.5.0
         version: 3.5.39(typescript@5.9.3)
@@ -88,6 +97,15 @@ importers:
       vue-tsc:
         specifier: ^3.0.0
         version: 3.3.7(typescript@5.9.3)
+
+  packages/shared:
+    devDependencies:
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.0
+        version: 4.1.10(@types/node@26.1.1)(vite@7.3.6(@types/node@26.1.1)(terser@5.49.0))
 
 packages:
 

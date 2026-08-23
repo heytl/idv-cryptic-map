@@ -10,6 +10,7 @@
 // - 其余路径按 wrangler.jsonc 的 assets 配置直接走静态资源（不进本代码）
 // ==========================================================================
 import { handleApi, handleR2 } from './api';
+import { handleAdminApiV2, handlePublicMapsV2 } from './api-v2';
 import { requireAuth } from './auth';
 import { runSnapshot } from './snapshot';
 import { CONFIG_KEY, jsonError, toPublicConfig, type Env, type StoredConfig } from './types';
@@ -18,10 +19,17 @@ export default {
   async fetch(request, env): Promise<Response> {
     const { pathname } = new URL(request.url);
     if (pathname === '/maps.json') return handleMapsJson(request, env);
+    if (pathname === '/maps-v2.json' || pathname === '/api/public/v2/maps') {
+      return handlePublicMapsV2(request, env);
+    }
     if (pathname.startsWith('/r2/')) return handleR2(request, env);
     // Vercel 统计脚本仅镜像部署存在；这里返回真 404 让 <script> 静默失败，
     // 避免 SPA fallback 以 200 回 HTML 造成页面 SyntaxError
     if (pathname.startsWith('/_vercel/')) return new Response(null, { status: 404 });
+    if (pathname.startsWith('/api/admin/v2/')) {
+      const denied = await requireAuth(request, env);
+      return denied ?? handleAdminApiV2(request, env);
+    }
     if (pathname.startsWith('/api/')) {
       const denied = await requireAuth(request, env);
       return denied ?? handleApi(request, env);
