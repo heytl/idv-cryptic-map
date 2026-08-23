@@ -15,7 +15,7 @@ const router = useRouter();
 const map = computed(() => findMapByName(route.params.name as string));
 watchEffect(() => {
   if (route.name === 'map' && !map.value) {
-    router.replace('/legacy');
+    router.replace('/v1');
   }
 });
 
@@ -36,14 +36,14 @@ onUnmounted(() => {
 
 // 楼层切换 replace 更新 hash 楼层段，返回键仍一步回目录（与旧站一致）
 function setFloor(f: Floor) {
-  router.replace(`/map/${route.params.name as string}${f === 'full' ? '' : `/${f}`}`);
+  router.replace(`/v1/map/${route.params.name as string}${f === 'full' ? '' : `/${f}`}`);
 }
 
 function goBack() {
   if (navState.enteredFromCatalog) {
     router.back();
   } else {
-    router.push('/legacy');
+    router.push('/v1');
   }
 }
 </script>

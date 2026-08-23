@@ -209,7 +209,7 @@ backups-v2/
 
 ### Worker 正式前台
 
-同源读取 `/api/public/v2/maps`。目录第三级筛选随入口变化：正门显示“全部、左上门、右上门、左右门、三门”，其他入口继续显示方向。入口卡片打开对应 Layout。V2 路由使用稳定 ID；旧 `#/map/左-Y门` 在观察期继续进入 V1 页面，不强制跳转。
+同源读取 `/api/public/v2/maps`。目录第三级筛选随入口变化：正门显示“全部、左上门、右上门、左右门、三门”，其他入口继续显示方向。入口卡片打开对应 Layout。正式前台路径不带版本前缀并使用稳定 ID；V1 统一使用 `#/v1/*`。旧 `#/v2/*`、`#/legacy`、`#/dir/*` 和 `#/map/*` 在观察期自动替换为对应规范地址。
 
 ### main 静态网页
 
@@ -340,7 +340,7 @@ backups-v2/
 
 测试入口：
 
-- 前台：`https://idv-cryptic-map-v2-preview.heytl.workers.dev/?demo=2#/v2/hard/side`
+- 前台：`https://idv-cryptic-map-v2-preview.heytl.workers.dev/#/hard/side`
 - 后台：`https://idv-cryptic-map-v2-preview.heytl.workers.dev/admin/`，进入“V2 开发工作区”编辑。
 - 公开协议（推荐）：`https://idv-cryptic-map-v2-preview.heytl.workers.dev/maps-v2.json`。`/api/public/v2/maps` 返回相同数据，但正式环境的 Cloudflare Access 规则覆盖 `/api/*`，网页、main 静态站和微信小程序统一使用 `/maps-v2.json`，避免要求后台登录。
 
@@ -387,7 +387,7 @@ pnpm exec wrangler deploy --env v2-preview
 ### D. 发版切换
 
 - [x] 单独发布“默认前台进入 V2”的 Worker Web 版本，不与数据迁移放在同一次变更中。
-- [x] 保留 V1 路由和配置作为观察期回退入口：`#/legacy`、`#/dir/*`、`#/map/*`。
+- [x] 保留 V1 路由和配置作为观察期回退入口：规范路径为 `#/v1`、`#/v1/dir/*`、`#/v1/map/*`，旧地址自动兼容跳转。
 - [ ] 更新 `main` 静态网页的正式 V2 API 地址并验证跨域读取；微信小程序不作为本次网页上线阻塞项。
 - [ ] 记录最终 Worker Version、V2 dataVersion、配置指纹和发布时间。
 
@@ -410,4 +410,4 @@ pnpm exec wrangler deploy --env v2-preview
 - 正式迁移备份目录：`migration-backups/2026-08-23/`，包含正式 V1 v8、正式旧 V2 v0、测试 V2 v22 与 v23。
 - Worker 紧急回退：`pnpm exec wrangler versions deploy --env="" 8b4a7767-12dd-42ba-869b-f6194c03b635@100 --message "Rollback V2 migration" --yes`。
 - 数据回退原则：优先保持默认 V1，不删除任何 V1/V2 KV、R2 或测试资源；仅在确认 V2 配置异常时从上述迁移备份恢复 `config:v2:current`。
-- 默认入口切换：`#/` 进入 V2 困难侧门目录；V1 目录保留在 `#/legacy`，旧 `#/dir/*` 与 `#/map/*` 分享链接继续有效。
+- 前台路径规范：`#/` 进入正式困难侧门目录并显示为 `#/hard/side`；正式版不带 `/v2`，V1 统一放在 `#/v1`。旧 `#/v2/*`、`#/legacy`、`#/dir/*` 与 `#/map/*` 分享链接继续有效并自动替换为规范地址。

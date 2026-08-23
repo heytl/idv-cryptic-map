@@ -8,7 +8,7 @@ const router = useRouter();
 
 function open() {
   navState.enteredFromCatalog = true;
-  router.push(`/map/${props.map.name}`);
+  router.push(`/v1/map/${props.map.name}`);
 }
 </script>
 

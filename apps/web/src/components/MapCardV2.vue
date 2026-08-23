@@ -9,7 +9,7 @@ const router = useRouter();
 
 function open() {
   navState.enteredFromCatalog = true;
-  router.push(`/v2/${props.map.mode}/${props.entrance.type}/map/${props.map.id}`);
+  router.push(`/${props.map.mode}/${props.entrance.type}/map/${props.map.id}`);
 }
 </script>
 

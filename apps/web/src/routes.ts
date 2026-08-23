@@ -21,17 +21,17 @@ async function prepareV2Catalog(to: RouteLocationNormalized) {
   const mode = to.params.mode;
   const entrance = to.params.entrance;
   const filter = to.params.filter;
-  if (!isGameMode(mode) || !isEntranceType(entrance)) return { path: '/v2', replace: true };
+  if (!isGameMode(mode) || !isEntranceType(entrance)) return { path: '/', replace: true };
   if (!isEnabledEntranceV2(mode, entrance)) {
     const enabledEntrance = defaultEntranceV2(mode);
     const validFilter = filter && isCatalogFilterV2(enabledEntrance, filter);
     return {
-      path: `/v2/${mode}/${enabledEntrance}${validFilter ? `/${filter as string}` : ''}`,
+      path: `/${mode}/${enabledEntrance}${validFilter ? `/${filter as string}` : ''}`,
       replace: true,
     };
   }
   if (filter && !isCatalogFilterV2(entrance, filter)) {
-    return { path: `/v2/${mode}/${entrance}`, replace: true };
+    return { path: `/${mode}/${entrance}`, replace: true };
   }
   return true;
 }
@@ -42,7 +42,7 @@ async function prepareV2Map(to: RouteLocationNormalized) {
   const entranceType = to.params.entrance;
   const id = Number(to.params.id);
   if (!isGameMode(mode) || !isEntranceType(entranceType) || !Number.isInteger(id)) {
-    return { path: '/v2', replace: true };
+    return { path: '/', replace: true };
   }
   if (!isEnabledEntranceV2(mode, entranceType)) {
     const enabledEntrance = defaultEntranceV2(mode);
@@ -51,17 +51,17 @@ async function prepareV2Map(to: RouteLocationNormalized) {
     const validFloor = floor && (FLOOR_ORDER as readonly string[]).includes(floor as string);
     if (map && findEntranceV2(map, enabledEntrance)) {
       return {
-        path: `/v2/${mode}/${enabledEntrance}/map/${id}${validFloor ? `/${floor as string}` : ''}`,
+        path: `/${mode}/${enabledEntrance}/map/${id}${validFloor ? `/${floor as string}` : ''}`,
         replace: true,
       };
     }
-    return { path: `/v2/${mode}/${enabledEntrance}`, replace: true };
+    return { path: `/${mode}/${enabledEntrance}`, replace: true };
   }
   const map = findMapV2(id, mode);
-  if (!map || !findEntranceV2(map, entranceType)) return { path: `/v2/${mode}/${entranceType}`, replace: true };
+  if (!map || !findEntranceV2(map, entranceType)) return { path: `/${mode}/${entranceType}`, replace: true };
   const floor = to.params.floor;
   if (floor && !(FLOOR_ORDER as readonly string[]).includes(floor as string)) {
-    return { path: `/v2/${mode}/${entranceType}/map/${id}`, replace: true };
+    return { path: `/${mode}/${entranceType}/map/${id}`, replace: true };
   }
   return true;
 }
@@ -76,42 +76,58 @@ export async function normalizeV2Route(to: RouteLocationNormalized) {
   return true;
 }
 
-// Hash 路由：默认首页进入 V2，V1 目录保留为显式回退入口；旧分享链接继续兼容：
-//   #/            V2 困难侧门目录页
-//   #/legacy      V1 目录页（观察期回退入口）
-//   #/dir/左      目录页 + 方向筛选
-//   #/map/左-Y门/1 攻略页 + 楼层（全图时省略第三段）
-// 旧分享链接中的地图名可能带“（新）”展示后缀，findMapByName 两种名字都认
+// Hash 路由：正式版不带版本号，旧版统一放在 /v1；历史 V1/V2 地址自动转到规范地址。
+//   #/hard/side                         正式困难侧门目录
+//   #/nightmare/front/upperLeft         正式噩梦正门 + 通道筛选
+//   #/v1                                V1 目录（观察期回退入口）
+//   #/v1/dir/左                         V1 方向筛选
+//   #/v1/map/左-Y门/1                   V1 攻略页 + 楼层
+// 旧分享链接中的地图名可能带“（新）”展示后缀，findMapByName 两种名字都认。
 export const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/v2/hard/side' },
-  { path: '/legacy', name: 'catalog-legacy', component: CatalogView },
-  { path: '/v2', redirect: '/v2/hard/side' },
+  { path: '/', redirect: '/hard/side' },
+  { path: '/v1', name: 'catalog-v1', component: CatalogView },
   {
-    path: '/v2/:mode/:entrance/:filter?',
-    name: 'catalog-v2',
-    component: CatalogV2View,
-  },
-  {
-    path: '/v2/:mode/:entrance/map/:id/:floor?',
+    path: '/:mode(hard|nightmare)/:entrance(side|front|upstairs)/map/:id/:floor?',
     name: 'map-v2',
     component: StrategyV2View,
   },
   {
-    path: '/dir/:direction',
+    path: '/:mode(hard|nightmare)/:entrance(side|front|upstairs)/:filter?',
+    name: 'catalog-v2',
+    component: CatalogV2View,
+  },
+  {
+    path: '/v1/dir/:direction',
     name: 'catalog-dir',
     component: CatalogView,
     beforeEnter: (to) =>
       (DIRECTIONS as readonly string[]).includes(to.params.direction as string)
         ? true
-        : { path: '/legacy', replace: true },
+        : { path: '/v1', replace: true },
   },
   {
-    path: '/map/:name/:floor?',
+    path: '/v1/map/:name/:floor?',
     name: 'map',
     component: StrategyView,
     beforeEnter: (to) =>
-      findMapByName(to.params.name as string) ? true : { path: '/legacy', replace: true },
+      findMapByName(to.params.name as string)
+        ? true
+        : { path: '/v1', replace: true },
   },
-  // 未知路径兜底回目录（与旧站 applyRoute 行为一致）
+  // 旧 V2 地址：去掉已经成为默认版本的 /v2 前缀。
+  { path: '/v2', redirect: '/hard/side' },
+  {
+    path: '/v2/:mode/:entrance/map/:id/:floor?',
+    redirect: (to) => ({ name: 'map-v2', params: to.params }),
+  },
+  {
+    path: '/v2/:mode/:entrance/:filter?',
+    redirect: (to) => ({ name: 'catalog-v2', params: to.params }),
+  },
+  // 旧 V1 地址：统一补上 /v1，浏览器历史只保留规范地址。
+  { path: '/legacy', redirect: '/v1' },
+  { path: '/dir/:direction', redirect: (to) => ({ name: 'catalog-dir', params: to.params }) },
+  { path: '/map/:name/:floor?', redirect: (to) => ({ name: 'map', params: to.params }) },
+  // 未知路径兜底回正式目录。
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ];

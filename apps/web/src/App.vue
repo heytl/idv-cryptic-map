@@ -8,7 +8,7 @@ const route = useRoute();
 const router = useRouter();
 
 const goHome = () => {
-  router.push(route.name === 'map-v2' || route.name === 'catalog-v2' ? '/v2' : '/');
+  router.push('/');
 };
 
 // 旧站通过 body.strategy-view-active 调整整体布局，保持该约定
