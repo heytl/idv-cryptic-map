@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { routes } from './routes';
+import { normalizeV2Route, routes } from './routes';
 
 export const router = createRouter({
   history: createWebHashHistory(),
@@ -11,3 +11,5 @@ export const router = createRouter({
     return { top: 0, left: 0 };
   },
 });
+
+router.beforeEach(normalizeV2Route);

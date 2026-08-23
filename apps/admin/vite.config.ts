@@ -13,9 +13,10 @@ export default defineConfig({
   server: {
     // 本地联调：UI 走 vite 热更，数据走 wrangler dev（先起 `npx wrangler dev --env dev --local`）
     proxy: {
-      '/api': 'http://localhost:8787',
-      '/maps.json': 'http://localhost:8787',
-      '/r2': 'http://localhost:8787',
+      // 固定 IPv4，避免部分系统把 localhost 解析到 ::1，而 wrangler 只监听 127.0.0.1。
+      '/api': 'http://127.0.0.1:8787',
+      '/maps.json': 'http://127.0.0.1:8787',
+      '/r2': 'http://127.0.0.1:8787',
     },
   },
 });

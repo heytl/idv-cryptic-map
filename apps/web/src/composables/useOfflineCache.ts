@@ -3,11 +3,17 @@
 // 移除了局域网 HTTP 下的硬阻断，即使在手机 192.168.x.x 局域网调试下也可正常触发预热并显示进度。
 import { ref } from 'vue';
 import { maps } from '../data/maps';
+import { mapsV2, mapsV2Version } from '../data/maps-v2';
 
 type Phase = 'idle' | 'running' | 'done' | 'error';
 
 const CONCURRENCY = 3; // 移动端稍微调低并发，避免弱网超时
-const STORAGE_KEY = 'idv_map_offline_cached_ready';
+const LEGACY_STORAGE_KEY = 'idv_map_offline_cached_ready';
+const V2_STORAGE_PREFIX = 'idv_map_offline_cached_v2_';
+
+function storageKey(): string {
+  return mapsV2Version.value > 0 ? `${V2_STORAGE_PREFIX}${mapsV2Version.value}` : LEGACY_STORAGE_KEY;
+}
 
 const phase = ref<Phase>('idle');
 const done = ref(0);
@@ -22,6 +28,15 @@ function allImageUrls(): string[] {
       if (u) urls.add(u);
     }
   }
+  for (const map of mapsV2) {
+    for (const asset of Object.values(map.layout)) {
+      if (asset?.url) urls.add(asset.url);
+    }
+    for (const entrance of map.entrances) {
+      urls.add(entrance.imageUrl);
+      urls.add(entrance.thumbUrl);
+    }
+  }
   return [...urls];
 }
 
@@ -29,7 +44,7 @@ function allImageUrls(): string[] {
 function checkSavedState() {
   if (typeof window === 'undefined') return;
   try {
-    if (localStorage.getItem(STORAGE_KEY) === 'true') {
+    if (localStorage.getItem(storageKey()) === 'true') {
       phase.value = 'done';
       const urls = allImageUrls();
       done.value = urls.length;
@@ -107,10 +122,10 @@ async function warm(): Promise<void> {
   if (failed.value > 0) {
     phase.value = 'error';
     error.value = `${failed.value} 张图片下载失败，请检查网络后重试`;
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    try { localStorage.removeItem(storageKey()); } catch {}
   } else {
     phase.value = 'done';
-    try { localStorage.setItem(STORAGE_KEY, 'true'); } catch {}
+    try { localStorage.setItem(storageKey(), 'true'); } catch {}
   }
 }
 
@@ -129,7 +144,11 @@ async function clear(): Promise<void> {
     // 忽略异常
   }
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+    for (let index = localStorage.length - 1; index >= 0; index--) {
+      const key = localStorage.key(index);
+      if (key?.startsWith(V2_STORAGE_PREFIX)) localStorage.removeItem(key);
+    }
   } catch {
     // 忽略异常
   }

@@ -7,15 +7,31 @@ export interface Rect {
   h: number;
 }
 
+export type V2CropOutput = {
+  full: Blob;
+  floor1: Blob;
+  floor2: Blob;
+  entrance: Blob;
+  entranceThumb: Blob;
+  basement?: Blob;
+};
+
 const WEBP_QUALITY = 0.9;
 export const THUMB_WIDTH = 300;
 
 export function loadImage(src: File | Blob | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const url = typeof src === 'string' ? src : URL.createObjectURL(src);
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error('图片加载失败'));
+    const isObjectUrl = typeof src !== 'string';
+    const url = isObjectUrl ? URL.createObjectURL(src) : src;
+    img.onload = () => {
+      if (isObjectUrl) URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror = () => {
+      if (isObjectUrl) URL.revokeObjectURL(url);
+      reject(new Error('图片加载失败'));
+    };
     img.src = url;
   });
 }

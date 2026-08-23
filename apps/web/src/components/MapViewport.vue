@@ -4,17 +4,19 @@ import type { MapItem } from '../data/maps';
 import type { Floor } from './FloorSwitch.vue';
 import { useZoomPan, ZOOM_CONFIG } from '../composables/useZoomPan';
 
-const props = defineProps<{ map: MapItem; floor: Floor }>();
+const props = defineProps<{ map?: MapItem; floor?: Floor; imageUrl?: string }>();
 
 const viewportEl = ref<HTMLElement | null>(null);
 const wrapperEl = ref<HTMLElement | null>(null);
 const imgEl = ref<HTMLImageElement | null>(null);
 
-const imgUrl = computed(() =>
-  props.floor === '1' ? props.map.floor1Img :
-  props.floor === '2' ? props.map.floor2Img :
-  props.map.fullImg,
-);
+const imgUrl = computed(() => {
+  if (props.imageUrl) return props.imageUrl;
+  if (!props.map) return '';
+  return props.floor === '1' ? props.map.floor1Img :
+    props.floor === '2' ? props.map.floor2Img :
+    props.map.fullImg;
+});
 
 const zoom = useZoomPan({ viewport: viewportEl, wrapper: wrapperEl, img: imgEl });
 

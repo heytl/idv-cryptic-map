@@ -22,16 +22,18 @@
 
 ## 2. 分支与发布
 
-双版本并行期（2026-07 起，合并时机待定）：
+长期分支职责（2026-08-23 确认）：
 
 | 分支 | 用途 | 发布渠道 |
 |------|------|---------|
-| feat/admin-backend | **新版生产**：Worker + 后台，`idv-map.321666.xyz` | push 即 test + build + `wrangler deploy` |
-| main | 旧版纯静态站，由旧 Cloudflare Pages 项目承载 | 不走本仓库 CI（main 已无 pnpm workspace） |
+| feat/admin-backend | **动态版生产**：Worker + 后台 + V2 数据，`idv-map.321666.xyz` | push 即 test + build + `wrangler deploy` |
+| main | 纯静态页面版本，可读取正式公开 V2 接口 | 独立静态发布渠道；不触发 Worker 部署 |
 | dev / 功能分支 | 日常开发 | PR 时：test + build + 上传 Workers 预览版本（预览 URL 见 CI 日志） |
 
-- 合并前在预览 URL 用手机真机过一遍核心交互（缩放拖拽最易回归）。
+- 功能分支合入 `feat/admin-backend` 前，在预览 URL 用手机真机过一遍核心交互（缩放拖拽最易回归）。
 - Vercel 镜像跟随仓库自动构建，无需额外操作。
+
+明确约束：`feat/admin-backend` 不合并到 `main`。`main` 长期保留为静态页面发布分支，仅通过 `VITE_MAP_API_BASE_URL` 读取正式环境的公开 V2 接口。
 
 ## 3. 缓存速查
 
