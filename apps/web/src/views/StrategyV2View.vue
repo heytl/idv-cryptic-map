@@ -27,23 +27,23 @@ const floor = computed<FloorType>(() => {
 const imageUrl = computed(() => map.value?.layout[floor.value]?.url ?? '');
 
 watchEffect(() => {
-  if (route.name === 'map-v2' && (!map.value || !entrance.value)) router.replace('/v2');
+  if (route.name === 'map-v2' && (!map.value || !entrance.value)) router.replace('/');
   if (map.value) document.title = `${map.value.displayName} | ${BASE_TITLE}`;
 });
 onUnmounted(() => { document.title = BASE_TITLE; });
 
 function setFloor(next: FloorType) {
-  const base = `/v2/${mode.value}/${entranceType.value}/map/${map.value!.id}`;
+  const base = `/${mode.value}/${entranceType.value}/map/${map.value!.id}`;
   router.replace(next === DEFAULT_FLOOR ? base : `${base}/${next}`);
 }
 
 function setEntrance(next: EntranceType) {
-  router.replace(`/v2/${mode.value}/${next}/map/${map.value!.id}${floor.value === DEFAULT_FLOOR ? '' : `/${floor.value}`}`);
+  router.replace(`/${mode.value}/${next}/map/${map.value!.id}${floor.value === DEFAULT_FLOOR ? '' : `/${floor.value}`}`);
 }
 
 function goBack() {
   if (navState.enteredFromCatalog) router.back();
-  else router.push(`/v2/${mode.value}/${entranceType.value}`);
+  else router.push(`/${mode.value}/${entranceType.value}`);
 }
 </script>
 

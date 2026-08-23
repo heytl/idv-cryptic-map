@@ -46,7 +46,7 @@ const cards = computed(() => mapsV2
   }));
 
 function navigate(nextMode: GameMode, nextEntrance: EntranceType, nextFilter: CatalogFilterV2 | 'all' = 'all') {
-  router.replace(`/v2/${nextMode}/${nextEntrance}${nextFilter === 'all' ? '' : `/${nextFilter}`}`);
+  router.replace(`/${nextMode}/${nextEntrance}${nextFilter === 'all' ? '' : `/${nextFilter}`}`);
 }
 
 function setMode(nextMode: GameMode) {

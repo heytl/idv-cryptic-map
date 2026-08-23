@@ -34,7 +34,7 @@ const directionCounts = computed(() => {
 
 // 筛选写入 hash（replace：筛选状态可随刷新还原且不产生历史记录，与旧站一致）
 function setFilter(dir: string) {
-  router.replace(dir === 'all' ? '/legacy' : `/dir/${dir}`);
+  router.replace(dir === 'all' ? '/v1' : `/v1/dir/${dir}`);
 }
 </script>
 
