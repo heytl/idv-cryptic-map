@@ -62,7 +62,7 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 3. **指定稳定基线**：`pnpm exec wrangler rollback 2a13463a-9a42-45cf-9ba6-1c2b12f1d50d --message "Rollback to V2.1.0 baseline" --yes`。
 4. **退回 V1 默认首页**：`pnpm exec wrangler rollback 8b4a7767-12dd-42ba-869b-f6194c03b635 --message "Emergency rollback to pre-V2" --yes`。
 5. **Service Worker 故障**（缓存坏死难恢复）：vite-plugin-pwa 开 `selfDestroying: true` 发一版自毁 SW，全体用户退回纯在线模式，修复后再关掉。
-6. **切换期兜底**：旧 Cloudflare Pages 项目在观察期内保留，可把域名指回旧站。
+6. **切换期兜底**：旧 Cloudflare Pages 项目继续保留，必要时可把域名指回旧站；项目只允许 `main` 构建。
 
 生产使用顶层 Wrangler 配置，回滚命令不要添加 `--env v2-preview`。数据问题和代码问题分开处理：Worker 回滚不会改数据；只有确认 `config:v2:current` 损坏时，才从 `backups-v2/` 恢复。
 
@@ -75,6 +75,7 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 - V2 稳定回滚 Worker：`2a13463a-9a42-45cf-9ba6-1c2b12f1d50d`。
 - 正式 V2：v23，41 张有效地图；困难 28，噩梦 13。
 - 正式 V1：v8，28 张地图，继续保留。
+- 正式 V2 基线备份：`backups-v2/snapshot-v23.json`，规范化 SHA-256 为 `812f43db99e81bd652dc66b782966116e7eb50099001966acb74380fe368c62b`。
 
 完整的数据指纹、备份位置和路由清单见 [V2.1.0 正式版本归档](releases/V2.1.0.md)。
 
@@ -85,7 +86,7 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 - [ ] PR 预览依赖的 Workers **Preview URLs** 开关：如遇 CI 预览 URL 打不开，到 Dashboard 检查
 - [ ] 旧站清理（2026-08-22 建议）：
   - **删** 本分支 `site/` 目录——26MB、新构建零引用，纯仓库死重；旧版在 main 有完整副本，git 历史亦永存，删之无损；
-  - **留** 旧 Cloudflare Pages 项目——它正承载仍在运行的旧版静态站；
+  - **留** 旧 Cloudflare Pages 项目——✅ 2026-08-28 已确认生产分支为 `main`，并关闭所有 Preview 分支自动构建；`feat/admin-backend` 不再触发 Pages 红叉；
   - **留** Vercel 项目——注意它若跟随 main 构建则镜像的是旧站（main 的 vercel.json 输出 `site/`），若已切到本分支则是新版静态壳（数据滞后 ≤1 天的降级链路）。两种身份都无持有成本，等旧版退役时一并处理。
 - [x] 端到端演练「更新即生效」：已由后台路径覆盖（2026-07-18 Phase 2 端到端验收通过）
 
@@ -96,4 +97,12 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 - `maps/` 目录（79MB，含 48MB 一图流源图）只做裁图来源，不参与部署。
 - 旧站时代的 88 张废弃 jpg/png 已不进产物（`import.meta.glob` 只打包被引用资源）。
 - 极少数移动浏览器（如 Via）曾出现无视 no-cache 死抱旧资源的问题——新架构下 HTML 是唯一非哈希入口，该风险窗口已收敛到最小；若有残余用户反馈图裂，引导其清一次浏览器缓存即可。
-- 每日快照任务在 2026-08-24 至 2026-08-27 产生了 Git Tree 完全相同的空提交，并触发 CI 重复部署。功能与数据没有变化，后续应单独修复快照内容比较或让 CI 忽略纯快照提交。
+- 2026-08-28 已修复每日快照：只读取正式 V2；中文 GitHub Base64 使用 UTF-8 解码；内容相同不提交；提交带 `[skip ci]`；同一 V2 dataVersion 不重复写 R2。V1 数据与历史备份仍保留，但不再进入每日任务。
+
+## 9. 每日 V2 备份检查
+
+- 执行时间：每天 04:00 UTC（北京时间 12:00）。
+- 正式数据源：仅 `config:v2:current`；任务名应为 `V2 地图配置快照 v<版本>`，不再出现 V1 的 v8。
+- R2：`backups-v2/snapshot-v<版本>.json`，同版本只存在一份定时基线；后台保存产生的时间戳备份继续保留。
+- Git：`apps/web/src/data/maps-v2.snapshot.json`，只有内容变化才提交，且 `[skip ci]` 不触发重复部署。
+- V1：`config:current`、`backups/`、`maps.snapshot.json` 和图片只保留，不再每日备份，也不删除。

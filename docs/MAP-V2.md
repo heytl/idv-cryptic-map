@@ -153,7 +153,7 @@ backups/             V1 历史备份（保持现有路径）
 backups-v2/          V2 备份（避开 V1 的 backups/ 前缀）
 ```
 
-V2 迁移先生成草稿，补齐入口和噩梦地图后才允许发布。观察期内不删除 V1 Key、旧 R2 图片或旧 Worker Version。
+V2 迁移先生成草稿，补齐入口和噩梦地图后才允许发布。观察期内不删除 V1 Key、旧 R2 图片或旧 Worker Version。V2 正式上线后，每日任务只保护 `config:v2:current`；V1 历史数据继续保留但不再产生每日快照。
 
 ## 7. API 契约
 

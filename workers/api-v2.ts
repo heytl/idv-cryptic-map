@@ -155,15 +155,36 @@ async function postImageV2(request: Request, env: Env): Promise<Response> {
   });
 }
 
+async function pruneBackupsV2(env: Env): Promise<void> {
+  const list = await env.MEDIA!.list({ prefix: BACKUP_V2_PREFIX, limit: 1000 });
+  const excess = list.objects
+    .sort((a, b) => a.uploaded.getTime() - b.uploaded.getTime())
+    .slice(0, Math.max(0, list.objects.length - BACKUP_KEEP))
+    .map((object) => object.key);
+  if (excess.length > 0) await env.MEDIA!.delete(excess);
+}
+
 async function writeBackupV2(env: Env, config: MapConfigV2): Promise<void> {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   await env.MEDIA!.put(`${BACKUP_V2_PREFIX}${stamp}-v${config.version}.json`, JSON.stringify(config), {
     httpMetadata: { contentType: 'application/json' },
   });
-  const list = await env.MEDIA!.list({ prefix: BACKUP_V2_PREFIX, limit: 1000 });
-  const keys = list.objects.map((object) => object.key).sort();
-  const excess = keys.slice(0, Math.max(0, keys.length - BACKUP_KEEP));
-  if (excess.length > 0) await env.MEDIA!.delete(excess);
+  await pruneBackupsV2(env);
+}
+
+/**
+ * 每日任务使用固定版本键留档。同一 dataVersion 只写一次，避免地图未变化时
+ * 每天制造重复 R2 对象；后台正常保存仍由 writeBackupV2 保留修改前版本。
+ */
+export async function ensureVersionBackupV2(env: Env, config: MapConfigV2): Promise<string> {
+  const key = `${BACKUP_V2_PREFIX}snapshot-v${config.version}.json`;
+  if (await env.MEDIA!.head(key)) return key;
+  await env.MEDIA!.put(key, JSON.stringify(config), {
+    httpMetadata: { contentType: 'application/json' },
+    customMetadata: { schemaVersion: '2', dataVersion: String(config.version), source: 'scheduled-snapshot' },
+  });
+  await pruneBackupsV2(env);
+  return key;
 }
 
 async function listBackupsV2(env: Env): Promise<Response> {
