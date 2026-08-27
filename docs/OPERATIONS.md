@@ -1,6 +1,6 @@
 # 运维手册
 
-> 现行流程。后台管理已上线：日常「改图 / 换图 / 新增」直接在网页后台完成（[ADMIN-BACKEND.md](ADMIN-BACKEND.md)），§1 本地流程仅作应急备用；其余各节仍适用。（2026-08-22 同步）
+> 现行流程。后台管理与 V2 默认首页均已上线：日常「改图 / 换图 / 新增」直接在网页后台完成（[ADMIN-BACKEND.md](ADMIN-BACKEND.md)），§1 本地流程仅作应急备用；正式版本基线见 [V2.1.0 归档](releases/V2.1.0.md)。（2026-08-27 同步）
 
 ## 1. 地图更新流程
 
@@ -58,11 +58,27 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 按影响面从小到大：
 
 1. **代码问题**：`git revert` 问题提交 → push `feat/admin-backend` 重新部署（几分钟）。
-2. **急停**：`npx wrangler rollback` 直接回退 Worker 上一版本（不动 git）。
-3. **Service Worker 故障**（缓存坏死难恢复）：vite-plugin-pwa 开 `selfDestroying: true` 发一版自毁 SW，全体用户退回纯在线模式，修复后再关掉。
-4. **切换期兜底**：旧 Cloudflare Pages 项目在观察期内保留，可把域名指回旧站。
+2. **急停**：`pnpm exec wrangler rollback --message "Rollback production Worker" --yes` 回退 Worker 上一版本（不动 git、KV 或 R2）。
+3. **指定稳定基线**：`pnpm exec wrangler rollback 2a13463a-9a42-45cf-9ba6-1c2b12f1d50d --message "Rollback to V2.1.0 baseline" --yes`。
+4. **退回 V1 默认首页**：`pnpm exec wrangler rollback 8b4a7767-12dd-42ba-869b-f6194c03b635 --message "Emergency rollback to pre-V2" --yes`。
+5. **Service Worker 故障**（缓存坏死难恢复）：vite-plugin-pwa 开 `selfDestroying: true` 发一版自毁 SW，全体用户退回纯在线模式，修复后再关掉。
+6. **切换期兜底**：旧 Cloudflare Pages 项目在观察期内保留，可把域名指回旧站。
 
-## 6. 上线待办（一次性手动步骤）
+生产使用顶层 Wrangler 配置，回滚命令不要添加 `--env v2-preview`。数据问题和代码问题分开处理：Worker 回滚不会改数据；只有确认 `config:v2:current` 损坏时，才从 `backups-v2/` 恢复。
+
+## 6. 当前正式基线
+
+2026-08-27 归档状态：
+
+- Git 功能基线：`v2.1.0` / `16e9c64`。
+- 当前流量 Worker：`2acc1622-b305-4001-b446-b18f4102da49`，100%。
+- V2 稳定回滚 Worker：`2a13463a-9a42-45cf-9ba6-1c2b12f1d50d`。
+- 正式 V2：v23，41 张有效地图；困难 28，噩梦 13。
+- 正式 V1：v8，28 张地图，继续保留。
+
+完整的数据指纹、备份位置和路由清单见 [V2.1.0 正式版本归档](releases/V2.1.0.md)。
+
+## 7. 上线待办（一次性手动步骤）
 
 - [x] GitHub repo Secrets：`CLOUDFLARE_API_TOKEN`（Workers 编辑权限）、`CLOUDFLARE_ACCOUNT_ID`（2026-07-19 配置验证，自动部署多次成功）
 - [x] Cloudflare Dashboard：Worker 绑定正式域名 `idv-map.321666.xyz`（2026-07-21）；`new-map.321666.xyz` 暂留回退入口
@@ -75,8 +91,9 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 
 后台管理（Phase 2）遗留事项的清账记录见 [ADMIN-BACKEND.md §13.4](ADMIN-BACKEND.md)。
 
-## 7. 已知事项
+## 8. 已知事项
 
 - `maps/` 目录（79MB，含 48MB 一图流源图）只做裁图来源，不参与部署。
 - 旧站时代的 88 张废弃 jpg/png 已不进产物（`import.meta.glob` 只打包被引用资源）。
 - 极少数移动浏览器（如 Via）曾出现无视 no-cache 死抱旧资源的问题——新架构下 HTML 是唯一非哈希入口，该风险窗口已收敛到最小；若有残余用户反馈图裂，引导其清一次浏览器缓存即可。
+- 每日快照任务在 2026-08-24 至 2026-08-27 产生了 Git Tree 完全相同的空提交，并触发 CI 重复部署。功能与数据没有变化，后续应单独修复快照内容比较或让 CI 忽略纯快照提交。
