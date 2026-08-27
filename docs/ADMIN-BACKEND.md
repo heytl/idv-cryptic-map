@@ -22,7 +22,7 @@
 | 版本历史 | git 天然自带 | 需自建备份机制（§8） |
 | Vercel 镜像 | 完整独立 | 降级为静态壳，需快照回写补偿（§8） |
 
-选 B 的代价通过三项补偿设计收回：保存留档可恢复、每日快照回写 git、前端内嵌兜底数据（§8、§9）。
+选 B 的代价通过三项补偿设计收回：保存留档可恢复、每日 V2 快照写入 R2 与 Git、前端缓存/静态兜底数据（§8、§9）。
 
 ## 2. 总体架构
 
@@ -138,7 +138,7 @@ KV 键 `config:current`，单文档：
   },
   "kv_namespaces": [{ "binding": "CONFIG", "id": "<prod>" }],
   "r2_buckets":    [{ "binding": "MEDIA",  "bucket_name": "idv-media" }],
-  "triggers": { "crons": ["0 4 * * *"] },        // 每日快照回写
+  "triggers": { "crons": ["0 4 * * *"] },        // 每日只保护正式 V2
   "env": { "dev": { /* 独立 KV namespace + R2 桶，后台测试不碰生产数据 */ } }
 }
 ```
@@ -148,8 +148,9 @@ KV 键 `config:current`，单文档：
 ## 8. 备份与降级（路线 B 的三项补偿）
 
 1. **保存即留档**：每次 `PUT /api/maps` 前，旧配置写入 R2 `backups/`（保留最近 50 份），后台「版本历史」页一键恢复。
-2. **每日快照回写 git**：Cron 读 KV 配置，内容有变化时经 GitHub API 提交到 `apps/web/src/data/maps.snapshot.json` → 触发 CI 重建 → **Vercel 镜像与前端内嵌兜底数据滞后 ≤ 1 天**。
-3. **可随时退回纯静态**：出问题时从 wrangler 配置摘掉 `main`（或 `run_worker_first`），Worker 退回纯静态托管；前端 fetch `/maps.json` 失败自动回退内嵌快照（§9），站点照常可用。
+2. **每日 V2 双副本**：Cron 只读 `config:v2:current`。先校验整份 V2 配置，再按 dataVersion 写入 R2 `backups-v2/snapshot-v<版本>.json`（同版本只写一次）；Git 内容有变化时提交完整恢复配置到 `apps/web/src/data/maps-v2.snapshot.json`。V1 已冻结，原 `maps.snapshot.json`、`config:current` 和 `backups/` 全部保留但不再每日更新。
+3. **空任务去重**：GitHub Base64 使用 UTF-8 `TextDecoder` 解码后比较，中文内容相同会直接结束；提交名带 `[skip ci]`，避免纯数据快照重复部署 Worker。
+4. **可随时退回纯静态**：出问题时从 wrangler 配置摘掉 `main`（或 `run_worker_first`），Worker 退回纯静态托管；V1 兼容页 fetch `/maps.json` 失败仍可回退冻结快照，V2 已访问设备还可使用 Service Worker 最近缓存。
 
 ## 9. 前端切换点（组件零改动）
 
@@ -187,7 +188,7 @@ export async function loadMaps(): Promise<MapItem[]> {
 | 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、Access 应用（双 IdP + 白名单）、KV/R2 建 prod（**Location Hint 选亚太**，回源跨境延迟最低）、真实绑定 id 填入 wrangler.jsonc | Access 拦截 `/admin` 生效 | ✅ 已完成（2026-07-16，c8d89c6）：`new-map.321666.xyz`、KV `d33cc5d1354f441287b216b2c7a96d9f`、R2 `idv-media`、Access 应用 `idv-map-admin`（OTP + GitHub，白名单）；生产数据迁移完成（140 图、KV v1） |
 | 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本 `scripts/migrate-phase2.mjs`（图哈希命名上传 R2 + 灌 KV，`--local/--remote` 幂等可重跑）；前端 `initMaps()` + 内嵌兜底；PWA 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 | ✅ 代码完成，生产验证通过 |
 | 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 登录、编辑、裁剪上传、发布、版本预览/恢复均已完成生产验收；V2 困难与噩梦管理列表已独立 |
-| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；静态兜底使用最近快照；演练「误删地图 → 后台恢复」 | ✅ Secret、每日快照和打包兜底均已接通；正式恢复只在确认数据损坏时执行，日常演练使用隔离环境 |
+| 2.3 韧性收尾 | V1/V2 保存留档、每日 V2 双副本（04:00 UTC）、恢复演练 | R2/Git 只在 V2 变化时新增；中文内容相同不提交；V1 不再生成每日任务 | ✅ 2026-08-28 已切换为 V2-only，正式 v23 基线写入 `backups-v2/snapshot-v23.json` 并校验 SHA-256 |
 
 回滚原则同 §8.3：任何阶段出问题，摘 Worker 路由即回到当前纯静态架构。
 
@@ -232,8 +233,8 @@ export async function loadMaps(): Promise<MapItem[]> {
 | 事项 | 结果 |
 |------|------|
 | 编辑保存 / 裁剪上传 / 版本历史恢复的生产端到端验收 | ✅ 通过（2026-07-18 用户确认，Phase 2 整体验收完成） |
-| `GITHUB_TOKEN`/`GITHUB_REPO` secrets 与 Cron 快照回写（§8.2） | ✅ 07-19 配置并首跑成功，此后每日快照持续运行 |
-| `maps.snapshot.json` 接入打包兜底数据 | ✅ 已接线（468a642） |
+| `GITHUB_TOKEN`/`GITHUB_REPO` secrets 与 Cron 快照回写（§8.2） | ✅ 07-19 接通；2026-08-28 改为只同步 V2，内容不变不提交 |
+| V1 `maps.snapshot.json` | ✅ 保留为冻结兼容快照，不再每日更新 |
 | CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）与自动部署 | ✅ 07-19 配置验证，多次自动部署成功 |
 | 合入 `main` | ⏸️ 用户拍板暂缓：双版本并行部署期间维持现状，非待办 |
 | `7c72ce9`（LegendBox Windows vitest fix）cherry-pick 回 `refactor/vite` | 📜 不再需要——`refactor/vite` 已被本分支取代归档（2026-08-22 拍板） |

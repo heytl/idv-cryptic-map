@@ -23,7 +23,8 @@ flowchart LR
   CI -->|feat/admin-backend| CF[Cloudflare Worker<br>前台 + 后台 + API]
   CF --> KV[(KV<br>V1 / V2 配置)]
   CF --> R2[(R2<br>图片 / 备份)]
-  Cron[每日快照] --> GH[GitHub 正式分支]
+  Cron[每日 V2 快照] --> R2Backup[(R2 backups-v2)]
+  Cron --> GH[GitHub 正式分支]
   CF --> Cron
   U((用户)) --> CF
   A((管理员)) --> Access[Cloudflare Access]
@@ -39,7 +40,8 @@ idv-cryptic-map/
 │   │                          # verify-e2e（31 项验收）/ verify-pwa（离线 5 项）
 │   ├── public/                # _headers（缓存头）、PWA 图标、图例 icons
 │   └── src/
-│       ├── data/maps.snapshot.json # V1 每日构建期快照
+│       ├── data/maps.snapshot.json # V1 冻结快照（保留，不再每日更新）
+│       ├── data/maps-v2.snapshot.json # V2 完整恢复快照（由 Cron 按内容更新）
 │       ├── data/maps-v2.ts    # V2 公开配置加载和筛选
 │       ├── data/maps.ts       # V1 兼容数据访问层
 │       ├── assets/maps/       # entry / entry-thumb(生成) / floor1 / floor2 / full，28×4 webp
@@ -74,9 +76,11 @@ flowchart LR
 ```
 
 - V1 与 V2 使用不同 KV Key、备份目录和公开协议，V2 保存不会覆盖 V1。
+- V1 已冻结：保留 `config:current`、`backups/`、图片和 Git 快照，但每日任务不再读取或写入 V1。
+- 每日任务只校验 `config:v2:current`；同一 dataVersion 在 R2 只留一份固定版本快照，Git 内容相同时不提交。
 - 后台配置内部只保存 R2 Key，公开接口根据请求域名生成完整图片 URL。
 - 草稿允许逐步录入；发布时 Worker 强制校验模式、楼层和入口完整度。
-- 前台读取失败时使用构建期快照兜底；图片使用内容稳定的 R2 Key 和长期缓存。
+- V1 兼容页读取失败时使用冻结构建快照；V2 使用 NetworkFirst 保留最近成功配置，完整 Git 快照用于审计和人工恢复；图片使用内容稳定的 R2 Key 和长期缓存。
 
 > 历史注记：重构初版曾实现「快速区域指引」（`rooms` 房间坐标 + 高亮聚焦），2026-07-16 经确认无实际使用价值已整体移除（`bf89f7a`），后续后台管理数据模型中也不保留该字段。
 
@@ -122,7 +126,7 @@ V2 使用稳定 ID 路由，V1 和旧分享链接继续兼容：
 
 | 手段 | 覆盖 |
 |------|------|
-| Vitest 36 项 | Shared V2 Schema/发布校验 10 + Web 数据/路由/字体 26 |
+| Vitest 39 项 | Shared V2 Schema/发布校验 10 + Worker V2 快照 3 + Web 数据/路由/字体 26 |
 | `verify-e2e.mjs` 31 项 | Playwright 驱动本机 Chrome，含新旧站截图对照 |
 | `verify-pwa.mjs` 5 项 | 离线可用性 |
 | CI 硬门槛 | test + build 失败即阻断部署 |

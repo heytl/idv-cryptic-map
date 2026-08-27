@@ -6,7 +6,7 @@
 //   回滚路径：摘掉 KV 数据即退回纯静态站，前台不受影响
 // - /api/*：后台管理 API（Access 鉴权，见 auth.ts / api.ts）
 // - /r2/*：R2 同源出图（img 子域绑定前的过渡路径）
-// - Cron：每日配置快照回写 git（snapshot.ts，未配 secrets 时跳过）
+// - Cron：每日只备份 V2 到 R2；内容变化时同步完整 V2 恢复快照到 git
 // - 其余路径按 wrangler.jsonc 的 assets 配置直接走静态资源（不进本代码）
 // ==========================================================================
 import { handleApi, handleR2 } from './api';

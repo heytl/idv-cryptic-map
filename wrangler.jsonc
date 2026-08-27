@@ -3,7 +3,7 @@
 // - 生产 KV/R2 绑定待 Phase 2.0 资源开通后填入真实 id（见 docs/ADMIN-BACKEND.md §7）；
 //   未绑定期间 Worker 自动回退静态快照，随时可安全部署
 // - 本地开发用 env.dev + `wrangler dev --env dev --local`（本地模拟存储，id 仅占位）
-// - Cron 快照回写需 secret：wrangler secret put GITHUB_TOKEN（仓库/分支在下方 vars）；未配置时跳过
+// - Cron 每日备份正式 V2 到 R2；Git 回写另需 GITHUB_TOKEN（未配置时只跳过 Git 副本）
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "idv-cryptic-map",
