@@ -1,8 +1,8 @@
 # 后台管理系统设计（Phase 2，已上线）
 
 > 2026-07-14/15 逐项确认设计定稿，2026-07-16/17 全部实施并生产验证通过。目标：网页后台管理地图资源与配置，改动**秒级生效**，不依赖本地脚本与 git 操作。
-> 前置阅读：[ARCHITECTURE.md](ARCHITECTURE.md)（当前静态架构）。
-> 代码在 `feat/admin-backend` 分支（新版生产部署分支，与旧版 main 并行运行，暂不合并——用户拍板）。生产地址：`https://idv-map.321666.xyz/admin/`（正式域名，2026-07-21 绑定，原旧站域名；`new-map.321666.xyz` 暂留作观察期回退入口）。当前实施状态见 §11；已知遗留见 §13，上线后迭代见 §14。
+> 前置阅读：[ARCHITECTURE.md](ARCHITECTURE.md)（当前架构总览）。
+> 代码在 `feat/admin-backend` 分支，该分支已成为动态 V2、Worker 与后台的正式生产分支；`main` 长期保留为独立静态页面分支，不进行合并。生产地址：`https://idv-map.321666.xyz/admin/`；`new-map.321666.xyz` 暂留作观察期回退入口。正式基线见 [V2.1.0 归档](releases/V2.1.0.md)。
 
 ## 1. 路线决策记录
 
@@ -186,8 +186,8 @@ export async function loadMaps(): Promise<MapItem[]> {
 |------|------|---------|------|
 | 2.0 资源开通 | 域名 zone 接入、Worker 绑定自定义域、Access 应用（双 IdP + 白名单）、KV/R2 建 prod（**Location Hint 选亚太**，回源跨境延迟最低）、真实绑定 id 填入 wrangler.jsonc | Access 拦截 `/admin` 生效 | ✅ 已完成（2026-07-16，c8d89c6）：`new-map.321666.xyz`、KV `d33cc5d1354f441287b216b2c7a96d9f`、R2 `idv-media`、Access 应用 `idv-map-admin`（OTP + GitHub，白名单）；生产数据迁移完成（140 图、KV v1） |
 | 2.1 读路径 + 数据迁移 | Worker `main`（`GET /maps.json` 读 KV）；迁移脚本 `scripts/migrate-phase2.mjs`（图哈希命名上传 R2 + 灌 KV，`--local/--remote` 幂等可重跑）；前端 `initMaps()` + 内嵌兜底；PWA 适配 | 线上数据来自 KV；本地摘掉 Worker 验证回退；改一条 remarks 保存后普通刷新即见效、图片全命中缓存 | ✅ 代码完成，生产验证通过 |
-| 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关/回收站）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 登录 + 列表渲染已用真实 Access 会话在生产实测通过（29 条记录正常显示）；**编辑/裁剪上传/版本历史恢复的端到端验收仍待做**（见 §13 待办） |
-| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC，未配 secrets 自动跳过）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；Vercel 镜像展示快照数据；演练「误删地图 → 后台恢复」 | 🟡 代码完成；`GITHUB_TOKEN`/`GITHUB_REPO` secrets 未配置，Cron 尚未实际跑过；快照文件接入打包兜底的接线待做 |
+| 2.2 后台上线 | `apps/admin`（构建到 `dist/admin`，同 Worker 部署）：列表（筛选/拖拽排序/发布开关）、编辑 + 裁剪工作台、版本历史；`/api/*` 全套 + Access JWT 校验（Worker 内二次验签，dev 可关） | 手机端完整走一遍：新增草稿 → 裁图上传 → 发布 → 换图 → 恢复历史版本 | ✅ 登录、编辑、裁剪上传、发布、版本预览/恢复均已完成生产验收；V2 困难与噩梦管理列表已独立 |
+| 2.3 韧性收尾 | 保存留档（R2 backups/ 保留 50 份）、Cron 快照回写（每日 04:00 UTC）、Vercel 镜像验证、恢复演练一次 | git 里出现快照提交；静态兜底使用最近快照；演练「误删地图 → 后台恢复」 | ✅ Secret、每日快照和打包兜底均已接通；正式恢复只在确认数据损坏时执行，日常演练使用隔离环境 |
 
 回滚原则同 §8.3：任何阶段出问题，摘 Worker 路由即回到当前纯静态架构。
 
@@ -237,7 +237,7 @@ export async function loadMaps(): Promise<MapItem[]> {
 | CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）与自动部署 | ✅ 07-19 配置验证，多次自动部署成功 |
 | 合入 `main` | ⏸️ 用户拍板暂缓：双版本并行部署期间维持现状，非待办 |
 | `7c72ce9`（LegendBox Windows vitest fix）cherry-pick 回 `refactor/vite` | 📜 不再需要——`refactor/vite` 已被本分支取代归档（2026-08-22 拍板） |
-| 旧站 `site/` 目录、旧 Pages 项目、Vercel 镜像去留 | ⏳ 处理建议见 [OPERATIONS.md](OPERATIONS.md) §6 |
+| 旧站 `site/` 目录、旧 Pages 项目、Vercel 镜像去留 | ⏳ 处理建议见 [OPERATIONS.md](OPERATIONS.md) §7 |
 
 ## 14. 上线后功能迭代（2026-07-18 ~ 07-23）
 
