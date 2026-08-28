@@ -1,0 +1,2283 @@
+{
+  "schemaVersion": 2,
+  "version": 23,
+  "updatedAt": "2026-08-23",
+  "maps": [
+    {
+      "id": 1,
+      "mode": "hard",
+      "name": "左-Y门",
+      "displayName": "左-Y门",
+      "remarks": "左侧入口，呈现Y字形墙体结构",
+      "sort": 10,
+      "published": true,
+      "legacyNames": [
+        "左-Y门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/64e33f48.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/56f5d9ff.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/9b0b993f.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "1-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/1a38704b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ebc109da.webp"
+          }
+        },
+        {
+          "id": "1-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/e816ab24.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d905094b.webp"
+          }
+        },
+        {
+          "id": "1-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/d660d068.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/98a3408d.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "mode": "hard",
+      "name": "左-锤子门",
+      "displayName": "左-锤子门",
+      "remarks": "左侧入口，呈现锤子形状墙体结构",
+      "sort": 20,
+      "published": true,
+      "legacyNames": [
+        "左-锤子门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/18785ff4.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/8a3ddd50.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/b350c3f3.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "2-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/617bc883.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3186bb31.webp"
+          }
+        },
+        {
+          "id": "2-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/617bc883.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3186bb31.webp"
+          }
+        },
+        {
+          "id": "2-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/617bc883.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3186bb31.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "mode": "hard",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "左侧入口，呈现倒T字形墙体结构",
+      "sort": 30,
+      "published": true,
+      "legacyNames": [
+        "左-倒T门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/b260897e.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/67137475.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/0757dfa6.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "3-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/aa7674c6.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c8d3e66d.webp"
+          }
+        },
+        {
+          "id": "3-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/aa7674c6.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c8d3e66d.webp"
+          }
+        },
+        {
+          "id": "3-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/aa7674c6.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c8d3e66d.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "mode": "hard",
+      "name": "左-对角门",
+      "displayName": "左-对角门",
+      "remarks": "左侧入口，呈现对角线墙体结构",
+      "sort": 40,
+      "published": true,
+      "legacyNames": [
+        "左-对角门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/9c4e2ec5.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/a632573c.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/e4fe8db9.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "4-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/6c221dd3.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ffd17584.webp"
+          }
+        },
+        {
+          "id": "4-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/6c221dd3.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ffd17584.webp"
+          }
+        },
+        {
+          "id": "4-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/6c221dd3.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ffd17584.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "mode": "hard",
+      "name": "左-音叉门",
+      "displayName": "左-音叉门",
+      "remarks": "左侧入口，呈现音叉状对称墙体结构",
+      "sort": 50,
+      "published": true,
+      "legacyNames": [
+        "左-音叉门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/33eda373.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/24ab1a40.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/5003b538.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "5-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/b0d66966.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b2a20c63.webp"
+          }
+        },
+        {
+          "id": "5-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/b0d66966.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b2a20c63.webp"
+          }
+        },
+        {
+          "id": "5-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/b0d66966.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b2a20c63.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "mode": "hard",
+      "name": "左-罐子门",
+      "displayName": "左-罐子门",
+      "remarks": "左侧入口，呈现罐子状墙体结构",
+      "sort": 60,
+      "published": true,
+      "legacyNames": [
+        "左-罐子门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/e36561e5.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/d0ae5686.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/50023234.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "6-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/a22fd2f1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7f6e6b37.webp"
+          }
+        },
+        {
+          "id": "6-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/a22fd2f1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7f6e6b37.webp"
+          }
+        },
+        {
+          "id": "6-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/a22fd2f1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7f6e6b37.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "mode": "hard",
+      "name": "左-对T门",
+      "displayName": "左-对T门",
+      "remarks": "左侧入口，呈现两个相对的T形墙体结构",
+      "sort": 70,
+      "published": true,
+      "legacyNames": [
+        "左-对T门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/6448e9c7.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/0aa78555.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/56671c86.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "7-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/62ef6248.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b9f7ca48.webp"
+          }
+        },
+        {
+          "id": "7-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/62ef6248.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b9f7ca48.webp"
+          }
+        },
+        {
+          "id": "7-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/62ef6248.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b9f7ca48.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "mode": "hard",
+      "name": "左-Y青蛙房",
+      "displayName": "左-Y青蛙房（新）",
+      "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构",
+      "sort": 80,
+      "published": true,
+      "legacyNames": [
+        "左-Y青蛙房",
+        "左-Y青蛙房（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/80e6eaa9.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/35dbb8a7.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/71a750d2.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "24-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/39ecc8e1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/315e6e68.webp"
+          }
+        },
+        {
+          "id": "24-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/39ecc8e1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/315e6e68.webp"
+          }
+        },
+        {
+          "id": "24-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/39ecc8e1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/315e6e68.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "mode": "hard",
+      "name": "左-锤灯笼门",
+      "displayName": "左-锤灯笼门（新）",
+      "remarks": "左侧入口，锤子形通道与灯笼状墙体组合结构",
+      "sort": 90,
+      "published": true,
+      "legacyNames": [
+        "左-锤灯笼门",
+        "左-锤灯笼门（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/42ba933c.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/820a3560.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/0359e116.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "27-side",
+          "type": "side",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/ea7a76be.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/9f30b845.webp"
+          }
+        },
+        {
+          "id": "27-front",
+          "type": "front",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/ea7a76be.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/9f30b845.webp"
+          }
+        },
+        {
+          "id": "27-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/ea7a76be.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/9f30b845.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "mode": "hard",
+      "name": "右-左上右下门",
+      "displayName": "右-左上右下门",
+      "remarks": "右侧入口，左上及右下方向的侧门结构",
+      "sort": 100,
+      "published": true,
+      "legacyNames": [
+        "右-左上右下门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/68459dc4.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/f40edc9d.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8b5dcf9e.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "8-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/c6f9ca1c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6bdfd5f6.webp"
+          }
+        },
+        {
+          "id": "8-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/c6f9ca1c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6bdfd5f6.webp"
+          }
+        },
+        {
+          "id": "8-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/c6f9ca1c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6bdfd5f6.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "mode": "hard",
+      "name": "右-双L门",
+      "displayName": "右-双L门",
+      "remarks": "右侧入口，呈现双L型拐角墙体结构",
+      "sort": 110,
+      "published": true,
+      "legacyNames": [
+        "右-双L门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/775803ce.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/f3b84407.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/31f38ebf.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "9-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/e4896fd1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/99938da8.webp"
+          }
+        },
+        {
+          "id": "9-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/e4896fd1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/99938da8.webp"
+          }
+        },
+        {
+          "id": "9-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/e4896fd1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/99938da8.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "mode": "hard",
+      "name": "右-锤子门",
+      "displayName": "右-锤子门",
+      "remarks": "右侧入口，呈现锤子形状墙体结构",
+      "sort": 120,
+      "published": true,
+      "legacyNames": [
+        "右-锤子门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/1062a6d1.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/9633dbe6.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/b2b4b334.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "10-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/72dabbb1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/32b9d20a.webp"
+          }
+        },
+        {
+          "id": "10-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/72dabbb1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/32b9d20a.webp"
+          }
+        },
+        {
+          "id": "10-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/72dabbb1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/32b9d20a.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "mode": "hard",
+      "name": "右-骑士门",
+      "displayName": "右-骑士门",
+      "remarks": "右侧入口，墙体轮廓形似骑士棋子",
+      "sort": 130,
+      "published": true,
+      "legacyNames": [
+        "右-骑士门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/73a85e21.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/140beddf.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/023ebd2e.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "11-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/a5172cd4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d20e0953.webp"
+          }
+        },
+        {
+          "id": "11-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/a5172cd4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d20e0953.webp"
+          }
+        },
+        {
+          "id": "11-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/a5172cd4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d20e0953.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "mode": "hard",
+      "name": "右-L门",
+      "displayName": "右-L门",
+      "remarks": "右侧入口，呈现L形墙体结构",
+      "sort": 140,
+      "published": true,
+      "legacyNames": [
+        "右-L门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/073a380e.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/cc8b72d3.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/96dc04e3.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "12-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/1d97672f.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7474dc04.webp"
+          }
+        },
+        {
+          "id": "12-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/1d97672f.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7474dc04.webp"
+          }
+        },
+        {
+          "id": "12-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/1d97672f.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/7474dc04.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "mode": "hard",
+      "name": "右-三L门",
+      "displayName": "右-三L门（新）",
+      "remarks": "右侧入口，三个L形拐角墙体结构",
+      "sort": 150,
+      "published": true,
+      "legacyNames": [
+        "右-三L门",
+        "右-三L门（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/eade262d.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/b08f5bd0.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/bb087ca1.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "26-side",
+          "type": "side",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/3b81943e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/fb811088.webp"
+          }
+        },
+        {
+          "id": "26-front",
+          "type": "front",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/3b81943e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/fb811088.webp"
+          }
+        },
+        {
+          "id": "26-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/3b81943e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/fb811088.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "mode": "hard",
+      "name": "南-三缺一门",
+      "displayName": "南-三缺一门",
+      "remarks": "南侧入口，三缺一侧墙体结构",
+      "sort": 160,
+      "published": true,
+      "legacyNames": [
+        "南-三缺一门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/7c4e9323.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/03bc19d0.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/99d64725.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "13-side",
+          "type": "side",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/846b2c2d.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ddae3dbd.webp"
+          }
+        },
+        {
+          "id": "13-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/846b2c2d.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ddae3dbd.webp"
+          }
+        },
+        {
+          "id": "13-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/846b2c2d.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ddae3dbd.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "mode": "hard",
+      "name": "南-十字门",
+      "displayName": "南-十字门",
+      "remarks": "南侧入口，标准十字形门体与墙体",
+      "sort": 170,
+      "published": true,
+      "legacyNames": [
+        "南-十字门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/61719348.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/bec4b157.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/2538bd4c.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "14-side",
+          "type": "side",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/48255ba8.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6c5c89ed.webp"
+          }
+        },
+        {
+          "id": "14-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/48255ba8.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6c5c89ed.webp"
+          }
+        },
+        {
+          "id": "14-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/48255ba8.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6c5c89ed.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "mode": "hard",
+      "name": "南-L门",
+      "displayName": "南-L门",
+      "remarks": "南侧入口，L形侧门通道结构",
+      "sort": 180,
+      "published": true,
+      "legacyNames": [
+        "南-L门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/b0927261.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/cbe3ae6b.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/dd17b84e.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "15-side",
+          "type": "side",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/61540e39.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/07f003b4.webp"
+          }
+        },
+        {
+          "id": "15-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/61540e39.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/07f003b4.webp"
+          }
+        },
+        {
+          "id": "15-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/61540e39.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/07f003b4.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "mode": "hard",
+      "name": "南-红门",
+      "displayName": "南-红门",
+      "remarks": "南侧入口，红色标记危险门体",
+      "sort": 190,
+      "published": true,
+      "legacyNames": [
+        "南-红门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/4262756e.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/0a7448d7.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/b2bcc56d.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "16-side",
+          "type": "side",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/eb75c0e9.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/55025452.webp"
+          }
+        },
+        {
+          "id": "16-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/eb75c0e9.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/55025452.webp"
+          }
+        },
+        {
+          "id": "16-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/eb75c0e9.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/55025452.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "mode": "hard",
+      "name": "南-orz门",
+      "displayName": "南-orz门（新）",
+      "remarks": "南侧入口，墙体轮廓形似orz字形",
+      "sort": 200,
+      "published": true,
+      "legacyNames": [
+        "南-orz门",
+        "南-orz门（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/05edd21b.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/9777cc82.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/be6117f3.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "25-side",
+          "type": "side",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/e38b67da.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c6faecaf.webp"
+          }
+        },
+        {
+          "id": "25-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/e38b67da.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c6faecaf.webp"
+          }
+        },
+        {
+          "id": "25-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/e38b67da.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c6faecaf.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "mode": "hard",
+      "name": "北-1门",
+      "displayName": "北-1门",
+      "remarks": "北侧入口，单一侧门通道",
+      "sort": 210,
+      "published": true,
+      "legacyNames": [
+        "北-1门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/8d20fc2c.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/0981a1a8.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/eec81318.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "17-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/2bdf250e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/f8ca74b0.webp"
+          }
+        },
+        {
+          "id": "17-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/2bdf250e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/f8ca74b0.webp"
+          }
+        },
+        {
+          "id": "17-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/2bdf250e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/f8ca74b0.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "mode": "hard",
+      "name": "北-4门",
+      "displayName": "北-4门",
+      "remarks": "北侧入口，4扇侧门结构",
+      "sort": 220,
+      "published": true,
+      "legacyNames": [
+        "北-4门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/149d87f9.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/338e7601.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/df2d2b9f.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "18-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/af5cd3bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3633dd4e.webp"
+          }
+        },
+        {
+          "id": "18-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/af5cd3bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3633dd4e.webp"
+          }
+        },
+        {
+          "id": "18-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/af5cd3bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3633dd4e.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "mode": "hard",
+      "name": "北-红门",
+      "displayName": "北-红门",
+      "remarks": "北侧入口，红色标记危险门体",
+      "sort": 230,
+      "published": true,
+      "legacyNames": [
+        "北-红门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/20a9f472.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/7a998697.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8bd0365b.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "19-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c05a78b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/bdeba04c.webp"
+          }
+        },
+        {
+          "id": "19-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c05a78b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/bdeba04c.webp"
+          }
+        },
+        {
+          "id": "19-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c05a78b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/bdeba04c.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "mode": "hard",
+      "name": "北-凹门",
+      "displayName": "北-凹门",
+      "remarks": "北侧入口，呈现凹字形墙体包围结构",
+      "sort": 240,
+      "published": true,
+      "legacyNames": [
+        "北-凹门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/585df652.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/2e9f2e52.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/04e31649.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "20-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/4e3c34c4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d8dcee70.webp"
+          }
+        },
+        {
+          "id": "20-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/4e3c34c4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d8dcee70.webp"
+          }
+        },
+        {
+          "id": "20-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/4e3c34c4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d8dcee70.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "mode": "hard",
+      "name": "北-T门",
+      "displayName": "北-T门",
+      "remarks": "北侧入口，呈现T字形墙体接口",
+      "sort": 250,
+      "published": true,
+      "legacyNames": [
+        "北-T门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/5baef489.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/87d7513c.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8a8a38dd.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "21-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/f4dde24b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/53fe7d0a.webp"
+          }
+        },
+        {
+          "id": "21-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/f4dde24b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/53fe7d0a.webp"
+          }
+        },
+        {
+          "id": "21-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/f4dde24b.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/53fe7d0a.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "mode": "hard",
+      "name": "北-红对角门",
+      "displayName": "北-红对角门",
+      "remarks": "北侧入口，带有红色标识的对角侧门",
+      "sort": 260,
+      "published": true,
+      "legacyNames": [
+        "北-红对角门"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/92e71ef8.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/887af021.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/031049c7.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "22-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/5b6161b5.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/64147a23.webp"
+          }
+        },
+        {
+          "id": "22-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/5b6161b5.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/64147a23.webp"
+          }
+        },
+        {
+          "id": "22-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/5b6161b5.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/64147a23.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "mode": "hard",
+      "name": "北-1沙发门",
+      "displayName": "北-1沙发门（新）",
+      "remarks": "北侧入口，单门通道变体，门内带沙发标志物",
+      "sort": 270,
+      "published": true,
+      "legacyNames": [
+        "北-1沙发门",
+        "北-1沙发门（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/0f5beec5.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/504fb727.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/f1914eec.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "23-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/303a22c0.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/0b456328.webp"
+          }
+        },
+        {
+          "id": "23-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/303a22c0.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/0b456328.webp"
+          }
+        },
+        {
+          "id": "23-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/303a22c0.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/0b456328.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "mode": "hard",
+      "name": "北-4安全门",
+      "displayName": "北-4安全门（新）",
+      "remarks": "北侧入口，北-4门变体，邻接安全门结构 New",
+      "sort": 280,
+      "published": true,
+      "legacyNames": [
+        "北-4安全门",
+        "北-4安全门（新）"
+      ],
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/bb4d0fc3.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/f8300357.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/ef39de31.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "28-side",
+          "type": "side",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c2f0ed4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/30ddb3b9.webp"
+          }
+        },
+        {
+          "id": "28-front",
+          "type": "front",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c2f0ed4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/30ddb3b9.webp"
+          }
+        },
+        {
+          "id": "28-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8c2f0ed4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/30ddb3b9.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "mode": "nightmare",
+      "name": "右-长Z门",
+      "displayName": "右-长Z门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 290,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/8b620e4b.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/d852cf6f.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/c05a2c73.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/b0ca3b8f.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "41-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/b6332caa.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b6825e7d.webp"
+          },
+          "passage": "both"
+        },
+        {
+          "id": "41-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/f2928108.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d1f0c429.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "mode": "nightmare",
+      "name": "右-短T门",
+      "displayName": "右-短T门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 300,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/1ae441c5.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/057960d2.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/e85d0349.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/23b0bc1d.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "40-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/2f1f913c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/cf8326c0.webp"
+          },
+          "passage": "upperLeft"
+        },
+        {
+          "id": "40-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/1852aeeb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/48b073f8.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "mode": "nightmare",
+      "name": "右-仙人掌门",
+      "displayName": "右-仙人掌门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 310,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/a7e3e534.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/68ec33e4.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/51448d3f.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8f078992.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "38-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/3fc9ed5d.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/393f6183.webp"
+          },
+          "passage": "triple"
+        },
+        {
+          "id": "38-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/f68cec90.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a9408696.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "mode": "nightmare",
+      "name": "右-闪一电门",
+      "displayName": "右-闪一电门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 320,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/994f7db7.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/943ba2d0.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/52ed6e02.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/d0b49534.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "37-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/62818415.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/329be788.webp"
+          },
+          "passage": "upperRight"
+        },
+        {
+          "id": "37-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/21201f15.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/10f71d2b.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "mode": "nightmare",
+      "name": "右-断C门",
+      "displayName": "右-断C门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 330,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/36908278.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/b3802df9.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/f89a1a1c.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/0a2f45e5.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "39-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/47db7020.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/97316a53.webp"
+          },
+          "passage": "upperRight"
+        },
+        {
+          "id": "39-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/09b99b6f.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/488a17ed.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "mode": "nightmare",
+      "name": "右-C门",
+      "displayName": "右-C门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 340,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/a33a12ca.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/b6311616.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/e658f887.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/4cbbf635.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "36-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/0fd86aa3.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/66ecea20.webp"
+          },
+          "passage": "upperRight"
+        },
+        {
+          "id": "36-upstairs",
+          "type": "upstairs",
+          "direction": "right",
+          "image": {
+            "key": "maps/entrance/d9d07241.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/3329d162.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "mode": "nightmare",
+      "name": "南-H门",
+      "displayName": "南-H门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 350,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/06ab68fe.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/46bdd0b3.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/986bcdad.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/c6db7334.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "35-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/7c1ba4b7.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/dd2b638d.webp"
+          },
+          "passage": "upperLeft"
+        },
+        {
+          "id": "35-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/fa622d0c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a2234066.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "mode": "nightmare",
+      "name": "南-3红门",
+      "displayName": "南-3红门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 360,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/74c765c6.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/6932769b.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/9e788643.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/2b351895.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "34-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/951f222c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/1056e341.webp"
+          },
+          "passage": "both"
+        },
+        {
+          "id": "34-upstairs",
+          "type": "upstairs",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/92ea31bc.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/80b9b965.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "mode": "nightmare",
+      "name": "北-b门",
+      "displayName": "北-b门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 370,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/f7b5e169.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/de9b3789.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/c1af92a1.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/d68f6618.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "30-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/d76d9ba7.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/ec7f09ee.webp"
+          },
+          "passage": "upperLeft"
+        },
+        {
+          "id": "30-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/1ac95441.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/09ef1aaf.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "mode": "nightmare",
+      "name": "北-仙人掌门",
+      "displayName": "北-仙人掌门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 380,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/86a89a58.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/1da5f0d2.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/3a3e9511.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/f65e5b18.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "31-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/8e642ae1.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/779112e8.webp"
+          },
+          "passage": "both"
+        },
+        {
+          "id": "31-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/558499bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/6a16b35f.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "mode": "nightmare",
+      "name": "北-回门",
+      "displayName": "北-回门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 390,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/47bab0bf.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/3d35291f.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/a3519117.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8c151e4d.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "32-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/1d664c81.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/441d6126.webp"
+          },
+          "passage": "triple"
+        },
+        {
+          "id": "32-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/e4b3ec29.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/42aa2a63.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "mode": "nightmare",
+      "name": "北-Z1门",
+      "displayName": "北-Z1门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 400,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/4aa0c590.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/b545c635.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/277c4825.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/0043c305.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "29-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/10fb8363.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/497ee1a5.webp"
+          },
+          "passage": "triple"
+        },
+        {
+          "id": "29-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/c6e7ae39.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/e0154746.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "mode": "nightmare",
+      "name": "北-骑士门",
+      "displayName": "北-骑士门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 410,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/7833a3a8.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/61199d28.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/3e4fd300.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/1384715c.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "33-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/f497e090.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/108a0121.webp"
+          },
+          "passage": "upperRight"
+        },
+        {
+          "id": "33-upstairs",
+          "type": "upstairs",
+          "direction": "north",
+          "image": {
+            "key": "maps/entrance/8cf2e380.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/1dd2cb16.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "mode": "nightmare",
+      "name": "222",
+      "displayName": "22",
+      "remarks": "22",
+      "sort": 420,
+      "published": false,
+      "layout": {},
+      "entrances": [
+        {
+          "id": "42-front",
+          "type": "front",
+          "direction": "south"
+        },
+        {
+          "id": "42-upstairs",
+          "type": "upstairs"
+        }
+      ],
+      "deletedAt": "2026-08-23T09:01:43.326Z"
+    }
+  ]
+}
