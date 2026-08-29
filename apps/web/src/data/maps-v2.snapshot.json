@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 23,
-  "updatedAt": "2026-08-23",
+  "version": 24,
+  "updatedAt": "2026-08-29",
   "maps": [
     {
       "id": 1,
@@ -2075,16 +2075,16 @@
       "published": true,
       "layout": {
         "full": {
-          "key": "maps/layout/full/86a89a58.webp"
+          "key": "maps/layout/full/67a7b874.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/1da5f0d2.webp"
+          "key": "maps/layout/basement/b6074dd2.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/3a3e9511.webp"
+          "key": "maps/layout/floor1/aa6c2db0.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/f65e5b18.webp"
+          "key": "maps/layout/floor2/d278546f.webp"
         }
       },
       "entrances": [
@@ -2123,16 +2123,16 @@
       "published": true,
       "layout": {
         "full": {
-          "key": "maps/layout/full/47bab0bf.webp"
+          "key": "maps/layout/full/fe9ada02.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/3d35291f.webp"
+          "key": "maps/layout/basement/8a2d5f1f.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/a3519117.webp"
+          "key": "maps/layout/floor1/a4658cec.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/8c151e4d.webp"
+          "key": "maps/layout/floor2/b3345dbd.webp"
         }
       },
       "entrances": [
