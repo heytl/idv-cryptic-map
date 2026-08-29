@@ -382,7 +382,7 @@ pnpm exec wrangler deploy --env v2-preview
 - [x] 验证正式 `/maps-v2.json`、ETag `"maps-v2-23"`、CORS、图片 URL 和 304 缓存；`/api/public/v2/maps` 保留为同结构别名，但当前正式 Access 策略会要求登录，不作为公开客户端地址。
 - [x] 在隐藏 V2 路由验收困难/噩梦、入口切换、第三级筛选、全图默认和地下室。
 - [x] 验证旧 V1 `/maps.json` 仍为 v8、28 张地图，迁移前后语义完全一致；默认路由仍为 V1。
-- [ ] PC Chrome、iPhone Safari、Android Chrome 各完成一次核心路径真机验收。
+- [x] PC Chrome、iPhone Safari、Android Chrome 已完成核心路径真实环境验收（2026-08-30，未发现问题）。
 - [ ] 验证 PWA 更新、普通刷新、离线缓存和旧 Service Worker 升级。
 - [x] 验证正式后台仍由 Cloudflare Access 保护，未登录请求返回 302 登录跳转，未携带 `DEV_DISABLE_AUTH=1`。
 
