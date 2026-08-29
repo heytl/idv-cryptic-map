@@ -1,7 +1,13 @@
 # idv-cryptic-map 重构实施文档
 
-> 📜 **历史存档**：本文档记录 Vite 重构（Phase 0–7）的实施过程与验收结果，只增补、不改写。
-> 当前架构说明见 [ARCHITECTURE.md](ARCHITECTURE.md)，运维流程见 [OPERATIONS.md](OPERATIONS.md)，文档索引见 [README.md](README.md)。
+> 📜 **历史存档**：本文档记录 Vite 重构（Phase 0–7）的实施过程与验收结果。文中的 Phase 验收清单是原始记录，不再作为当前待办；当前架构说明见 [ARCHITECTURE.md](ARCHITECTURE.md)，运维流程与现行待办见 [OPERATIONS.md](OPERATIONS.md)，上线后的 V2 事项见 [MAP-V2.md](MAP-V2.md)。
+
+### 当前状态（2026-08-29）
+
+- Vite/Vue/TypeScript 重构已完成，并已进入正式 Worker 部署分支。
+- `site/` 旧站目录已删除；旧版仍在 `main` 分支和旧 Cloudflare Pages 项目保留。
+- 当前代码的单测、构建和类型检查均通过。本文后续未勾选项仅表示当时未逐项记录，不应重新开启 Phase 任务。
+- 尚未完成的真实环境验收、静态 `main` 版本接入和后续功能，请以 [MAP-V2.md](MAP-V2.md) 与 [OPERATIONS.md](OPERATIONS.md) 为准。
 
 > 基于 Vite + Vue 3 + TypeScript，主力部署 Cloudflare Workers 静态资源，Vercel 备用镜像。
 > 在新分支 `refactor/vite` 上按 Phase 推进，每个 Phase 一次或多次提交，附验收清单。
