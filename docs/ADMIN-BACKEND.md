@@ -238,7 +238,7 @@ export async function loadMaps(): Promise<MapItem[]> {
 | CI secrets（`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`）与自动部署 | ✅ 07-19 配置验证，多次自动部署成功 |
 | 合入 `main` | ⏸️ 用户拍板暂缓：双版本并行部署期间维持现状，非待办 |
 | `7c72ce9`（LegendBox Windows vitest fix）cherry-pick 回 `refactor/vite` | 📜 不再需要——`refactor/vite` 已被本分支取代归档（2026-08-22 拍板） |
-| 旧站 `site/` 目录、旧 Pages 项目、Vercel 镜像去留 | ⏳ 处理建议见 [OPERATIONS.md](OPERATIONS.md) §7 |
+| 旧站 `site/` 目录、旧 Pages 项目、Vercel 镜像去留 | ✅ `site/` 已删除；Pages 已确认保留，Vercel 去留仍见 [OPERATIONS.md](OPERATIONS.md) §7 |
 
 ## 14. 上线后功能迭代（2026-07-18 ~ 07-23）
 

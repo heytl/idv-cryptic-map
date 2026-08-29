@@ -18,7 +18,7 @@
 - [ ] `pnpm test`——缺图、数据错误、**地图名出现子集字体没有的新字**都会在这里红；缺字则先跑 `node apps/web/scripts/subset-fonts.mjs` 再测
 - [ ] push 后在 PR 预览 URL 上抽查新地图
 
-**不需要做的事**：不需要任何 `?v=` 版本号；不需要通知用户清缓存——部署完成后普通刷新即生效。
+**说明**：上面的新增地图 checklist 是日常操作模板，不是当前项目待办。项目级未完成事项统一记录在本节和 [MAP-V2.md §19](MAP-V2.md#19-正式上线准备与后续事项)。不需要任何 `?v=` 版本号，也不需要通知用户清缓存——部署完成后普通刷新即生效。
 
 ## 2. 分支与发布
 
@@ -79,15 +79,14 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 
 完整的数据指纹、备份位置和路由清单见 [V2.1.0 正式版本归档](releases/V2.1.0.md)。
 
-## 7. 上线待办（一次性手动步骤）
+## 7. 上线后维护待办与基础设施保留策略
 
 - [x] GitHub repo Secrets：`CLOUDFLARE_API_TOKEN`（Workers 编辑权限）、`CLOUDFLARE_ACCOUNT_ID`（2026-07-19 配置验证，自动部署多次成功）
 - [x] Cloudflare Dashboard：Worker 绑定正式域名 `idv-map.321666.xyz`（2026-07-21）；`new-map.321666.xyz` 暂留回退入口
-- [ ] PR 预览依赖的 Workers **Preview URLs** 开关：如遇 CI 预览 URL 打不开，到 Dashboard 检查
-- [ ] 旧站清理（2026-08-22 建议）：
-  - **删** 本分支 `site/` 目录——26MB、新构建零引用，纯仓库死重；旧版在 main 有完整副本，git 历史亦永存，删之无损；
-  - **留** 旧 Cloudflare Pages 项目——✅ 2026-08-28 已确认生产分支为 `main`，并关闭所有 Preview 分支自动构建；`feat/admin-backend` 不再触发 Pages 红叉；
-  - **留** Vercel 项目——注意它若跟随 main 构建则镜像的是旧站（main 的 vercel.json 输出 `site/`），若已切到本分支则是新版静态壳（数据滞后 ≤1 天的降级链路）。两种身份都无持有成本，等旧版退役时一并处理。
+- [ ] PR 预览依赖的 Workers **Preview URLs** 开关：顶层正式配置已开启；如 CI 预览 URL 打不开，再到 Cloudflare Dashboard 检查账号侧开关。
+- [x] 删除本分支 `site/` 目录：已于 2026-08-22 完成；旧版仍在 `main` 分支和 Git 历史中保留。
+- [x] 保留旧 Cloudflare Pages 项目：生产分支为 `main`，已关闭所有 Preview 分支自动构建。
+- [ ] Vercel 镜像去留：确认其当前跟随的分支和实际用途；在旧版退役前可暂时保留。
 - [x] 端到端演练「更新即生效」：已由后台路径覆盖（2026-07-18 Phase 2 端到端验收通过）
 
 后台管理（Phase 2）遗留事项的清账记录见 [ADMIN-BACKEND.md §13.4](ADMIN-BACKEND.md)。
