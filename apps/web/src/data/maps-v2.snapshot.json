@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "version": 24,
+  "version": 25,
   "updatedAt": "2026-08-29",
   "maps": [
     {
@@ -1646,13 +1646,13 @@
           "key": "maps/layout/full/8b620e4b.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/d852cf6f.webp"
+          "key": "maps/layout/basement/4d9fb2ef.webp"
         },
         "floor1": {
           "key": "maps/layout/floor1/c05a2c73.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/b0ca3b8f.webp"
+          "key": "maps/layout/floor2/8673ed41.webp"
         }
       },
       "entrances": [
@@ -1694,7 +1694,7 @@
           "key": "maps/layout/full/1ae441c5.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/057960d2.webp"
+          "key": "maps/layout/basement/a0e5ef70.webp"
         },
         "floor1": {
           "key": "maps/layout/floor1/e85d0349.webp"
@@ -1742,10 +1742,10 @@
           "key": "maps/layout/full/a7e3e534.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/68ec33e4.webp"
+          "key": "maps/layout/basement/00ea1716.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/51448d3f.webp"
+          "key": "maps/layout/floor1/57219b7a.webp"
         },
         "floor2": {
           "key": "maps/layout/floor2/8f078992.webp"
@@ -1793,10 +1793,10 @@
           "key": "maps/layout/basement/943ba2d0.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/52ed6e02.webp"
+          "key": "maps/layout/floor1/92879547.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/d0b49534.webp"
+          "key": "maps/layout/floor2/214d8cb7.webp"
         }
       },
       "entrances": [
@@ -1838,13 +1838,13 @@
           "key": "maps/layout/full/36908278.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/b3802df9.webp"
+          "key": "maps/layout/basement/42a89314.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/f89a1a1c.webp"
+          "key": "maps/layout/floor1/80613f81.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/0a2f45e5.webp"
+          "key": "maps/layout/floor2/e65802d7.webp"
         }
       },
       "entrances": [
@@ -1886,7 +1886,7 @@
           "key": "maps/layout/full/a33a12ca.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/b6311616.webp"
+          "key": "maps/layout/basement/c4dac9a7.webp"
         },
         "floor1": {
           "key": "maps/layout/floor1/e658f887.webp"
@@ -1937,10 +1937,10 @@
           "key": "maps/layout/basement/46bdd0b3.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/986bcdad.webp"
+          "key": "maps/layout/floor1/da0ccdcc.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/c6db7334.webp"
+          "key": "maps/layout/floor2/f95440a6.webp"
         }
       },
       "entrances": [
@@ -1982,13 +1982,13 @@
           "key": "maps/layout/full/74c765c6.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/6932769b.webp"
+          "key": "maps/layout/basement/ae1c35f7.webp"
         },
         "floor1": {
           "key": "maps/layout/floor1/9e788643.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/2b351895.webp"
+          "key": "maps/layout/floor2/17ecdbcf.webp"
         }
       },
       "entrances": [
@@ -2030,13 +2030,13 @@
           "key": "maps/layout/full/f7b5e169.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/de9b3789.webp"
+          "key": "maps/layout/basement/cf873e75.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/c1af92a1.webp"
+          "key": "maps/layout/floor1/fe359f25.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/d68f6618.webp"
+          "key": "maps/layout/floor2/49c42622.webp"
         }
       },
       "entrances": [
@@ -2126,13 +2126,13 @@
           "key": "maps/layout/full/fe9ada02.webp"
         },
         "basement": {
-          "key": "maps/layout/basement/8a2d5f1f.webp"
+          "key": "maps/layout/basement/a5928c98.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/a4658cec.webp"
+          "key": "maps/layout/floor1/6c415702.webp"
         },
         "floor2": {
-          "key": "maps/layout/floor2/b3345dbd.webp"
+          "key": "maps/layout/floor2/246e2960.webp"
         }
       },
       "entrances": [
@@ -2177,7 +2177,7 @@
           "key": "maps/layout/basement/b545c635.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/277c4825.webp"
+          "key": "maps/layout/floor1/b91cc72a.webp"
         },
         "floor2": {
           "key": "maps/layout/floor2/0043c305.webp"
@@ -2225,7 +2225,7 @@
           "key": "maps/layout/basement/61199d28.webp"
         },
         "floor1": {
-          "key": "maps/layout/floor1/3e4fd300.webp"
+          "key": "maps/layout/floor1/d92848b3.webp"
         },
         "floor2": {
           "key": "maps/layout/floor2/1384715c.webp"
