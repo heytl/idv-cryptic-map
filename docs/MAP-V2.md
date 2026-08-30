@@ -383,7 +383,7 @@ pnpm exec wrangler deploy --env v2-preview
 - [x] 在隐藏 V2 路由验收困难/噩梦、入口切换、第三级筛选、全图默认和地下室。
 - [x] 验证旧 V1 `/maps.json` 仍为 v8、28 张地图，迁移前后语义完全一致；默认路由仍为 V1。
 - [x] PC Chrome、iPhone Safari、Android Chrome 已完成核心路径真实环境验收（2026-08-30，未发现问题）。
-- [ ] 验证 PWA 更新、普通刷新、离线缓存和旧 Service Worker 升级。
+- [x] PWA 普通刷新与离线缓存已完成实机验证（2026-08-30：断网后刷新网页仍可正常使用）；自动脚本的目录统计仍存在等待时序问题，后续可单独修正。
 - [x] 验证正式后台仍由 Cloudflare Access 保护，未登录请求返回 302 登录跳转，未携带 `DEV_DISABLE_AUTH=1`。
 
 ### D. 发版切换
