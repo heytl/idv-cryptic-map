@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 25,
-  "updatedAt": "2026-08-29",
+  "version": 30,
+  "updatedAt": "2026-09-10",
   "maps": [
     {
       "id": 1,
@@ -2278,6 +2278,246 @@
         }
       ],
       "deletedAt": "2026-08-23T09:01:43.326Z"
+    },
+    {
+      "id": 43,
+      "mode": "nightmare",
+      "name": "左-竖1图书走廊门",
+      "displayName": "左-竖1图书走廊门",
+      "remarks": "",
+      "sort": 430,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/5e241d0b.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/ab4894cf.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/533ae043.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/2ab968ea.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "43-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/a143fda0.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/fd5e5ddb.webp"
+          },
+          "passage": "upperLeft"
+        },
+        {
+          "id": "43-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/8cc825cd.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/60b8916d.webp"
+          },
+          "direction": "left"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "mode": "nightmare",
+      "name": "左-竖L门",
+      "displayName": "左-竖L门",
+      "remarks": "",
+      "sort": 440,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/92f7b763.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/0c750d94.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/3701fa77.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/a77c78d4.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "46-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/b1a66d96.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/80e12182.webp"
+          },
+          "passage": "both"
+        },
+        {
+          "id": "46-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/544d6b8a.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a28aa71c.webp"
+          },
+          "direction": "left"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "mode": "nightmare",
+      "name": "左-竖1图书门",
+      "displayName": "左-竖1图书门",
+      "remarks": "",
+      "sort": 450,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/045131c0.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/e0f7f267.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/b69549bc.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/1436b360.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "44-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/9d1b0ab4.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d269b1c0.webp"
+          },
+          "passage": "both"
+        },
+        {
+          "id": "44-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/a90125a5.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/bf8444fa.webp"
+          },
+          "direction": "left"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "mode": "nightmare",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "",
+      "sort": 460,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/37e079ae.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/c3bedd8a.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/36c8eb06.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/d42d8646.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "45-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/9e424bfa.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/2a4f3fac.webp"
+          },
+          "passage": "triple"
+        },
+        {
+          "id": "45-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/b8cf66eb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/07a24d7b.webp"
+          },
+          "direction": "left"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "mode": "nightmare",
+      "name": "南-悬空桌门",
+      "displayName": "南-悬空桌门",
+      "remarks": "",
+      "sort": 470,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/f8f84ce2.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/2a912675.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/98d0f3b5.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/fa969cbf.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "47-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/104437e0.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/42f1eff2.webp"
+          }
+        },
+        {
+          "id": "47-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/bfef3d4c.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/d26f0634.webp"
+          },
+          "direction": "south"
+        }
+      ]
     }
   ]
 }
