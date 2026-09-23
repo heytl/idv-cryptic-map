@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { ENTRANCE_LABELS, MODE_LABELS, type EntranceType, type GameMode } from "@idv-map/shared";
 import { gameMaps, enabledEntranceTypesV2 } from "../data/maps-v2";
 
@@ -20,6 +20,16 @@ function open() {
   expanded.value = true;
 }
 function close() { dialog.value?.close(); }
+watch(expanded, (isOpen) => {
+  if (typeof document === "undefined") return;
+  if (isOpen) {
+    document.documentElement.classList.add("condition-dialog-open");
+    document.body.classList.add("condition-dialog-open");
+  } else {
+    document.documentElement.classList.remove("condition-dialog-open");
+    document.body.classList.remove("condition-dialog-open");
+  }
+});
 function onClose() {
   expanded.value = false;
   trigger.value?.focus();
@@ -85,15 +95,15 @@ function onBackdrop(event: MouseEvent) {
 
 <style scoped>
 .catalog-conditions { text-align: center; }
-.condition-summary { display: inline-flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; width: 100%; max-width: 100%; min-height: 44px; padding: 4px 8px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--text-dark); font: inherit; font-size: .95rem; font-weight: 600; cursor: pointer; }
+.condition-summary { display: inline-flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; width: 100%; max-width: 100%; min-height: 44px; padding: 4px 8px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--text-dark); font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .condition-summary { transition: color .18s ease; }
 .condition-summary:hover, .condition-summary[aria-expanded="true"] { color: #76501f; }
-.condition-summary:active { color: #573611; }
+.condition-summary:active { color: inherit; background: transparent; }
 .condition-summary:focus-visible, .condition-dialog button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .condition-dot { opacity: .55; }
 .condition-chevron { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; transition: transform .18s ease; }
 .condition-chevron.expanded { transform: rotate(180deg); }
-.condition-dialog { position: fixed; inset: 0; margin: auto; width: min(460px, calc(100% - 32px)); max-height: 85dvh; overflow: auto; padding: 22px; color: var(--text-dark); background: var(--parchment-light); border: 1px solid var(--parchment-dark); border-radius: 8px; box-shadow: 0 18px 60px rgba(26,20,16,.4); text-align: left; }
+.condition-dialog { position: fixed; inset: 0; margin: auto; width: min(460px, calc(100% - 32px)); max-height: 85dvh; overflow: hidden; overscroll-behavior: none; touch-action: none; padding: 22px; color: var(--text-dark); background: var(--parchment-light); border: 1px solid var(--parchment-dark); border-radius: 8px; box-shadow: 0 18px 60px rgba(26,20,16,.4); text-align: left; }
 .condition-dialog::backdrop { background: rgba(26,20,16,.65); }
 .condition-dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
 .condition-dialog-heading h2 { font-size: 1.15rem; margin: 0; }
@@ -108,6 +118,7 @@ function onBackdrop(event: MouseEvent) {
 .condition-options .tab-btn.active { background: var(--gold-dark); color: #fff7e8; border-color: var(--gold-dark); }
 .condition-options .tab-btn.active::after { content: '✓'; position: absolute; right: 10px; font-size: 12px; }
 .condition-map-name { margin: 0; padding: 11px 0; font-weight: 500; }
+:global(html.condition-dialog-open), :global(body.condition-dialog-open) { overflow: hidden; }
 @media (max-width: 768px) {
   .condition-summary { gap: 5px; padding: 2px 0; font-size: .9rem; }
   .condition-dialog { inset: auto 0 0; margin: 0; width: 100%; max-width: none; max-height: 85dvh; border-radius: 14px 14px 0 0; padding: 16px 20px max(20px, env(safe-area-inset-bottom)); }
