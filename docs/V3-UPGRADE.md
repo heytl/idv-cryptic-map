@@ -74,6 +74,21 @@ node scripts/content-transfer.mjs import https://目标环境.example ./backup-2
 
 后台“备份与恢复”用于当前存储内的配置恢复；跨存储迁移必须使用完整导出目录。统计不会随内容导入/恢复被覆盖。
 
+### 正式内容同步到预览环境
+
+正式当前提供 V2 公开地图协议，预览使用 V3。跨版本同步时，从正式 `/maps-v2.json` 转换公开配置并复制其引用图片，再导入预览。公开协议只含正式已发布地图，不含草稿；D1 统计不会迁移。导入会保留预览独有的 ID 为下架 / 软删除记录，避免 ID 重用。
+
+```powershell
+# 迁移前先备份预览；目录必须是尚不存在的新目录。
+node scripts/content-transfer.mjs export https://idv-map-dev.321666.xyz ./.tmp/preview-before-sync
+
+# 把正式公开 V2 配置和图片转换为 V3 导入包；输出目录也必须不存在。
+node scripts/prepare-v2-content-for-v3.mjs https://idv-map.321666.xyz/maps-v2.json ./.tmp/production-v2-content
+node scripts/content-transfer.mjs import https://idv-map-dev.321666.xyz ./.tmp/production-v2-content
+```
+
+同步前后分别打开正式 `/maps-v2.json` 和预览 `/maps-v3.json`，核对地图 ID、名称和布局数量，并抽查新增噩梦地图图片。`pnpm dev` 默认通过 `apps/web/.env.development` 读取预览 Worker 的公开配置，重载开发页即可看到同步结果。该文件只影响本地开发，不会把预览地址写进正式构建。
+
 ## 验收与回滚
 
 ```powershell
