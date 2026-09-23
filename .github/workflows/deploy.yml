@@ -5,7 +5,7 @@ name: Test & Deploy
 # - main：只用于静态页面版本发布，绝不由本工作流部署 Worker。
 on:
   push:
-    branches: [feat/admin-backend, codex/v3-dev]
+    branches: [feat/admin-backend, v3-dev]
   pull_request:
 
 concurrency:
@@ -40,13 +40,13 @@ jobs:
       # Dedicated V3 development branch only. This reuses the isolated
       # v2-preview Worker, KV, and R2 environment and never touches production.
       - name: Configure preview D1 binding
-        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/v3-dev'
         env:
           V3_PREVIEW_D1_ID: ${{ vars.V3_PREVIEW_D1_ID }}
         run: node scripts/configure-preview-d1.mjs
 
       - name: Migrate preview statistics database
-        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/v3-dev'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
           command: d1 migrations apply STATS --remote --env v2-preview
 
       - name: Deploy V3 development branch to isolated preview
-        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/v3-dev'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
