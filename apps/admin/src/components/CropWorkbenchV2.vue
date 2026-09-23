@@ -1,30 +1,43 @@
 <script setup lang="ts">
 // V2 整体裁剪：一张原图按模式导出楼层、当前入口、入口缩略图与自动合成全图。
-import type { GameMode } from '@idv-map/shared';
-import { NButton, NCheckbox, NModal, useMessage } from 'naive-ui';
-import { computed, onBeforeUnmount, reactive, ref } from 'vue';
-import { createBoxDrag } from '../cropBox';
-import { composeFull, crop, loadImage, makeThumb, type Rect, type V2CropOutput } from '../imageTools';
+import { REQUIRED_LAYOUTS, type GameMode } from "@idv-map/shared";
+import { NButton, NCheckbox, NModal, useMessage } from "naive-ui";
+import { computed, onBeforeUnmount, reactive, ref } from "vue";
+import { createBoxDrag } from "../cropBox";
+import {
+  composeFull,
+  crop,
+  loadImage,
+  makeThumb,
+  type Rect,
+  type V2CropOutput,
+} from "../imageTools";
 
-const props = defineProps<{ source: Blob; mode: GameMode; entranceLabel: string }>();
+const props = defineProps<{
+  source: Blob;
+  mode: GameMode;
+  entranceLabel: string;
+}>();
 const emit = defineEmits<{ done: [blobs: V2CropOutput]; cancel: [] }>();
 
-type BoxKey = 'basement' | 'floor1' | 'floor2' | 'entrance';
+type BoxKey = "basement" | "floor1" | "floor2" | "entrance";
 const LABELS: Record<BoxKey, string> = {
-  basement: '地下室',
-  floor1: '一楼',
-  floor2: '二楼',
-  entrance: '入口',
+  basement: "地下室",
+  floor1: "一楼",
+  floor2: "二楼",
+  entrance: "入口",
 };
 
 const message = useMessage();
 const imgEl = ref<HTMLImageElement>();
 const entranceLocked = ref(true);
 const exporting = ref(false);
-const layoutKeys = computed<Exclude<BoxKey, 'entrance'>[]>(() =>
-  props.mode === 'nightmare' ? ['basement', 'floor1', 'floor2'] : ['floor1', 'floor2'],
+const layoutKeys = computed<Exclude<BoxKey, "entrance">[]>(() =>
+  REQUIRED_LAYOUTS[props.mode].filter(
+    (floor): floor is Exclude<BoxKey, "entrance"> => floor !== "full",
+  ),
 );
-const activeKeys = computed<BoxKey[]>(() => [...layoutKeys.value, 'entrance']);
+const activeKeys = computed<BoxKey[]>(() => [...layoutKeys.value, "entrance"]);
 
 let natural = { w: 0, h: 0 };
 const boxes = reactive<Record<BoxKey, Rect>>({
@@ -44,7 +57,12 @@ function onImgLoad(): void {
   // 困难默认左右二等分；噩梦默认三等分。框可任意拖动、重叠和缩放。
   const width = natural.w / layoutKeys.value.length;
   layoutKeys.value.forEach((key, index) => {
-    Object.assign(boxes[key], { x: width * index, y: 0, w: width, h: natural.h });
+    Object.assign(boxes[key], {
+      x: width * index,
+      y: 0,
+      w: width,
+      h: natural.h,
+    });
   });
   const size = Math.max(40, Math.round(Math.min(natural.w, natural.h) * 0.3));
   Object.assign(boxes.entrance, {
@@ -59,7 +77,7 @@ const { onPointerDown, boxStyle } = createBoxDrag<BoxKey>({
   boxes,
   natural: () => natural,
   scale: () => (imgEl.value ? imgEl.value.clientWidth / natural.w : 1),
-  lockSquare: (key) => key === 'entrance' && entranceLocked.value,
+  lockSquare: (key) => key === "entrance" && entranceLocked.value,
 });
 
 async function exportAll(): Promise<void> {
@@ -74,10 +92,11 @@ async function exportAll(): Promise<void> {
       floor2: await crop(image, boxes.floor2),
       full: await composeFull(image, boxes.floor1, boxes.floor2),
     };
-    if (props.mode === 'nightmare') result.basement = await crop(image, boxes.basement);
-    emit('done', result);
+    if (layoutKeys.value.includes("basement"))
+      result.basement = await crop(image, boxes.basement);
+    emit("done", result);
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '裁剪导出失败');
+    message.error(error instanceof Error ? error.message : "裁剪导出失败");
   } finally {
     exporting.value = false;
   }
@@ -107,16 +126,23 @@ async function exportAll(): Promise<void> {
         :style="boxStyle(key)"
         @pointerdown="onPointerDown($event, key, 'move')"
       >
-        <span class="tag">{{ key === 'entrance' ? entranceLabel : LABELS[key] }}</span>
-        <span class="handle" @pointerdown="onPointerDown($event, key, 'resize')"></span>
+        <span class="tag">{{
+          key === "entrance" ? entranceLabel : LABELS[key]
+        }}</span>
+        <span
+          class="handle"
+          @pointerdown="onPointerDown($event, key, 'resize')"
+        ></span>
       </div>
     </div>
     <div class="dialog-actions">
       <n-checkbox v-model:checked="entranceLocked">入口框锁定 1:1</n-checkbox>
-      <span class="muted">将生成 {{ mode === 'nightmare' ? 6 : 5 }} 张图</span>
+      <span class="muted">将生成 {{ layoutKeys.length + 3 }} 张图</span>
       <span class="spacer"></span>
       <n-button @click="emit('cancel')">取消</n-button>
-      <n-button type="primary" :loading="exporting" @click="exportAll">裁剪、生成并上传</n-button>
+      <n-button type="primary" :loading="exporting" @click="exportAll"
+        >裁剪、生成并上传</n-button
+      >
     </div>
   </n-modal>
 </template>

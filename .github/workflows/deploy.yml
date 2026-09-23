@@ -1,11 +1,11 @@
 name: Test & Deploy
 
 # 长期分支职责：
-# - feat/admin-backend：线上 Worker、后台与动态 V2 的唯一正式部署来源。
+# - feat/admin-backend：线上 Worker、后台与动态站点的唯一正式部署来源。
 # - main：只用于静态页面版本发布，绝不由本工作流部署 Worker。
 on:
   push:
-    branches: [feat/admin-backend]
+    branches: [feat/admin-backend, codex/v3-dev]
   pull_request:
 
 concurrency:
@@ -31,8 +31,35 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Type checks
+        run: pnpm check:shared && pnpm check:worker
+
       - name: Build
         run: pnpm build
+
+      # Dedicated V3 development branch only. This reuses the isolated
+      # v2-preview Worker, KV, and R2 environment and never touches production.
+      - name: Configure preview D1 binding
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        env:
+          V3_PREVIEW_D1_ID: ${{ vars.V3_PREVIEW_D1_ID }}
+        run: node scripts/configure-preview-d1.mjs
+
+      - name: Migrate preview statistics database
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 migrations apply STATS --remote --env v2-preview
+
+      - name: Deploy V3 development branch to isolated preview
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/v3-dev'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env v2-preview
 
       # PR：上传预览版本（预览 URL 见本步骤日志；需在 Cloudflare Dashboard
       # 开启该 Worker 的 Preview URLs 开关）
@@ -43,7 +70,15 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: versions upload
+          command: versions upload --env v2-preview
+
+      - name: Migrate production statistics database
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/admin-backend'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 migrations apply STATS --remote
 
       # 仅 Worker 正式分支部署生产；main 的静态页面走独立发布渠道。
       - name: Deploy to Cloudflare Workers

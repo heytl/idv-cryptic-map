@@ -20,7 +20,7 @@
   Cache-Control: no-cache, must-revalidate
 
 # 地图配置：刷新必回源验证（KV 接管后由 Worker 下发同样的头 + ETag 304）
-/maps.json
+/maps-v3.json
   Cache-Control: no-cache, must-revalidate
 
 # 后台管理（构建产物在 dist/admin/，assets 同样哈希命名）

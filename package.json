@@ -1,18 +1,20 @@
 {
   "name": "idv-cryptic-map",
   "private": true,
-  "packageManager": "pnpm@11.13.0",
+  "packageManager": "pnpm@11.19.0",
   "scripts": {
     "dev": "pnpm --filter web dev",
     "dev:admin": "pnpm --filter admin dev",
     "build": "pnpm --filter web build && pnpm --filter admin build",
     "preview": "pnpm --filter web preview",
+    "preview:demo": "node scripts/preview-online-demo.mjs",
     "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test",
-    "test:worker": "pnpm --filter @idv-map/shared exec vitest run --root ../.. workers/snapshot.test.ts",
+    "test:worker": "pnpm --filter @idv-map/shared exec vitest run --root ../.. workers",
     "check:shared": "pnpm --filter @idv-map/shared typecheck",
     "check:worker": "tsc -p workers",
-    "migrate:v2": "node scripts/migrate-v1-to-v2.mts",
-    "import:nightmare": "node scripts/import-nightmare-maps.mts"
+    "migrate:v3": "node scripts/migrate-v2-to-v3.mts",
+    "verify:e2e": "node apps/web/scripts/verify-e2e.mjs",
+    "verify:pwa": "node apps/web/scripts/verify-pwa.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260715.1",
