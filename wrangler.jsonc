@@ -1,9 +1,5 @@
-// Cloudflare Workers 部署配置：静态资源 + 后台 API 同一个 Worker
-// - /maps.json、/api/*、/r2/* 先进 Worker（workers/index.ts），其余路径静态直出
-// - 生产 KV/R2 绑定待 Phase 2.0 资源开通后填入真实 id（见 docs/ADMIN-BACKEND.md §7）；
-//   未绑定期间 Worker 自动回退静态快照，随时可安全部署
-// - 本地开发用 env.dev + `wrangler dev --env dev --local`（本地模拟存储，id 仅占位）
-// - Cron 每日备份正式 V2 到 R2；Git 回写另需 GITHUB_TOKEN（未配置时只跳过 Git 副本）
+// Cloudflare deployment. Configure real production/preview D1 IDs before release.
+// See docs/V3-UPGRADE.md for migration, backup and rollback.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "idv-cryptic-map",
@@ -15,7 +11,7 @@
     "binding": "ASSETS",
     // /_vercel/* 进 Worker 返回真 404：index.html 里的 Vercel 统计脚本在本部署
     // 不存在，若走 SPA fallback 会以 200 回 HTML，触发页面 SyntaxError 噪音
-    "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
+    "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
   },
   "triggers": {
     "crons": ["0 4 * * *"]
@@ -23,6 +19,7 @@
   "vars": {
     // img 子域绑定 R2 后改为 https://img.<domain>；过渡期由本 Worker /r2/* 同源出图
     "IMG_BASE_URL": "/r2",
+    "TELEMETRY_ORIGIN": "https://idv-map.321666.xyz",
     // Cron 快照永久回写 Worker 正式分支（配合 secret GITHUB_TOKEN 生效）。
     // main 专用于静态页面发布，不接收 Worker 后台快照。
     "GITHUB_REPO": "heytl/idv-cryptic-map",
@@ -33,6 +30,8 @@
   },
   // 生产绑定（Phase 2.0 已开通，2026-07-16）
   "kv_namespaces": [{ "binding": "CONFIG", "id": "d33cc5d1354f441287b216b2c7a96d9f" }],
+  "d1_databases": [{ "binding": "STATS", "database_name": "idv-map-stats", "migrations_dir": "workers/migrations" }],
+  "ratelimits": [{ "name": "TELEMETRY_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } }],
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
   // 主站自定义域（部署时自动建 DNS 记录）；workers.dev 关闭，避免绕过 Access 的重复入口
   // 正式域名切换为 idv-map.321666.xyz（原 main 静态站域名，2026-07-21 确定）；
@@ -45,19 +44,27 @@
   ],
   "env": {
     "dev": {
+      "triggers": { "crons": [] },
       // 本地/开发环境绝不继承生产自定义域，避免误接管正式流量，也保证 request.url 使用本机 Host。
       "routes": [],
       "assets": {
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
       },
       "vars": {
         "IMG_BASE_URL": "/r2",
-        "DEV_DISABLE_AUTH": "1"
+        "TELEMETRY_ORIGIN": "http://127.0.0.1:8787",
+        "DEV_DISABLE_AUTH": "1",
+        "GITHUB_REPO": "",
+        "GITHUB_BRANCH": "",
+        "ACCESS_TEAM_DOMAIN": "",
+        "ACCESS_AUD": ""
       },
       "kv_namespaces": [{ "binding": "CONFIG", "id": "local-dev-config" }],
+      "d1_databases": [{ "binding": "STATS", "database_name": "idv-map-stats-dev", "database_id": "00000000-0000-0000-0000-000000000001", "migrations_dir": "workers/migrations" }],
+      "ratelimits": [{ "name": "TELEMETRY_LIMITER", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }],
       "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media-dev" }]
     },
     "v2-preview": {
@@ -72,19 +79,22 @@
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/maps-v2.json", "/api/*", "/r2/*", "/_vercel/*"]
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
       },
       // 仅测试 Worker 跳过 Access；正式环境仍按顶层 ACCESS_* 配置鉴权。
       "vars": {
         "IMG_BASE_URL": "/r2",
         "DEV_DISABLE_AUTH": "1",
         // 显式置空生产变量，避免误触仓库回写或正式 Access。
+        "TELEMETRY_ORIGIN": "",
         "GITHUB_REPO": "",
         "GITHUB_BRANCH": "",
         "ACCESS_TEAM_DOMAIN": "",
         "ACCESS_AUD": ""
       },
       "kv_namespaces": [{ "binding": "CONFIG", "id": "064adcb553b64bfc9cf19f34b6f3098e" }],
+      "d1_databases": [{ "binding": "STATS", "database_name": "idv-map-stats-preview", "migrations_dir": "workers/migrations" }],
+      "ratelimits": [{ "name": "TELEMETRY_LIMITER", "namespace_id": "1003", "simple": { "limit": 60, "period": 60 } }],
       "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media-v2-preview" }]
     }
   }

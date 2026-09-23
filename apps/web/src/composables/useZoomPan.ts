@@ -7,7 +7,7 @@ import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue';
 
 // 缩放配置：最小/最大缩放均为相对“自适应铺满比例(fitScale)”的倍数
 export const ZOOM_CONFIG = {
-  minScaleRatio: 0.8,
+  minScaleRatio: 0.95,
   maxScaleRatio: 4,
   wheelZoomFactor: 1.1, // 滚轮每格缩放倍率
   buttonZoomFactor: 1.3, // 工具栏 +/- 按钮每次缩放倍率

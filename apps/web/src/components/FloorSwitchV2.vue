@@ -12,6 +12,7 @@ defineEmits<{ change: [floor: FloorType] }>();
       :key="item"
       class="switch-btn"
       :class="{ active: floor === item }"
+      :aria-pressed="floor === item"
       :data-floor="item"
       @click="$emit('change', item)"
     >{{ FLOOR_LABELS[item] }}</button>

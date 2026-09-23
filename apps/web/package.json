@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/gen-thumbs.mjs && vite",
-    "build": "node scripts/gen-thumbs.mjs && vue-tsc -b && vite build",
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "test": "node scripts/gen-thumbs.mjs && vitest run"
+    "test": "vitest run"
   },
   "dependencies": {
     "@idv-map/shared": "workspace:*",

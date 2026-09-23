@@ -1,14 +1,26 @@
 # 项目文档索引
 
-| 文档 | 内容 | 状态 |
-|------|------|------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | 当前架构总览：技术栈、目录结构、数据流、缓存与 PWA 机制、部署拓扑 | ✅ 反映当前实现 |
-| [ADMIN-BACKEND.md](ADMIN-BACKEND.md) | Phase 2 后台管理系统：KV/R2/Access、数据模型、API、裁剪工作台、备份降级 | ✅ 已上线，`feat/admin-backend` 为正式动态版分支 |
-| [OPERATIONS.md](OPERATIONS.md) | 运维手册：地图更新流程、发布与回滚、缓存速查、上线待办 | ✅ 现行流程 |
-| [MAP-V2.md](MAP-V2.md) | V2.1 多模式、多入口、噩梦地下室、公开 API 与渐进式发版方案 | ✅ 已上线并完成首轮观察 |
-| [releases/V2.1.0.md](releases/V2.1.0.md) | V2.1.0 正式版本、数据指纹、备份位置和回滚基线 | ✅ 2026-08-27 归档 |
-| [REFACTOR.md](REFACTOR.md) | Vite 重构（Phase 0–7）实施文档与验收记录 | 📜 历史存档 |
+当前代码为 V3 升级，尚待发布；历史上线记录不代表当前代码已部署。新接手建议按「项目 README → 当前架构 → V3 升级 → V3 版本记录」阅读。
 
-**阅读顺序建议**：新接手先读 ARCHITECTURE → OPERATIONS → V2.1.0 正式归档；参与后台开发读 ADMIN-BACKEND；追溯重构决策与验收细节读 REFACTOR。
+## 当前实现与发布准备
 
-文档维护约定：架构或流程变更时同步更新对应文档（与代码同一 PR）；REFACTOR.md 只增补记录、不改写历史。文档自 2026-08-22 起随 `feat/admin-backend` 分支维护，`docs/project-docs` 文档分支已合并退役。
+| 文档 | 内容 |
+|---|---|
+| [项目 README](../README.md) | 项目介绍、功能、使用、开发与日常维护 |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | V3 分层、数据流与兼容边界 |
+| [V3-UPGRADE.md](V3-UPGRADE.md) | 数据迁移、D1、部署、统计、备份和回滚 |
+| [releases/V3.md](releases/V3.md) | 本轮版本变化、验证记录、发布前清单 |
+
+## 历史资料
+
+以下保留原始设计与当时上线事实，不能直接用作 V3 操作手册。
+
+| 文档 | 历史用途 |
+|---|---|
+| [ADMIN-BACKEND.md](ADMIN-BACKEND.md) | Phase 2 KV/R2/Access 后台设计与上线过程 |
+| [OPERATIONS.md](OPERATIONS.md) | V1/V2 运维流程；含已退役脚本与操作 |
+| [MAP-V2.md](MAP-V2.md) | V2 多模式、多入口与公开协议设计 |
+| [releases/V2.1.0.md](releases/V2.1.0.md) | 当时正式部署、数据指纹和回滚基线 |
+| [REFACTOR.md](REFACTOR.md) | Vite 重构 Phase 0–7 历史记录 |
+
+文档与代码同步维护；历史归档不改写成新版本说明。生产上线后，在当前版本记录补充实际提交、标签、Worker 版本、数据版本及验证结果，不预填上线成功状态。

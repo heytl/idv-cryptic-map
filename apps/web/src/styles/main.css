@@ -1484,3 +1484,31 @@ body.catalog-v2-view-active .header-decoration {
     white-space: nowrap;
   }
 }
+
+/* Cards are keyboard-operable buttons; retain the established parchment styling. */
+button.map-card-item { text-align:left; color:inherit; font:inherit; }
+.map-choice-heading { display:flex; align-items:center; gap:20px; margin-bottom:20px; flex-wrap:wrap; }
+button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid #d4b77c; outline-offset:4px; }
+
+/* Detail view dedicates the available screen to the map. */
+body.strategy-view-active {
+  --strategy-max-width: 1080px;
+  --strategy-canvas: #151d23;
+  --strategy-atmosphere: radial-gradient(ellipse at 50% 38%, #24313b 0%, #1c272f 40%, #151d23 78%);
+  overflow: hidden;
+  background-color: var(--strategy-canvas);
+  background-image: var(--strategy-atmosphere);
+  background-attachment: fixed;
+}
+body.strategy-view-active .glow-bg { display: none; }
+body.strategy-view-active .app-container {
+  width: 100%;
+  max-width: var(--strategy-max-width);
+  margin: 0 auto;
+  padding: 0;
+  /* The content width controls interaction placement, not a visible panel edge. */
+  background: transparent;
+  box-shadow: none;
+}
+body.strategy-view-active .app-header,
+body.strategy-view-active .app-footer { display: none; }
