@@ -1502,8 +1502,13 @@ body.strategy-view-active {
 }
 body.strategy-view-active .glow-bg { display: none; }
 body.strategy-view-active .app-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   max-width: var(--strategy-max-width);
+  min-height: 0;
   margin: 0 auto;
   padding: 0;
   /* The content width controls interaction placement, not a visible panel edge. */

@@ -6,7 +6,7 @@ import {
   type FloorType,
   type GameMode,
 } from "@idv-map/shared";
-import { computed, onUnmounted, ref, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FloorSwitchV2 from "../components/FloorSwitchV2.vue";
 import LegendBox from "../components/LegendBox.vue";
@@ -22,6 +22,21 @@ import {
 import { navState } from "../navState";
 
 const referenceDialog = ref<HTMLDialogElement | null>(null);
+// iPad Safari may size 100dvh beyond the currently visible area when its bars
+// are shown. Use the visual viewport so the map's fitted image stays visible.
+const viewportHeight = ref(0);
+function updateViewportHeight() {
+  viewportHeight.value = window.visualViewport?.height ?? window.innerHeight;
+}
+onMounted(() => {
+  updateViewportHeight();
+  window.addEventListener("resize", updateViewportHeight);
+  window.visualViewport?.addEventListener("resize", updateViewportHeight);
+});
+onUnmounted(() => {
+  window.removeEventListener("resize", updateViewportHeight);
+  window.visualViewport?.removeEventListener("resize", updateViewportHeight);
+});
 function closeReference(event: MouseEvent) {
   if (event.target !== referenceDialog.value) return;
   const box = referenceDialog.value!.getBoundingClientRect();
@@ -89,7 +104,7 @@ function goBack() {
 </script>
 
 <template>
-  <main v-if="map && entrance" id="strategy-v2-view" class="view-panel active">
+  <main v-if="map && entrance" id="strategy-v2-view" class="view-panel active" :style="viewportHeight ? { '--strategy-viewport-height': `${viewportHeight}px` } : undefined">
     <div class="control-bar">
       <button class="btn-back" aria-label="返回手记目录" @click="goBack">‹ 返回</button>
       <div class="map-title-container">
@@ -154,7 +169,7 @@ function goBack() {
 </template>
 
 <style scoped>
-#strategy-v2-view { display: flex; flex-direction: column; height: 100dvh; min-height: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+#strategy-v2-view { display: flex; flex-direction: column; height: var(--strategy-viewport-height, 100vh); min-height: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
 .control-bar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; flex: none; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
 .btn-back { width: auto; background: transparent; border: 0; box-shadow: none; padding: 6px 10px; }
 .map-title-container { min-width: 0; gap: 8px; }
@@ -167,7 +182,7 @@ function goBack() {
 .map-main-panel { flex: 1; min-width: 0; min-height: 0; }
 .map-main-panel :deep(.map-viewport) { min-height: 0; border: 0; border-radius: 0; }
 .map-main-panel :deep(.vignette-overlay) { display: none; }
-.reference-dialog { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(360px, 100%); max-width: 100%; height: 100dvh; max-height: 100dvh; overflow: auto; border: 0; padding: 16px; }
+.reference-dialog { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(360px, 100%); max-width: 100%; height: var(--strategy-viewport-height, 100vh); max-height: var(--strategy-viewport-height, 100vh); overflow: auto; border: 0; padding: 16px; }
 .reference-dialog::backdrop { background: rgba(10,11,13,.65); }
 .reference-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .reference-heading h2 { font-size: 1.1rem; }
