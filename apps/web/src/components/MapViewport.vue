@@ -218,7 +218,7 @@ function onViewportClick(e: MouseEvent) {
 </template>
 
 <style scoped>
-.map-viewport.in-page-fullscreen { width: 100%; height: 100dvh; min-height: 0; }
+.map-viewport.in-page-fullscreen { width: 100%; height: var(--strategy-viewport-height, 100vh); min-height: 0; }
 .map-wrapper { transition: none; }
 .map-floating-controls { top: 8px; right: 8px; gap: 6px; }
 .tool-btn { width: 40px; height: 40px; }
