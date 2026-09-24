@@ -33,13 +33,13 @@ describe("V3 content", () => {
     expect(compatibleV2Config(c)).toEqual(v2);
     expect(validateMapConfigV3(c).valid).toBe(true);
   });
-  it("rejects orphan layouts, duplicate map IDs and removal of referenced maps", () => {
+  it("rejects orphan layouts and duplicate IDs while allowing a referenced map to be retired", () => {
     const c = migrateV2ToV3(v2);
     c.layouts[0]!.gameMapId = "missing";
     expect(validateMapConfigV3(c).valid).toBe(false);
     c.layouts[0]!.gameMapId = c.gameMaps[0]!.id;
     c.gameMaps[0]!.deletedAt = "now";
-    expect(validateMapConfigV3(c).valid).toBe(false);
+    expect(validateMapConfigV3(c).valid).toBe(true);
     c.gameMaps[0]!.deletedAt = null;
     c.gameMaps.push({ ...c.gameMaps[0]! });
     expect(validateMapConfigV3(c).valid).toBe(false);
