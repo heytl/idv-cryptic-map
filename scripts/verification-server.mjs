@@ -49,6 +49,52 @@ const db = new DatabaseSync(":memory:");
 db.exec(
   readFileSync(resolve(root, "workers/migrations/0001_statistics.sql"), "utf8"),
 );
+// Give the local admin demo a useful analytics preview without implying that
+// these synthetic visits came from the production site. TEST_EMPTY keeps the
+// intentionally empty fixture available for manual empty-state checks.
+if (process.env.TEST_EMPTY !== "1") {
+  const activeMapIds = new Set(
+    config.gameMaps.filter((map) => map.published && !map.deletedAt).map((map) => map.id),
+  );
+  const layouts = config.layouts.filter(
+    (layout) => layout.published && !layout.deletedAt && activeMapIds.has(layout.gameMapId),
+  );
+  const insert = db.prepare(
+    "INSERT INTO visits (event_id,layout_id,entrance_id,entrance_type,game_map_id,mode,received_at,day) VALUES (?,?,?,?,?,?,?,?)",
+  );
+  const today = new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 10);
+  let total = 0;
+  let startedAt = "";
+  for (let offset = 29; offset >= 0; offset--) {
+    const day = new Date(Date.parse(`${today}T00:00:00Z`) - offset * 86400_000)
+      .toISOString()
+      .slice(0, 10);
+    const count = 7 + ((offset * 13 + 11) % 24);
+    for (let index = 0; index < count; index++) {
+      const layout = layouts[(offset * 17 + index * 11) % layouts.length];
+      if (!layout) continue;
+      const entrance = layout.entrances[(offset + index) % layout.entrances.length];
+      if (!entrance) continue;
+      const receivedAt = new Date(
+        Date.parse(`${day}T09:00:00+08:00`) + index * 60_000,
+      ).toISOString();
+      startedAt ||= receivedAt;
+      insert.run(
+        `demo-${String(++total).padStart(6, "0")}`,
+        layout.id,
+        entrance.id,
+        entrance.type,
+        layout.gameMapId,
+        layout.mode,
+        receivedAt,
+        day,
+      );
+    }
+  }
+  db.prepare("INSERT INTO stats_meta (key,value) VALUES ('started_at',?)").run(
+    startedAt || new Date().toISOString(),
+  );
+}
 function prepare(sql) {
   let values = [];
   return {
