@@ -61,7 +61,7 @@ pnpm check:worker
 pnpm build
 ```
 
-推荐先启动隔离验收服务。它不读写生产数据，提供样例配置和图片，进程重启后数据重置：
+推荐先启动隔离验收服务。它不读写生产数据，提供样例配置、图片和虚构的演示访问数据，进程重启后数据重置：
 
 ```powershell
 pnpm exec wrangler deploy --dry-run --env dev --outdir .tmp/worker-build

@@ -93,8 +93,6 @@ export function validateMapConfigV3(input: unknown): {
       typeof m.published !== "boolean"
     )
       errors.push("地图名称、排序或发布状态无效");
-    if (m?.deletedAt && c.layouts.some((l) => l?.gameMapId === m.id))
-      errors.push(`地图 ${m.id} 仍有关联布局，请使用下架`);
   }
   for (const l of c.layouts) {
     if (!l || !ids.has(l.gameMapId)) errors.push("布局引用的地图不存在");

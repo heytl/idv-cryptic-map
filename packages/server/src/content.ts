@@ -44,9 +44,8 @@ export async function saveContent(
         "missing_map",
         "地图记录必须保留；请使用下架或软删除",
       );
-  for (const map of current.gameMaps)
-    if (map.deletedAt && !maps.get(map.id)?.deletedAt)
-      throw new ServiceError(400, "retired_map_id", "已移除地图 ID 不可复用");
+  // The existing row keeps this ID reserved. Clearing deletedAt restores that
+  // same map; removing the row entirely is still rejected by the check above.
   const layouts = new Map(config.layouts.map((l) => [l.id, l]));
   for (const l of current.layouts) {
     const next = layouts.get(l.id);

@@ -3,94 +3,137 @@ import { ref } from "vue";
 import {
   NAlert,
   NButton,
+  NCard,
+  NEmpty,
+  NFormItem,
   NInput,
   NInputNumber,
+  NPopconfirm,
+  NSpace,
   NSwitch,
+  NTag,
   useMessage,
 } from "naive-ui";
-import { storeV2, markDirtyV2, saveV2 } from "../store-v2";
+import { storeV2, markDirtyV2 } from "../store-v2";
+
 const name = ref("");
+const mapId = ref("");
 const message = useMessage();
+const idPattern = /^[a-z0-9][a-z0-9-]{0,63}$/;
+
 function add() {
+  const id = mapId.value.trim();
   if (!name.value.trim()) return;
+  if (!idPattern.test(id)) {
+    message.error("地图标识需为 1–64 位小写字母、数字或连字符，且以字母或数字开头");
+    return;
+  }
+  if (storeV2.gameMaps.some((map) => map.id === id)) {
+    message.error("地图标识已存在（包括回收站中的地图），请换一个标识");
+    return;
+  }
   storeV2.gameMaps.push({
-    id: `map-${crypto.randomUUID()}`,
+    id,
     name: name.value.trim(),
     sort: (storeV2.gameMaps.length + 1) * 10,
     published: false,
   });
   name.value = "";
+  mapId.value = "";
   markDirtyV2();
 }
-async function save() {
-  const error = await saveV2();
-  if (error) message.error(error);
-  else message.success("已保存");
-}
+
 function remove(id: string) {
-  if (storeV2.maps.some((l) => l.gameMapId === id)) {
-    message.warning("仍有关联布局，请使用下架");
-    return;
+  const map = storeV2.gameMaps.find((item) => item.id === id);
+  if (!map) return;
+  map.published = false;
+  map.deletedAt = new Date().toISOString();
+  for (const layout of storeV2.maps.filter((item) => item.gameMapId === id)) {
+    layout.published = false;
   }
-  const m = storeV2.gameMaps.find((m) => m.id === id)!;
-  m.published = false;
-  m.deletedAt = new Date().toISOString();
+  markDirtyV2();
+}
+
+function restore(id: string) {
+  const map = storeV2.gameMaps.find((item) => item.id === id);
+  if (!map) return;
+  map.deletedAt = null;
   markDirtyV2();
 }
 </script>
+
 <template>
-  <n-alert type="info"
-    >新增地图默认为草稿。地图下架后，其全部布局会从前台隐藏；历史访问记录保留。</n-alert
-  >
-  <div class="toolbar">
-    <n-input
-      v-model:value="name"
-      aria-label="新地图名称"
-      placeholder="新地图名称"
-      style="max-width: 300px"
-      @keyup.enter="add"
-    /><n-button @click="add" :disabled="!name.trim()">新增地图</n-button>
-  </div>
-  <article
-    v-for="map in storeV2.gameMaps.filter((m) => !m.deletedAt)"
-    :key="map.id"
-    class="map-card"
-  >
-    <div class="meta">
-      <n-input
-        v-model:value="map.name"
-        aria-label="地图名称"
-        @update:value="markDirtyV2"
-      /><small>{{ map.id }}</small>
-    </div>
-    <label
-      >排序<n-input-number
-        v-model:value="map.sort"
-        aria-label="地图排序"
-        @update:value="markDirtyV2"
-        style="width: 110px"
-    /></label>
-    <label
-      >发布
-      <n-switch
-        v-model:value="map.published"
-        :aria-label="`${map.name}发布状态`"
-        @update:value="markDirtyV2"
-    /></label>
-    <n-button
-      :disabled="storeV2.maps.some((l) => l.gameMapId === map.id)"
-      @click="remove(map.id)"
-      >移除空地图</n-button
-    >
-  </article>
-  <div class="savebar">
-    <span>{{ storeV2.dirty ? "有未保存的改动" : "已保存" }}</span
-    ><n-button
-      type="primary"
-      :loading="storeV2.saving"
-      :disabled="!storeV2.dirty"
-      @click="save"
-      >保存内容</n-button
-    >
-  </div>
+  <section class="admin-page">
+    <n-card class="surface-card" :bordered="false">
+      <template #header>
+        <div class="card-title-row">
+          <div>
+            <h2>地图目录</h2>
+            <p>创建地图并管理标识、排序和前台发布状态。</p>
+          </div>
+          <n-tag :bordered="false">{{ storeV2.gameMaps.filter((item) => !item.deletedAt).length }} 张地图</n-tag>
+        </div>
+      </template>
+
+      <n-alert type="info" :show-icon="true">
+        新增地图默认为草稿。地图标识用于 URL 与数据关联；移除地图会连同布局移入回收站，保存后从前台隐藏，历史访问记录保留。
+      </n-alert>
+
+      <form class="map-manager-create" @submit.prevent="add">
+        <n-form-item label="地图名称" required>
+          <n-input v-model:value="name" placeholder="例如：遗忘之境" autocomplete="off" />
+        </n-form-item>
+        <n-form-item label="地图标识" required feedback="1–64 位小写字母、数字或连字符，例如 new-map">
+          <n-input v-model:value="mapId" placeholder="new-map" autocomplete="off" />
+        </n-form-item>
+        <n-button type="primary" attr-type="submit" :disabled="!name.trim() || !mapId.trim()">新增地图</n-button>
+      </form>
+
+      <div v-if="storeV2.gameMaps.some((item) => !item.deletedAt)" class="map-manager-list">
+        <article
+          v-for="map in storeV2.gameMaps.filter((item) => !item.deletedAt)"
+          :key="map.id"
+          class="map-card map-manager-row"
+        >
+          <div class="map-manager-name">
+            <n-input v-model:value="map.name" aria-label="地图名称" @update:value="markDirtyV2" />
+            <small>{{ map.id }}</small>
+          </div>
+          <n-form-item label="排序" :show-feedback="false" class="map-sort-field">
+            <n-input-number v-model:value="map.sort" aria-label="地图排序" :min="0" @update:value="markDirtyV2" />
+          </n-form-item>
+          <n-space align="center" :size="8">
+            <span class="muted">发布</span>
+            <n-switch v-model:value="map.published" :aria-label="`${map.name}发布状态`" @update:value="markDirtyV2" />
+          </n-space>
+          <n-popconfirm positive-text="移入回收站" negative-text="取消" @positive-click="remove(map.id)">
+            <template #trigger>
+              <n-button type="error" secondary>移除</n-button>
+            </template>
+            移除「{{ map.name }}」及其全部布局？保存后会从前台隐藏，可在回收站恢复。
+          </n-popconfirm>
+        </article>
+      </div>
+      <n-empty v-else description="还没有地图，请在上方创建" />
+    </n-card>
+
+    <n-card v-if="storeV2.gameMaps.some((item) => item.deletedAt)" class="surface-card" :bordered="false">
+      <template #header>
+        <div class="card-title-row">
+          <div>
+            <h2>回收站</h2>
+            <p>恢复后地图与原布局仍为草稿，不会自动重新发布。</p>
+          </div>
+          <n-tag type="warning" :bordered="false">{{ storeV2.gameMaps.filter((item) => item.deletedAt).length }}</n-tag>
+        </div>
+      </template>
+      <div class="map-manager-list">
+        <article v-for="map in storeV2.gameMaps.filter((item) => item.deletedAt)" :key="`deleted-${map.id}`" class="map-card map-manager-restore">
+          <div class="map-manager-name"><strong>{{ map.name }}</strong><small>{{ map.id }}</small></div>
+          <n-button @click="restore(map.id)">恢复地图</n-button>
+        </article>
+      </div>
+    </n-card>
+
+  </section>
 </template>

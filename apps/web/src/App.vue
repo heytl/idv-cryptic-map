@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { watchEffect } from "vue";
+import { computed, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { formatUpdatedAt } from "@idv-map/shared";
 import OfflineCache from "./components/OfflineCache.vue";
-import { mapsV2UpdatedAt as mapsUpdatedAt } from "./data/maps-v2";
+import { mapsV2UpdatedAt } from "./data/maps-v2";
 
 const route = useRoute();
 const router = useRouter();
+const mapsUpdatedAt = computed(() =>
+  mapsV2UpdatedAt.value ? formatUpdatedAt(mapsV2UpdatedAt.value) : "",
+);
 
 const goHome = () => {
   router.push("/");

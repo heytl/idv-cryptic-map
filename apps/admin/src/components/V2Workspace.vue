@@ -11,6 +11,7 @@ import {
 import {
   NAlert,
   NButton,
+  NEmpty,
   NPopconfirm,
   NRadioButton,
   NRadioGroup,
@@ -34,7 +35,6 @@ import {
   loadV2,
   markDirtyV2,
   nextIdV2,
-  saveV2,
   storeV2,
 } from "../store-v2";
 import MapEditorV2 from "./MapEditorV2.vue";
@@ -190,11 +190,6 @@ function closeEditor(): void {
   editingIsNew.value = false;
 }
 
-async function onSave(): Promise<void> {
-  const error = await saveV2();
-  if (error) message.error(error, { duration: 10000, closable: true });
-  else message.success(`内容已保存（v${storeV2.version}）`);
-}
 </script>
 
 <template>
@@ -226,10 +221,6 @@ async function onSave(): Promise<void> {
           >噩梦地图（{{ modeCounts.nightmare }}）</n-radio-button
         >
       </n-radio-group>
-      <span class="muted"
-        >配置 v{{ storeV2.version }} ·
-        {{ storeV2.updatedAt || "尚未保存" }}</span
-      >
       <span class="spacer"></span>
       <n-button
         type="primary"
@@ -329,28 +320,19 @@ async function onSave(): Promise<void> {
         </div>
       </article>
     </div>
-    <div v-else class="v2-empty">
-      还没有{{ MODE_LABELS[activeMode] }}布局，可以直接新增。
-    </div>
+    <n-empty v-else :description="`还没有${MODE_LABELS[activeMode]}布局`" class="v2-empty">
+      <template #extra>
+        <n-button type="primary" :disabled="!gameMapOptions.some((m) => m.value === gameMapId)" @click="createMap">
+          新增{{ MODE_LABELS[activeMode] }}布局
+        </n-button>
+      </template>
+    </n-empty>
 
     <p v-if="visibleMaps.length" class="muted v2-list-hint">
       按住 ⠿ 拖动，或使用“上移 /
       下移”调整当前模式的前台顺序；排序、发布和移除都需点击“保存内容”生效。
     </p>
 
-    <div class="savebar">
-      <span class="hint">{{
-        storeV2.dirty ? "有未保存的改动" : "内容已是最新"
-      }}</span>
-      <n-button
-        type="primary"
-        :disabled="!storeV2.dirty"
-        :loading="storeV2.saving"
-        @click="onSave"
-      >
-        保存内容
-      </n-button>
-    </div>
   </template>
 
   <MapEditorV2
