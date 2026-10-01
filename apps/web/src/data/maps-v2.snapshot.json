@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 35,
-  "updatedAt": "2026-09-25",
+  "version": 40,
+  "updatedAt": "2026-09-30",
   "maps": [
     {
       "id": 1,
@@ -2804,6 +2804,150 @@
             "key": "maps/entrance-thumb/c27ad834.webp"
           },
           "direction": "south"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "mode": "nightmare",
+      "name": "左 - 骑士1门",
+      "displayName": "左 - 骑士1门",
+      "remarks": "",
+      "sort": 540,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/d3c3a1f7.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/16359710.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/2af90618.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/8944202c.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "54-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/c5889702.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/726e8fb0.webp"
+          }
+        },
+        {
+          "id": "54-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/5bc33173.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a11c4732.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "mode": "nightmare",
+      "name": "左 - 十字门",
+      "displayName": "左 - 十字门",
+      "remarks": "",
+      "sort": 550,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/9be6737f.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/9449cb33.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/1284e67d.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/d9d37d2d.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "55-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/ea0238d7.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/49378a6b.webp"
+          }
+        },
+        {
+          "id": "55-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/911b4e4e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/8c587cdb.webp"
+          }
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "mode": "nightmare",
+      "name": "左 - z门",
+      "displayName": "左 - z门",
+      "remarks": "",
+      "sort": 560,
+      "published": true,
+      "layout": {
+        "full": {
+          "key": "maps/layout/full/5e2cd65f.webp"
+        },
+        "basement": {
+          "key": "maps/layout/basement/8a8a9699.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/8d3ac8ba.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/a4f540ef.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "56-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/6ec5e699.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c81ab563.webp"
+          }
+        },
+        {
+          "id": "56-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/b5e971bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/615ab39c.webp"
+          }
         }
       ]
     }
