@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5211",
-    "build": "vue-tsc -b && vite build"
+    "build": "vue-tsc -b && vite build",
+    "test": "pnpm --filter @idv-map/shared exec vitest run --root ../../apps/admin"
   },
   "dependencies": {
     "@idv-map/shared": "workspace:*",

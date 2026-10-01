@@ -21,7 +21,7 @@ export function useOfflineCache(gameMapId: Ref<string>) {
   const failed = ref(0);
   const error = ref("");
   const key = (id = gameMapId.value, version = mapsV2Version.value) =>
-    `idv_map_offline_v3_${id}_${version}`;
+    `idv_map_offline_v4_${id}_${version}`;
   watch(
     [gameMapId, mapsV2Version],
     () => {
@@ -37,6 +37,7 @@ export function useOfflineCache(gameMapId: Ref<string>) {
   async function warm() {
     if (phase.value === "running" || !gameMapId.value) return;
     const id = gameMapId.value;
+    const downloadVersion = mapsV2Version.value;
     const savedKey = key();
     const urls = imageUrls(id);
     if (!urls.length) {
@@ -55,14 +56,15 @@ export function useOfflineCache(gameMapId: Ref<string>) {
         const response = await fetch(publicEndpoint(), { cache: "no-cache" });
         if (!response.ok) throw new Error("配置下载失败");
         const config = await response.clone().json();
-        if (config.schemaVersion !== 3) throw new Error("配置格式无效");
+        if (config.schemaVersion !== 4) throw new Error("配置格式无效");
+        if (config.dataVersion !== downloadVersion) throw new Error("地图内容已更新，请刷新页面后重新下载离线包");
         await (
-          await caches.open("maps-config-v3")
+          await caches.open("maps-config-v4")
         ).put(publicEndpoint(), response);
       }
-    } catch {
+    } catch (e) {
       phase.value = "error";
-      error.value = "地图配置下载失败，请联网重试";
+      error.value = e instanceof Error ? e.message : "地图配置下载失败，请联网重试";
       return;
     }
     void navigator.storage?.persist?.().catch(() => undefined);
@@ -111,7 +113,7 @@ export function useOfflineCache(gameMapId: Ref<string>) {
     try {
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const k = localStorage.key(i);
-        if (k?.startsWith(`idv_map_offline_v3_${gameMapId.value}_`))
+        if (k?.startsWith(`idv_map_offline_v4_${gameMapId.value}_`))
           localStorage.removeItem(k);
       }
     } catch {}

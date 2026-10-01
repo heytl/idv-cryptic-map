@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
+import { computed, watch, nextTick, onMounted, onUnmounted, ref } from "vue";
 import { useZoomPan, ZOOM_CONFIG } from "../composables/useZoomPan";
 
-const props = defineProps<{ imageUrl: string }>();
+import type { PixelRect } from "@idv-map/shared";
+const props = defineProps<{ imageUrl: string; region?: PixelRect }>();
 
 const viewportEl = ref<HTMLElement | null>(null);
 const wrapperEl = ref<HTMLElement | null>(null);
 const imgEl = ref<HTMLImageElement | null>(null);
+const naturalWidth = ref(0);
 
 const imgUrl = computed(() => props.imageUrl);
 
@@ -14,6 +16,7 @@ const zoom = useZoomPan({
   viewport: viewportEl,
   wrapper: wrapperEl,
   img: imgEl,
+  size: () => props.region,
 });
 
 // 图片尺寸不统一（新图有 1650/1700/1800 等高度），
@@ -22,11 +25,17 @@ function fitWrapperToImage() {
   const img = imgEl.value;
   const wrapper = wrapperEl.value;
   if (!img || !wrapper || !img.naturalWidth) return;
-  wrapper.style.width = `${img.naturalWidth}px`;
-  wrapper.style.height = `${img.naturalHeight}px`;
+  naturalWidth.value = img.naturalWidth;
+  wrapper.style.width = `${props.region?.width ?? img.naturalWidth}px`;
+  wrapper.style.height = `${props.region?.height ?? img.naturalHeight}px`;
   zoom.reset(true);
 }
 
+watch(() => props.region, () => nextTick(fitWrapperToImage), { deep: true });
+const imageStyle = computed(() => props.region ? {
+  position: "absolute" as const, left: `${-props.region.x}px`, top: `${-props.region.y}px`,
+  width: naturalWidth.value ? `${naturalWidth.value}px` : "auto", height: "auto", maxWidth: "none",
+} : { position: "static" as const, width: "auto", height: "auto", maxWidth: "none" });
 let resizeObserver: ResizeObserver | undefined;
 onMounted(() => {
   resizeObserver = new ResizeObserver(() => { if (imgEl.value?.complete && imgEl.value.naturalWidth) zoom.reset(true); });
@@ -79,6 +88,7 @@ function onViewportClick(e: MouseEvent) {
         id="main-map-img"
         ref="imgEl"
         :src="imgUrl"
+        :style="imageStyle"
         alt="交互地图"
         draggable="false"
         fetchpriority="high"
@@ -219,7 +229,7 @@ function onViewportClick(e: MouseEvent) {
 
 <style scoped>
 .map-viewport.in-page-fullscreen { width: 100%; height: var(--strategy-viewport-height, 100vh); min-height: 0; }
-.map-wrapper { transition: none; }
+.map-wrapper { transition: none; overflow: hidden; position: absolute; }
 .map-floating-controls { top: 8px; right: 8px; gap: 6px; }
 .tool-btn { width: 40px; height: 40px; }
 </style>

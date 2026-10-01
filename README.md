@@ -23,7 +23,7 @@
 
 pnpm 工作区，前后台采用 **Vue 3 + TypeScript + Vite**。主站使用 **Cloudflare Workers + KV + R2**，V3 访问统计新增 **D1**；后台由 Cloudflare Access 保护。
 
-内容真源为 KV `config:v3:current`，图片与版本备份存于 R2，统计独立存于 D1。修改地图通过后台发布，无需重新构建前端。首次读取可从现有 V2 配置转换，首次保存前归档 V2 基线。V2 正式分享链接与公开协议继续兼容；V1 页面、编辑 API 和静态图片链路已退役。
+内容真源为 KV `config:v3:current`，图片与版本备份存于 R2，统计独立存于 D1。修改地图通过后台发布，无需重新构建前端。首次读取可从现有 V2 配置转换，首次保存前归档 V2 基线。旧分享链接继续兼容，公开数据使用 V4（旧 V2/V3 图片协议返回升级提示）；V1 页面、编辑 API 和静态图片链路已退役。
 
 部分文件名和路由内部名称仍保留 `V2`，用于延续原组件与接口调用，**不表示存在第二套可编辑内容源**。详见 [架构总览](docs/ARCHITECTURE.md)。
 
@@ -37,7 +37,7 @@ apps/web/                  玩家端、PWA、字体与地图交互
   src/data/                公开数据读取、测试与版本快照
   scripts/                 字体子集、交互与 PWA 验收
 apps/admin/                地图管理、裁剪、统计、备份恢复
-packages/shared/           V2/V3 协议、共享类型与校验
+packages/shared/           V2/V3 历史配置、V4 公开协议、共享类型与校验
 packages/server/src/       内容与统计业务、平台存储接口
 workers/                   HTTP 路由、Cloudflare 适配、定时任务
   migrations/              D1 数据库迁移
@@ -89,7 +89,7 @@ pnpm verify:pwa
 ## 日常地图维护
 
 1. 进入已部署相应版本的后台，选择目标游戏地图及模式。
-2. 新增或编辑布局，上传全图，裁剪楼层与入口参考图，填写门型 / 方向和备注。
+2. 新增或编辑布局，上传完整全图，选择楼层区域并裁剪入口参考图，填写门型 / 方向和备注。
 3. 检查发布所需图片与入口信息，再保存、发布。
 4. 刷新玩家端，核对入口筛选、楼层、备注与图片；已下载离线包可重新复查。
 
@@ -100,7 +100,7 @@ pnpm verify:pwa
 - **Cloudflare 主站**：推送 `feat/admin-backend` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
 - **V3 前置条件**：生产发布前配置真实 D1 ID。开发分支部署前，在 GitHub 仓库 Actions Variables 设置 `V3_PREVIEW_D1_ID`，值为隔离数据库 `idv-map-stats-preview` 的 UUID。详情见 [V3 版本记录](docs/releases/V3.md)。
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
-- **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v3.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
+- **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
 
 具体部署命令、备份、验收与回滚以 [V3 升级与运维](docs/V3-UPGRADE.md) 为准。未来 Docker 自托管只有业务 / 平台接口准备，本版本不包含 Docker 运行环境。
 
@@ -120,3 +120,5 @@ pnpm verify:pwa
 - 游戏及地图版权归《第五人格》官方所有。
 - 字体 Cinzel / Ma Shan Zheng / Noto Serif SC 来自 [google/fonts](https://github.com/google/fonts)，按 OFL 协议使用并自托管。
 - 欢迎通过 GitHub Issues 反馈错误、缺图与体验问题；反馈时请附地图、模式、入口、布局及复现步骤。
+
+楼层区域与移动端编辑器的迁移、验收和回滚说明见 [区域改造说明](docs/FLOOR-REGIONS.md)。

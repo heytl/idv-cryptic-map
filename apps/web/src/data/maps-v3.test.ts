@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   assetKeys,
   migrateV2ToV3,
-  toPublicMapConfigV3,
+  toPublicMapConfigV4,
   type MapConfigV2,
   type MapConfigV3,
 } from "@idv-map/shared";
@@ -15,12 +15,26 @@ describe("baseline and offline packages", () => {
     mapsV2.splice(
       0,
       mapsV2.length,
-      ...toPublicMapConfigV3(snapshot as MapConfigV3, "https://test").layouts,
+      ...toPublicMapConfigV4(snapshot as MapConfigV3, "https://test").layouts,
     ),
   );
   it("checked-in migration exactly matches the V2 baseline", () => {
     expect(snapshot).toEqual(migrateV2ToV3(oldSnapshot as MapConfigV2));
     expect(assetKeys(snapshot as MapConfigV3).length).toBeGreaterThan(0);
+  });
+  it("downloads the full image only for converted floors and includes unmigrated floors", () => {
+    const config = structuredClone(snapshot) as MapConfigV3;
+    const layout = config.layouts[0]!;
+    const legacyFloor = layout.floorImages.floor2!.key;
+    const removed = layout.floorImages.floor1!.key;
+    delete layout.floorImages.floor1;
+    layout.floorRegions = { sourceKey: layout.floorImages.full!.key, imageWidth: 900, imageHeight: 1500,
+      regions: { floor1: { x: 0, y: 0, width: 900, height: 700 } } };
+    mapsV2.splice(0, mapsV2.length, ...toPublicMapConfigV4({ ...config, layouts: [layout] }, "https://test").layouts);
+    const urls = imageUrls(layout.gameMapId);
+    expect(urls).toContain(`https://test/${legacyFloor}`);
+    expect(urls).not.toContain(`https://test/${removed}`);
+    expect(urls.filter(u => u === `https://test/${layout.floorImages.full!.key}`)).toHaveLength(1);
   });
   it("downloads only selected map resources, deduplicated", () => {
     const first = mapsV2[0]!;

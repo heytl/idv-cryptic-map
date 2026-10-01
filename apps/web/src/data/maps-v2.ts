@@ -15,12 +15,12 @@ import {
   type GameMode,
   type PassageV2,
   type PublicEntranceV2,
-  type PublicMapConfigV3,
-  type PublicLayout,
+  type PublicMapConfigV4,
+  type PublicLayoutV4,
 } from "@idv-map/shared";
 import { reactive, ref } from "vue";
 
-export const mapsV2 = reactive<PublicLayout[]>([]);
+export const mapsV2 = reactive<PublicLayoutV4[]>([]);
 export const mapsV2UpdatedAt = ref("");
 export const mapsV2Version = ref(0);
 export const gameMaps = reactive<GameMap[]>([]);
@@ -32,14 +32,14 @@ export function publicEndpoint(): string {
   const base = (import.meta.env.VITE_MAP_API_BASE_URL ?? "").replace(/\/$/, "");
   // 正式 Access 策略覆盖 /api/*；使用等价的公开文件路由可让网页、main 静态站和小程序
   // 在无需后台登录的情况下读取，同时仍由 Worker 从同一份 config:v3:current 下发。
-  return `${base}/maps-v3.json`;
+  return `${base}/maps-v4.json`;
 }
 
-function isPublicConfig(input: unknown): input is PublicMapConfigV3 {
+function isPublicConfig(input: unknown): input is PublicMapConfigV4 {
   if (!input || typeof input !== "object") return false;
-  const config = input as Partial<PublicMapConfigV3>;
+  const config = input as Partial<PublicMapConfigV4>;
   return (
-    config.schemaVersion === 3 &&
+    config.schemaVersion === 4 &&
     config.defaultFloor === DEFAULT_FLOOR &&
     typeof config.dataVersion === "number" &&
     Array.isArray(config.layouts) &&
@@ -149,7 +149,7 @@ export function findMapV2(
   id: number,
   mode?: GameMode,
   gameMapId?: string,
-): PublicLayout | undefined {
+): PublicLayoutV4 | undefined {
   return mapsV2.find(
     (map) =>
       map.id === id &&
@@ -159,12 +159,12 @@ export function findMapV2(
 }
 
 export function findEntranceV2(
-  map: PublicLayout,
+  map: PublicLayoutV4,
   type: EntranceType,
 ): PublicEntranceV2 | undefined {
   return map.entrances.find((entrance) => entrance.type === type);
 }
 
-export function availableFloors(map: PublicLayout): FloorType[] {
-  return FLOOR_ORDER.filter((floor) => !!map.floorImages[floor]);
+export function availableFloors(map: PublicLayoutV4): FloorType[] {
+  return FLOOR_ORDER.filter((floor) => !!map.floorImages[floor] || (floor !== "full" && !!map.floorRegions?.regions[floor]));
 }

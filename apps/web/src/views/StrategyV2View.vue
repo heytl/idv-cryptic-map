@@ -72,7 +72,8 @@ const floor = computed<FloorType>(() => {
     ? requested
     : DEFAULT_FLOOR;
 });
-const imageUrl = computed(() => map.value?.floorImages[floor.value]?.url ?? "");
+const region = computed(() => floor.value === "full" ? undefined : map.value?.floorRegions?.regions[floor.value]);
+const imageUrl = computed(() => region.value ? map.value!.floorRegions!.sourceUrl : map.value?.floorImages[floor.value]?.url ?? "");
 
 watchEffect(() => {
   if (route.name === "map-v2" && (!map.value || !entrance.value))
@@ -162,7 +163,7 @@ function goBack() {
       </dialog>
 
       <section class="map-main-panel">
-        <MapViewport :image-url="imageUrl" />
+        <MapViewport :image-url="imageUrl" :region="region" />
       </section>
     </div>
   </main>
