@@ -69,15 +69,16 @@ try {
   await page.setViewportSize({ width: 1365, height: 900 });
   await page.goto(`${base}/admin/`);
   await page.getByText("地图管理", { exact: true }).click();
-  await page.getByRole("textbox", { name: "新地图名称" }).fill("验收新地图");
+  await page.getByPlaceholder("例如：遗忘之境").fill("验收新地图");
+  await page.getByPlaceholder("new-map", { exact: true }).fill(`e2e-map-${Date.now()}`);
   await page.getByRole("button", { name: "新增地图", exact: true }).click();
-  const save = page.getByRole("button", { name: "保存内容", exact: true });
+  const save = page.getByRole("button", { name: "保存修改", exact: true });
   await save.click();
   await page.getByText("已保存", { exact: true }).first().waitFor();
   const config = await (await fetch(`${base}/api/admin/v3/maps`)).json();
   assert(config.gameMaps.some((m) => m.name === "验收新地图" && !m.published));
   await page.getByText("访问统计", { exact: true }).click();
-  await page.getByRole("heading", { name: /次访问/ }).waitFor();
+  await page.getByRole("heading", { name: "访问趋势", exact: true }).waitFor();
   await page.screenshot({ path: resolve(shots, "statistics.png") });
   await page.getByText("备份与恢复", { exact: true }).click();
   await page

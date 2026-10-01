@@ -1,5 +1,5 @@
 // Local UI + read-only public demo content. Never forwards admin or telemetry writes.
-// DEMO_CONFIG_URL may point to a public V2 or V3 JSON endpoint.
+// DEMO_CONFIG_URL may point to a public V2, V3 or V4 JSON endpoint.
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, relative, extname } from "node:path";
@@ -7,7 +7,7 @@ import { createHash } from "node:crypto";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "apps/web/dist");
-const endpoint = new URL(process.env.DEMO_CONFIG_URL || "https://idv-map.321666.xyz/maps-v2.json");
+const endpoint = new URL(process.env.DEMO_CONFIG_URL || "https://idv-map.321666.xyz/maps-v4.json");
 if (!["http:", "https:"].includes(endpoint.protocol) || endpoint.username || endpoint.password) {
   throw new Error("DEMO_CONFIG_URL must be a public HTTP(S) URL without credentials");
 }
@@ -53,18 +53,19 @@ async function loadConfig() {
   loading = (async () => {
     const source = await (await upstream(endpoint)).json();
     let config;
-    if (source.schemaVersion === 3 && Array.isArray(source.layouts) && Array.isArray(source.gameMaps)) {
-      config = structuredClone(source);
+    if ([3, 4].includes(source.schemaVersion) && Array.isArray(source.layouts) && Array.isArray(source.gameMaps)) {
+      config = { ...structuredClone(source), schemaVersion: 4 };
     } else if (source.schemaVersion === 2 && Array.isArray(source.maps)) {
       const { maps, ...rest } = source;
       config = {
-        ...rest, schemaVersion: 3,
+        ...rest, schemaVersion: 4,
         gameMaps: [{ id: "lady-of-doom", name: "厄运之女", sort: 10, published: true }],
         layouts: maps.map(({ layout, ...item }) => ({ ...item, gameMapId: "lady-of-doom", floorImages: layout })),
       };
-    } else throw new Error("Demo endpoint must return public V2 or V3 JSON");
+    } else throw new Error("Demo endpoint must return public V2, V3 or V4 JSON");
     for (const layout of config.layouts) {
       for (const asset of Object.values(layout.floorImages)) asset.url = imageUrl(asset.url);
+      if (layout.floorRegions) layout.floorRegions.sourceUrl = imageUrl(layout.floorRegions.sourceUrl);
       for (const entrance of layout.entrances) {
         entrance.imageUrl = imageUrl(entrance.imageUrl);
         entrance.thumbUrl = imageUrl(entrance.thumbUrl);
@@ -88,7 +89,7 @@ createServer(async (req, res) => {
   if (!["GET", "HEAD"].includes(req.method)) { req.resume(); res.writeHead(405); res.end(); return; }
   if (path.startsWith("/api/") || path.startsWith("/admin")) { res.writeHead(404); res.end(); return; }
   try {
-    if (path === "/maps-v3.json") {
+    if (path === "/maps-v4.json") {
       const config = await loadConfig();
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       res.end(req.method === "HEAD" ? undefined : JSON.stringify(config));

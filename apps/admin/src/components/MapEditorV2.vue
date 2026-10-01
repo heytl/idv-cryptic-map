@@ -15,6 +15,8 @@ import {
   type FloorType,
   type GameMode,
   type Layout,
+  type RegionFloor,
+  type PixelRect,
 } from "@idv-map/shared";
 import {
   NAlert,
@@ -29,11 +31,12 @@ import {
   NSwitch,
   useMessage,
 } from "naive-ui";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, onBeforeUnmount } from "vue";
 import { API_BASE, uploadImageV2 } from "../api-v2";
-import { fileToWebp, makeThumb, type V2CropOutput } from "../imageTools";
+import { fileToWebp, makeThumb } from "../imageTools";
 import CropSingle from "./CropSingle.vue";
-import CropWorkbenchV2 from "./CropWorkbenchV2.vue";
+import RegionEditor, { type RegionItem, type RegionResult } from "./RegionEditor.vue";
+import RegionPreview from "./RegionPreview.vue";
 
 const props = defineProps<{ map: Layout; isNew?: boolean }>();
 const emit = defineEmits<{ apply: [map: Layout]; cancel: [] }>();
@@ -47,11 +50,12 @@ for (const entrance of draft.entrances) {
   if (entrance.type === "front") entrance.direction = "south";
 }
 const busy = ref("");
-const workbench = ref<{
-  source: File;
-  entranceIndex: number;
-  entranceLabel: string;
-} | null>(null);
+const regionJob = ref<{ source: string; candidate?: Blob; initialId?: string; items: RegionItem[]; required: string[] } | null>(null);
+function closeRegions() {
+  if (regionJob.value?.candidate) URL.revokeObjectURL(regionJob.value.source);
+  regionJob.value = null;
+}
+onBeforeUnmount(closeRegions);
 const recrop = ref<
   | {
       target: "floor";
@@ -71,12 +75,11 @@ const recrop = ref<
     }
   | null
 >(null);
-const wholeCropEntranceId = ref(draft.entrances[0]?.id ?? "");
 
 const floorSlots = computed(() =>
   FLOOR_ORDER.filter((floor) => {
     return (
-      REQUIRED_LAYOUTS[draft.mode].includes(floor) || !!draft.floorImages[floor]
+      REQUIRED_LAYOUTS[draft.mode].includes(floor) || !!draft.floorImages[floor] || (floor !== "full" && !!draft.floorRegions?.regions[floor])
     );
   }),
 );
@@ -95,13 +98,6 @@ const passageOptions = PASSAGES_V2.map((value) => ({
   label: PASSAGE_LABELS[value],
   value,
 }));
-const entranceOptions = computed(() =>
-  draft.entrances.map((entrance) => ({
-    label: ENTRANCE_LABELS[entrance.type],
-    value: entrance.id,
-  })),
-);
-
 function mediaUrl(key: string): string {
   return `${API_BASE}/r2/${key}`;
 }
@@ -124,21 +120,51 @@ function pickImage(): Promise<File | null> {
   });
 }
 
-async function replaceFloor(floor: FloorType): Promise<void> {
+function floorRect(floor: FloorType): PixelRect | undefined {
+  return floor === 'full' ? undefined : draft.floorRegions?.regions[floor];
+}
+function regionItems(): RegionItem[] {
+  return floorSlots.value.filter(f => f !== 'full').map(f => ({
+    id: f, label: FLOOR_LABELS[f], rect: floorRect(f),
+    reference: draft.floorImages[f] ? mediaUrl(draft.floorImages[f]!.key) : undefined,
+  }));
+}
+function openRegions(floor?: FloorType, candidate?: Blob) {
+  if (!candidate && !draft.floorImages.full) return;
+  regionJob.value = {
+    source: candidate ? URL.createObjectURL(candidate) : mediaUrl(draft.floorImages.full!.key), candidate,
+    initialId: floor === 'full' ? undefined : floor,
+    items: regionItems(), required: candidate ? Object.keys(draft.floorRegions?.regions ?? {}) : [],
+  };
+}
+async function uploadFull() {
   const file = await pickImage();
   if (!file) return;
-  busy.value = `正在上传${FLOOR_LABELS[floor]}…`;
-  try {
-    const webp = await fileToWebp(file);
-    const result = await uploadImageV2(floor, webp);
-    draft.floorImages[floor] = result.asset;
-  } catch (error) {
-    message.error(error instanceof Error ? error.message : "图片上传失败");
-  } finally {
-    busy.value = "";
-  }
+  busy.value = '正在准备全图…';
+  try { openRegions(undefined, await fileToWebp(file)); }
+  catch (e) { message.error(e instanceof Error ? e.message : '图片读取失败'); }
+  finally { busy.value = ''; }
 }
-
+async function applyRegions(result: RegionResult) {
+  const job = regionJob.value;
+  if (!job) return;
+  busy.value = '正在应用区域…';
+  try {
+    const asset = job.candidate ? (await uploadImageV2('full', job.candidate)).asset : draft.floorImages.full!;
+    // Commit image + rectangles together only after upload succeeds.
+    draft.floorImages.full = asset;
+    draft.floorRegions = { sourceKey: asset.key, imageWidth: result.imageWidth, imageHeight: result.imageHeight, regions: result.regions };
+    for (const floor of Object.keys(result.regions) as RegionFloor[]) delete draft.floorImages[floor];
+    closeRegions();
+    message.success('区域已应用到布局草稿，还需应用布局并保存内容');
+  } catch (e) { message.error(e instanceof Error ? e.message : '应用失败，区域已保留，可重试'); }
+  finally { busy.value = ''; }
+}
+function removeFloor(floor: FloorType) {
+  delete draft.floorImages[floor];
+  if (floor === 'full') delete draft.floorRegions;
+  else if (draft.floorRegions) delete draft.floorRegions.regions[floor];
+}
 async function replaceEntrance(index: number): Promise<void> {
   const file = await pickImage();
   if (!file) return;
@@ -159,71 +185,10 @@ async function replaceEntrance(index: number): Promise<void> {
   }
 }
 
-async function openWorkbench(): Promise<void> {
-  let entranceIndex = draft.entrances.findIndex(
-    (entrance) => entrance.id === wholeCropEntranceId.value,
-  );
-  if (entranceIndex < 0) entranceIndex = 0;
-  const entrance = draft.entrances[entranceIndex];
-  if (!entrance) {
-    message.warning("请先添加至少一个入口");
-    return;
-  }
-  const file = await pickImage();
-  if (!file) return;
-  workbench.value = {
-    source: file,
-    entranceIndex,
-    entranceLabel: ENTRANCE_LABELS[entrance.type],
-  };
+function openFullCrop() {
+  if (!draft.floorImages.full) return;
+  recrop.value = { target: 'floor', floor: 'full', label: '全图', currentSrc: mediaUrl(draft.floorImages.full.key) };
 }
-
-async function onWorkbenchDone(blobs: V2CropOutput): Promise<void> {
-  const job = workbench.value;
-  if (!job) return;
-  workbench.value = null;
-  busy.value = `正在上传${job.entranceLabel}及楼层图片…`;
-  try {
-    const [full, floor1, floor2, basement, entranceImage, entranceThumb] =
-      await Promise.all([
-        uploadImageV2("full", blobs.full),
-        uploadImageV2("floor1", blobs.floor1),
-        uploadImageV2("floor2", blobs.floor2),
-        blobs.basement
-          ? uploadImageV2("basement", blobs.basement)
-          : Promise.resolve(null),
-        uploadImageV2("entrance", blobs.entrance),
-        uploadImageV2("entranceThumb", blobs.entranceThumb),
-      ]);
-    draft.floorImages.full = full.asset;
-    draft.floorImages.floor1 = floor1.asset;
-    draft.floorImages.floor2 = floor2.asset;
-    if (basement) draft.floorImages.basement = basement.asset;
-    const entrance = draft.entrances[job.entranceIndex];
-    entrance.image = entranceImage.asset;
-    entrance.thumb = entranceThumb.asset;
-    message.success(`已生成并上传${blobs.basement ? "6" : "5"}张图片`);
-  } catch (error) {
-    message.error(error instanceof Error ? error.message : "整体裁剪上传失败");
-  } finally {
-    busy.value = "";
-  }
-}
-
-function openFloorRecrop(floor: FloorType): void {
-  const asset = draft.floorImages[floor];
-  const full = draft.floorImages.full;
-  if (!asset && !full) return;
-  recrop.value = {
-    target: "floor",
-    floor,
-    label: FLOOR_LABELS[floor],
-    currentSrc: asset ? mediaUrl(asset.key) : undefined,
-    fullSrc: floor !== "full" && full ? mediaUrl(full.key) : undefined,
-    initialFull: !asset,
-  };
-}
-
 function openEntranceRecrop(entranceIndex: number): void {
   const entrance = draft.entrances[entranceIndex];
   const full = draft.floorImages.full;
@@ -241,12 +206,10 @@ function openEntranceRecrop(entranceIndex: number): void {
 async function onRecropped(blob: Blob): Promise<void> {
   const target = recrop.value;
   if (!target) return;
-  recrop.value = null;
   busy.value = `正在上传${target.label}裁剪结果…`;
   try {
     if (target.target === "floor") {
-      const result = await uploadImageV2(target.floor, blob);
-      draft.floorImages[target.floor] = result.asset;
+      openRegions(undefined, blob);
     } else {
       const entrance = draft.entrances[target.entranceIndex];
       const [image, thumb] = await Promise.all([
@@ -258,6 +221,7 @@ async function onRecropped(blob: Blob): Promise<void> {
       entrance.image = image.asset;
       entrance.thumb = thumb.asset;
     }
+    recrop.value = null;
   } catch (error) {
     message.error(error instanceof Error ? error.message : "裁剪结果上传失败");
   } finally {
@@ -272,13 +236,10 @@ function addEntrance(type: EntranceType): void {
     ...(type === "front" ? { direction: "south" as const } : {}),
   };
   draft.entrances.push(entrance);
-  if (!wholeCropEntranceId.value) wholeCropEntranceId.value = entrance.id;
 }
 
 function removeEntrance(index: number): void {
-  const [removed] = draft.entrances.splice(index, 1);
-  if (removed?.id === wholeCropEntranceId.value)
-    wholeCropEntranceId.value = draft.entrances[0]?.id ?? "";
+  draft.entrances.splice(index, 1);
 }
 
 function changeMode(mode: GameMode): void {
@@ -297,13 +258,7 @@ function changeMode(mode: GameMode): void {
     if (type === "front") entrance.direction = "south";
     return entrance;
   });
-  if (
-    !draft.entrances.some(
-      (entrance) => entrance.id === wholeCropEntranceId.value,
-    )
-  ) {
-    wholeCropEntranceId.value = draft.entrances[0]?.id ?? "";
-  }
+
 }
 
 function setPublished(value: boolean): void {
@@ -338,7 +293,7 @@ function apply(): void {
     :show="true"
     preset="card"
     class="editor-modal"
-    :title="`V2 · #${draft.id} · ${draft.displayName || '新增地图'}`"
+    :title="`布局 · #${draft.id} · ${draft.displayName || '新增地图'}`"
     :mask-closable="false"
     @update:show="(value: boolean) => value || emit('cancel')"
     @close="emit('cancel')"
@@ -376,66 +331,27 @@ function apply(): void {
       </n-form-item>
     </div>
 
-    <h3 class="section-title">楼层地图</h3>
-    <p class="muted">全图固定排在第一，并且是用户进入详情页时默认看到的图。</p>
+    <h3 class="section-title">全图与楼层区域</h3>
+    <p class="muted">上传完整全图，在图上选择楼层范围。楼层保存像素坐标，不再生成图片。</p>
     <div class="whole-crop-toolbar">
-      <span class="muted">整体裁剪时同时生成入口：</span>
-      <n-select
-        v-model:value="wholeCropEntranceId"
-        class="whole-crop-entrance"
-        :options="entranceOptions"
-        placeholder="选择入口"
-      />
-      <n-button
-        type="primary"
-        secondary
-        :disabled="!!busy || !wholeCropEntranceId"
-        @click="openWorkbench"
-      >
-        上传原图整体裁剪
-      </n-button>
-      <span class="muted"
-        >其他图片点击“裁剪”后，可裁剪当前图片或从全图重新框选。</span
-      >
+      <n-button type="primary" :disabled="!!busy" @click="uploadFull">上传全图并设置区域</n-button>
+      <span class="muted">旧楼层可逐张转换；新全图需要重新确认已转换区域。</span>
     </div>
     <div class="img-slots">
-      <div
-        v-for="floor in floorSlots"
-        :key="floor"
-        class="img-slot"
-        :class="{ missing: !draft.floorImages[floor] }"
-      >
+      <div v-for="floor in floorSlots" :key="floor" class="img-slot" :class="{ missing: !draft.floorImages[floor] && !floorRect(floor) }">
         <div class="frame">
-          <n-image
-            v-if="draft.floorImages[floor]"
-            :src="mediaUrl(draft.floorImages[floor]!.key)"
-            object-fit="contain"
-            lazy
-          />
-          <span v-else class="muted">缺失</span>
+          <RegionPreview v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" />
+          <n-image v-else-if="draft.floorImages[floor]" :src="mediaUrl(draft.floorImages[floor]!.key)" object-fit="contain" lazy />
+          <span v-else class="muted">尚未设置</span>
         </div>
-        <div class="k">
-          {{ FLOOR_LABELS[floor] }}{{ floor === "full" ? "（默认）" : "" }}
-        </div>
+        <div class="k">{{ FLOOR_LABELS[floor] }}{{ floor === 'full' ? '（默认）' : floorRect(floor) ? ' · 区域' : draft.floorImages[floor] ? ' · 待转换' : '' }}</div>
         <div class="row-actions" style="justify-content: center">
-          <n-button size="tiny" :disabled="!!busy" @click="replaceFloor(floor)"
-            >换图</n-button
-          >
-          <n-button
-            size="tiny"
-            :disabled="
-              !!busy || !(draft.floorImages[floor] || draft.floorImages.full)
-            "
-            @click="openFloorRecrop(floor)"
-          >
-            裁剪
-          </n-button>
-          <n-button
-            size="tiny"
-            :disabled="!!busy || !draft.floorImages[floor]"
-            @click="delete draft.floorImages[floor]"
-            >移除</n-button
-          >
+          <template v-if="floor === 'full'">
+            <n-button :disabled="!!busy" @click="uploadFull">换图</n-button>
+            <n-button :disabled="!!busy || !draft.floorImages.full" @click="openFullCrop">裁切全图</n-button>
+          </template>
+          <n-button v-else :disabled="!!busy || !draft.floorImages.full" @click="openRegions(floor)">{{ floorRect(floor) ? '调整区域' : '选择区域' }}</n-button>
+          <n-button :disabled="!!busy || (!draft.floorImages[floor] && !floorRect(floor))" @click="removeFloor(floor)">移除</n-button>
         </div>
       </div>
     </div>
@@ -527,20 +443,14 @@ function apply(): void {
       <span class="spacer"></span>
       <n-button @click="emit('cancel')">取消</n-button>
       <n-button type="primary" :disabled="!!busy" @click="apply"
-        >应用（还需保存 V2）</n-button
+        >应用（还需保存内容）</n-button
       >
     </div>
 
-    <CropWorkbenchV2
-      v-if="workbench"
-      :source="workbench.source"
-      :mode="draft.mode"
-      :entrance-label="workbench.entranceLabel"
-      @done="onWorkbenchDone"
-      @cancel="workbench = null"
-    />
+    <RegionEditor v-if="regionJob" :source="regionJob.source" :items="regionJob.items" :initial-id="regionJob.initialId" :required-confirmation="regionJob.required" :pending-source="!!regionJob.candidate" :busy="!!busy" @done="applyRegions" @cancel="closeRegions" />
     <CropSingle
       v-if="recrop"
+      :busy="!!busy"
       :current-src="recrop.currentSrc"
       :full-src="recrop.fullSrc"
       :initial-full="recrop.initialFull"

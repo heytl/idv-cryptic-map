@@ -1,10 +1,8 @@
 import {
   assetKeys,
   beijingDay,
-  compatibleV2Config,
   dayOffset,
-  toPublicMapConfigV2,
-  toPublicMapConfigV3,
+  toPublicMapConfigV4,
   validateStatsQuery,
   type StatsQuery,
 } from "../packages/shared/src/index";
@@ -111,12 +109,16 @@ export async function handleRequest(
   const path = url.pathname;
   const repo = new CloudflareContent(env);
   const storage = new CloudflareAssets(env, url.origin);
+  if (["/maps-v2.json", "/maps-v3.json", "/api/public/v2/maps"].includes(path))
+    return new Response(JSON.stringify({ error: "client_upgrade_required", detail: "请升级客户端并使用 /maps-v4.json" }), {
+      status: 410, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store" },
+    });
   if (RETIRED.has(path) || path.startsWith("/api/admin/v2/"))
     return jsonError(410, "retired", "请使用当前正式版本");
   if (path.startsWith("/r2/")) return handleR2(request, env);
   if (path.startsWith("/_vercel/")) return new Response(null, { status: 404 });
   if (
-    ["/maps-v3.json", "/maps-v2.json", "/api/public/v2/maps"].includes(path)
+    path === "/maps-v4.json"
   ) {
     const headers = {
       "Access-Control-Allow-Origin": "*",
@@ -130,15 +132,12 @@ export async function handleRequest(
     if (!["GET", "HEAD"].includes(request.method))
       return jsonError(405, "method_not_allowed");
     const config = await repo.read();
-    const v3 = path === "/maps-v3.json";
-    const etag = `"maps-v${v3 ? 3 : 2}-${config.version}"`;
+    const etag = `"maps-v4-${config.version}"`;
     const responseHeaders = { ...headers, ETag: etag };
     if (request.headers.get("If-None-Match") === etag)
       return new Response(null, { status: 304, headers: responseHeaders });
     const base = new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
-    const output = v3
-      ? toPublicMapConfigV3(config, base)
-      : toPublicMapConfigV2(compatibleV2Config(config), base);
+    const output = toPublicMapConfigV4(config, base);
     return request.method === "HEAD"
       ? new Response(null, { headers: responseHeaders })
       : jsonResponse(output, 200, responseHeaders);

@@ -17,9 +17,10 @@ interface Refs {
   viewport: Ref<HTMLElement | null>;
   wrapper: Ref<HTMLElement | null>;
   img: Ref<HTMLImageElement | null>;
+  size?: () => { width: number; height: number } | undefined;
 }
 
-export function useZoomPan({ viewport, wrapper, img }: Refs) {
+export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   const state = reactive({
     scale: 1,
     x: 0,
@@ -30,7 +31,7 @@ export function useZoomPan({ viewport, wrapper, img }: Refs) {
 
   // 当前地图图片的自然尺寸 (带兜底值)
   function getMapSize() {
-    return {
+    return size?.() ?? {
       width: img.value?.naturalWidth || 900,
       height: img.value?.naturalHeight || 750,
     };

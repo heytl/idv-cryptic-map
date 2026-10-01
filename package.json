@@ -8,12 +8,13 @@
     "build": "pnpm --filter web build && pnpm --filter admin build",
     "preview": "pnpm --filter web preview",
     "preview:demo": "node scripts/preview-online-demo.mjs",
-    "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test",
+    "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test && pnpm --filter admin test",
     "test:worker": "pnpm --filter @idv-map/shared exec vitest run --root ../.. workers",
     "check:shared": "pnpm --filter @idv-map/shared typecheck",
     "check:worker": "tsc -p workers",
     "migrate:v3": "node scripts/migrate-v2-to-v3.mts",
     "verify:e2e": "node apps/web/scripts/verify-e2e.mjs",
+    "verify:regions": "node apps/web/scripts/verify-regions.mjs",
     "verify:pwa": "node apps/web/scripts/verify-pwa.mjs"
   },
   "devDependencies": {

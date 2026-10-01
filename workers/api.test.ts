@@ -12,7 +12,7 @@ const env = () =>
     TELEMETRY_LIMITER: { limit: async () => ({ success: true }) },
   }) as unknown as Env;
 describe("HTTP boundaries", () => {
-  it.each(["/maps.json", "/api/maps", "/api/restore", "/api/admin/v2/maps"])(
+  it.each(["/maps.json", "/maps-v2.json", "/maps-v3.json", "/api/public/v2/maps", "/api/maps", "/api/restore", "/api/admin/v2/maps"])(
     "%s is retired without SPA fallback",
     async (path) => {
       expect(
@@ -21,24 +21,24 @@ describe("HTTP boundaries", () => {
       ).toBe(410);
     },
   );
-  it("publishes V3 and conditional V2 compatibility", async () => {
+  it("publishes V4 with conditional requests", async () => {
     const e = env();
     const r = await worker.fetch(
-      new Request("https://primary.test/maps-v3.json"),
+      new Request("https://primary.test/maps-v4.json"),
       e,
     );
     expect(((await r.json()) as any).layouts).toHaveLength(
       config.layouts.filter((l) => l.published && !l.deletedAt).length,
     );
     const v2 = await worker.fetch(
-      new Request("https://primary.test/maps-v2.json"),
+      new Request("https://primary.test/maps-v4.json"),
       e,
     );
-    expect(((await v2.json()) as any).schemaVersion).toBe(2);
+    expect(((await v2.json()) as any).schemaVersion).toBe(4);
     expect(
       (
         await worker.fetch(
-          new Request("https://primary.test/maps-v2.json", {
+          new Request("https://primary.test/maps-v4.json", {
             headers: { "If-None-Match": v2.headers.get("ETag")! },
           }),
           e,
@@ -81,7 +81,7 @@ describe("HTTP boundaries", () => {
       ).status,
     ).toBe(503);
     expect(
-      (await worker.fetch(new Request("https://primary.test/maps-v3.json"), e))
+      (await worker.fetch(new Request("https://primary.test/maps-v4.json"), e))
         .status,
     ).toBe(200);
   });

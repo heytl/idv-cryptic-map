@@ -118,12 +118,15 @@ export const ENABLED_ENTRANCES: Record<GameMode, readonly EntranceType[]> = {
  * 给后台直接展示的发布检查清单。草稿不调用这项检查，所以录入过程可以不完整。
  * 文案使用业务名称，避免把 full / upstairs 一类内部代码暴露给管理员。
  */
-export function publicationIssues(map: MapItemV2): string[] {
+export function publicationIssues(
+  map: MapItemV2,
+  hasFloor: (floor: FloorType) => boolean = floor => !!map.layout[floor],
+): string[] {
   const issues: string[] = [];
   for (const floor of REQUIRED_LAYOUTS[map.mode]) {
-    if (!map.layout[floor]) issues.push(`缺少${FLOOR_LABELS[floor]}地图`);
+    if (!hasFloor(floor)) issues.push(`缺少${FLOOR_LABELS[floor]}地图`);
   }
-  if (map.mode === "hard" && map.layout.basement)
+  if (map.mode === "hard" && hasFloor("basement"))
     issues.push("困难模式不使用地下室地图，请先移除");
 
   const requiredTypes = REQUIRED_ENTRANCES[map.mode];

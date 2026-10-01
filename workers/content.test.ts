@@ -21,7 +21,7 @@ let current: MapConfigV3;
 let repo: ContentRepository;
 let storage: AssetStorage;
 beforeEach(() => {
-  current = migrateV2ToV3(snapshot as MapConfigV2);
+  current = migrateV2ToV3(structuredClone(snapshot) as MapConfigV2);
   repo = {
     read: async () => structuredClone(current),
     save: vi.fn(async (c) => {
@@ -58,6 +58,23 @@ describe("portable content service", () => {
     expect(restored.layouts).toEqual(current.layouts);
     expect(restored.gameMaps).toEqual(current.gameMaps);
     expect(isolated.save).toHaveBeenCalledTimes(1);
+  });
+  it("round-trips mixed region content and restores a legacy backup", async () => {
+    const legacy = structuredClone(current);
+    const candidate = structuredClone(current);
+    const layout = candidate.layouts.find(l => l.mode === "hard" && l.published)!;
+    const oldFloorKey = layout.floorImages.floor1!.key;
+    delete layout.floorImages.floor1;
+    layout.floorRegions = { sourceKey: layout.floorImages.full!.key, imageWidth: 900, imageHeight: 1500,
+      regions: { floor1: { x: 0, y: 0, width: 900, height: 700 } } };
+    await saveContent(repo, storage, candidate, current.version);
+    const bundle = await exportContent(repo, storage);
+    expect(bundle.config.layouts.find(l => l.id === layout.id)!.floorRegions).toEqual(layout.floorRegions);
+    expect(bundle.assets.some(a => a.key === oldFloorKey)).toBe(false);
+    await saveContent(repo, storage, checkedConfig(JSON.parse(JSON.stringify(bundle.config))), current.version);
+    const restored = await saveContent(repo, storage, preserveIdentities(legacy, current), current.version);
+    expect(restored.layouts.find(l => l.id === layout.id)!.floorImages.floor1?.key).toBe(oldFloorKey);
+    expect(restored.layouts.find(l => l.id === layout.id)!.floorRegions).toBeUndefined();
   });
   it("rejects stale saves and missing media without changing content", async () => {
     await expect(saveContent(repo, storage, current, -1)).rejects.toMatchObject(
