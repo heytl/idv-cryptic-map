@@ -3,6 +3,7 @@
 // 滚轮以指针为锚缩放、左键拖拽、双指捏合（中点锚定 + 抬指接续单指拖）、
 // clampScale/clampPosition 边界钳制、fitScale 自适应铺满
 // ==========================================================================
+import { clampPosition as clampAxis, fitScale as computeFitScale, rotatedSize, rotationOffset, type QuarterTurn } from "@idv-map/shared";
 import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue';
 
 // 缩放配置：最小/最大缩放均为相对“自适应铺满比例(fitScale)”的倍数
@@ -40,13 +41,8 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   // 获取考虑当前旋转状态后的有效地图尺寸
   function getEffectiveMapSize() {
     const { width: mapW, height: mapH } = getMapSize();
-    const isRotated = (state.rotation % 180 !== 0);
-    return {
-      mapW,
-      mapH,
-      effW: isRotated ? mapH : mapW,
-      effH: isRotated ? mapW : mapH,
-    };
+    const effective = rotatedSize({ width: mapW, height: mapH }, state.rotation as QuarterTurn);
+    return { mapW, mapH, effW: effective.width, effH: effective.height };
   }
 
   // 将缩放比例约束在 [fitScale * min, fitScale * max] 区间内
@@ -67,17 +63,8 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
     const scaledW = effW * state.scale;
     const scaledH = effH * state.scale;
 
-    if (scaledW <= viewW) {
-      state.x = (viewW - scaledW) / 2;
-    } else {
-      state.x = Math.min(Math.max(state.x, viewW - scaledW), 0);
-    }
-
-    if (scaledH <= viewH) {
-      state.y = (viewH - scaledH) / 2;
-    } else {
-      state.y = Math.min(Math.max(state.y, viewH - scaledH), 0);
-    }
+    state.x = clampAxis(state.x, scaledW, viewW);
+    state.y = clampAxis(state.y, scaledH, viewH);
   }
 
   // 应用 transform 到 DOM (统一在此处做边界约束与旋转偏移)
@@ -88,18 +75,9 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
       const s = state.scale;
       const r = state.rotation;
 
-      let offsetX = 0;
-      let offsetY = 0;
-      if (r === 90) {
-        offsetX = mapH * s;
-        offsetY = 0;
-      } else if (r === 180) {
-        offsetX = mapW * s;
-        offsetY = mapH * s;
-      } else if (r === 270) {
-        offsetX = 0;
-        offsetY = mapW * s;
-      }
+      const { x: offsetX, y: offsetY } = rotationOffset(
+        { width: mapW * s, height: mapH * s }, r as QuarterTurn,
+      );
 
       const tx = state.x + offsetX;
       const ty = state.y + offsetY;
@@ -137,7 +115,7 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
     const { effW, effH } = getEffectiveMapSize();
 
     // 重新计算在当前旋转方向下的自适应铺满基准
-    state.fitScale = Math.min(viewW / effW, viewH / effH);
+    state.fitScale = computeFitScale({ width: effW, height: effH }, { width: viewW, height: viewH });
     state.scale = clampScale(state.scale);
 
     // 水平与垂直居中
@@ -159,7 +137,7 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
     const { effW, effH } = getEffectiveMapSize();
 
     // 选择最限制的轴向比例作为自适应铺满基准
-    state.fitScale = Math.min(viewW / effW, viewH / effH);
+    state.fitScale = computeFitScale({ width: effW, height: effH }, { width: viewW, height: viewH });
     state.scale = state.fitScale;
 
     // 水平与垂直完全居中对齐
