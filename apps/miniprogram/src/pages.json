@@ -1,0 +1,22 @@
+{
+  "pages": [
+    {
+      "path": "pages/maps/index",
+      "style": {
+        "navigationBarTitleText": "加页手记解密手册"
+      }
+    },
+    {
+      "path": "pages/strategy/index",
+      "style": {
+        "navigationBarTitleText": "地图攻略",
+        "disableScroll": true
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#151d23",
+    "backgroundColor": "#151d23"
+  }
+}

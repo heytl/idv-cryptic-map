@@ -5,17 +5,20 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "dev:admin": "pnpm --filter admin dev",
-    "build": "pnpm --filter web build && pnpm --filter admin build",
+    "build": "pnpm --filter web build && pnpm --filter admin build && pnpm build:miniprogram:preview",
     "preview": "pnpm --filter web preview",
     "preview:demo": "node scripts/preview-online-demo.mjs",
-    "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test && pnpm --filter admin test",
+    "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test && pnpm --filter admin test && pnpm --filter miniprogram test",
     "test:worker": "pnpm --filter @idv-map/shared exec vitest run --root ../.. workers",
     "check:shared": "pnpm --filter @idv-map/shared typecheck",
     "check:worker": "tsc -p workers",
     "migrate:v3": "node scripts/migrate-v2-to-v3.mts",
     "verify:e2e": "node apps/web/scripts/verify-e2e.mjs",
     "verify:regions": "node apps/web/scripts/verify-regions.mjs",
-    "verify:pwa": "node apps/web/scripts/verify-pwa.mjs"
+    "verify:pwa": "node apps/web/scripts/verify-pwa.mjs",
+    "dev:miniprogram": "pnpm --filter miniprogram dev:mp-weixin",
+    "build:miniprogram": "pnpm --filter miniprogram typecheck && pnpm --filter miniprogram build:mp-weixin",
+    "build:miniprogram:preview": "pnpm --filter miniprogram typecheck && pnpm --filter miniprogram build:preview"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260715.1",

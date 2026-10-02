@@ -7,6 +7,7 @@
 | 文档 | 内容 |
 |---|---|
 | [项目 README](../README.md) | 项目介绍、功能、使用、开发与日常维护 |
+| [MINIPROGRAM.md](MINIPROGRAM.md) | 微信小程序架构、开发命令、实现进度与验收边界 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | V3 分层、数据流与兼容边界 |
 | [V3-UPGRADE.md](V3-UPGRADE.md) | 数据迁移、D1、部署、统计、备份和回滚 |
 | [releases/V3.md](releases/V3.md) | 本轮版本变化、验证记录、发布前清单 |
