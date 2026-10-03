@@ -16,13 +16,14 @@ export default defineConfig(({ mode }) => {
     throw new Error("Set WECHAT_APP_ID to a real WeChat AppID in .env.production.local.");
   }
   return { plugins: [uni(), {
-    name: "wechat-project-appid", enforce: "post",
+    name: "wechat-project-config", enforce: "post",
     generateBundle(_options, bundle) {
-      if (!appId) return;
       const project = bundle["project.config.json"];
       if (!project || project.type !== "asset") throw new Error("WeChat project configuration was not generated.");
       const config = JSON.parse(String(project.source));
-      config.appid = appId;
+      if (appId) config.appid = appId;
+      // Opt in locally for simulator debugging; release builds always validate domains.
+      config.setting.urlCheck = !(mode === "development" && env.WECHAT_SKIP_DOMAIN_CHECK === "true");
       project.source = JSON.stringify(config, null, 2);
     },
   }] };

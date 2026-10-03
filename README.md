@@ -1,12 +1,14 @@
 # 第五人格加页手记 · 解密手册
 
-面向《第五人格》“加页手记”玩家的网页版互动地图攻略工具。按地图、困难 / 噩梦模式、入口、方向或正门通道类型查找布局，再查看全图与分层攻略。
+面向《第五人格》“加页手记”玩家的互动地图攻略工具，提供 Web 与微信小程序。按地图、困难 / 噩梦模式、入口、方向或正门通道类型查找布局，再查看全图与分层攻略。
 
 - 项目站点：[idv-map.321666.xyz](https://idv-map.321666.xyz/)
 - 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（需要 Cloudflare Access 授权）
 - 源码与反馈：[GitHub](https://github.com/heytl/idv-cryptic-map) · [Issues](https://github.com/heytl/idv-cryptic-map/issues)
 
 **版本状态：**当前工作区为 V3 多地图升级，尚待预览验收与正式发布。上述站点地址不代表已部署 V3；历史正式基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。本轮变化与待办见 [V3 版本记录](docs/releases/V3.md)。
+
+微信小程序 `0.1.0` 初版已获用户初步功能验收通过，尚未上传审核或发布。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
 
 ## 功能与使用方式
 
@@ -37,6 +39,7 @@ apps/web/                  玩家端、PWA、字体与地图交互
   src/data/                公开数据读取、测试与版本快照
   scripts/                 字体子集、交互与 PWA 验收
 apps/admin/                地图管理、裁剪、统计、备份恢复
+apps/miniprogram/          uni-app 微信小程序、WXS 地图手势、楼层预览缓存
 packages/shared/           V2/V3 历史配置、V4 公开协议、共享类型与校验
 packages/server/src/       内容与统计业务、平台存储接口
 workers/                   HTTP 路由、Cloudflare 适配、定时任务
@@ -60,6 +63,8 @@ pnpm check:shared
 pnpm check:worker
 pnpm build
 ```
+
+微信小程序开发运行 `pnpm dev:miniprogram`，非 watch 测试构建运行 `pnpm build:miniprogram:preview`，然后在微信开发者工具导入对应的 `apps/miniprogram/dist` 工程目录。根 `pnpm build` 包含小程序测试环境编译；正式构建独立运行 `pnpm build:miniprogram`，需在本地配置生产 API 和真实 AppID。详细配置、产物路径及缓存排查见 [小程序指南](docs/MINIPROGRAM.md)。
 
 推荐先启动隔离验收服务。它不读写生产数据，提供样例配置、图片和虚构的演示访问数据，进程重启后数据重置：
 
@@ -108,6 +113,8 @@ pnpm verify:pwa
 
 - [文档索引](docs/README.md)
 - [当前架构](docs/ARCHITECTURE.md)
+- [微信小程序开发指南](docs/MINIPROGRAM.md)
+- [微信小程序初版记录与验收清单](docs/releases/MINIPROGRAM-0.1.0.md)
 - [V3 升级、部署、统计与恢复](docs/V3-UPGRADE.md)
 - [V3 版本记录与发布清单](docs/releases/V3.md)
 - [V2.1.0 历史正式基线](docs/releases/V2.1.0.md)

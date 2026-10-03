@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+packageExtensionsChecksum: sha256-3vIkexKbhYExxUQOisOP4m018Ic2guSte1bddrUMN6k=
+
 importers:
 
   .:
@@ -5340,6 +5342,7 @@ snapshots:
       '@vue/compiler-sfc': 3.4.21
       '@vue/shared': 3.4.21
       debug: 4.3.7(supports-color@10.2.2)
+      estree-walker: 2.0.2
     transitivePeerDependencies:
       - '@nuxt/kit'
       - '@vueuse/core'

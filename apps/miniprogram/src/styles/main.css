@@ -1,10 +1,7 @@
-page { background: #151d23; color: #ded6c6; font-family: serif; font-size: 14px; }
+page { --parchment: #c7b99c; --parchment-light: #dbd0b9; --parchment-border: #ab9c7e; --ink: #2b2216; --gold: #c3a168; --gold-dark: #7e633a; background: #151d23; color: #ded6c6; font-family: "Noto Serif SC", "Songti SC", "STSong", serif; font-size: 14px; }
 view, text, button { box-sizing: border-box; }
 button { margin: 0; color: #c3a168; border: 1px solid #454a49; border-radius: 8px; background: #1c272f; font-size: 14px; line-height: 1.4; padding: 10px 14px; }
 button::after { border: 0; }
 button[disabled] { color: #737b80; background: #1c272f; }
-.active { background: #c3a168; color: #171710; border-color: #c3a168; }
-.muted { color: #b1a58f; font-size: 12px; }
 .status { padding: 32px 20px; text-align: center; line-height: 1.8; }
 .status button { margin-top: 16px; }
-.heading { display: block; font-size: 24px; color: #e1c795; margin-bottom: 8px; }
