@@ -22,3 +22,16 @@ it("does not replace valid session data with a malformed refresh", async () => {
   await expect(client.load(true)).rejects.toThrow("地图数据格式不兼容");
   expect(await client.load()).toBe(initial);
 });
+it("reconciles preview files only for successful fresh, validated content", async () => {
+  const initial = data(); const updated = { ...data(), dataVersion: initial.dataVersion + 1 };
+  const loaded = vi.fn();
+  const request = vi.fn().mockResolvedValueOnce(initial).mockResolvedValueOnce({ schemaVersion: 3 }).mockResolvedValueOnce(updated);
+  const client = createContentClient(request, loaded);
+  await client.load(); await client.load();
+  expect(loaded).toHaveBeenCalledTimes(1);
+  await expect(client.load(true)).rejects.toThrow("地图数据格式不兼容");
+  expect(loaded).toHaveBeenCalledTimes(1);
+  await client.load(true);
+  expect(loaded).toHaveBeenLastCalledWith(updated);
+  expect(loaded).toHaveBeenCalledTimes(2);
+});

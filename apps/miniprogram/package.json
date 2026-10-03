@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "generate:icons": "node scripts/generate-icons.mjs",
     "dev:mp-weixin": "uni -p mp-weixin",
     "build:mp-weixin": "uni build -p mp-weixin",
     "build:preview": "uni build -p mp-weixin --mode development",

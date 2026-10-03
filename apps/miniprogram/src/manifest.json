@@ -10,6 +10,7 @@
     "setting": {
       "urlCheck": true,
       "es6": true,
+      "compileHotReLoad": false,
       "minified": true
     },
     "usingComponents": true

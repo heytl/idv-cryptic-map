@@ -10,6 +10,7 @@
       "path": "pages/strategy/index",
       "style": {
         "navigationBarTitleText": "地图攻略",
+        "pageOrientation": "auto",
         "disableScroll": true
       }
     }

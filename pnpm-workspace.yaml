@@ -1,6 +1,11 @@
 packages:
   - apps/*
   - packages/*
+packageExtensions:
+  # The uni-app compiler uses estree-walker without declaring it.
+  '@dcloudio/uni-mp-vite@3.0.0-5020620260917001':
+    dependencies:
+      estree-walker: 2.0.2
 allowBuilds:
   core-js: false
   core-js-pure: false
