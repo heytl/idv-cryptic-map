@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   DEFAULT_FLOOR,
+  resolveFloorSource,
   ENTRANCE_LABELS,
   type EntranceType,
   type FloorType,
@@ -72,8 +73,9 @@ const floor = computed<FloorType>(() => {
     ? requested
     : DEFAULT_FLOOR;
 });
-const region = computed(() => floor.value === "full" ? undefined : map.value?.floorRegions?.regions[floor.value]);
-const imageUrl = computed(() => region.value ? map.value!.floorRegions!.sourceUrl : map.value?.floorImages[floor.value]?.url ?? "");
+const source = computed(() => map.value ? resolveFloorSource(map.value, floor.value) : undefined);
+const region = computed(() => source.value?.region);
+const imageUrl = computed(() => source.value?.url ?? "");
 
 watchEffect(() => {
   if (route.name === "map-v2" && (!map.value || !entrance.value))

@@ -1,0 +1,30 @@
+{
+  "name": "miniprogram",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "generate:icons": "node scripts/generate-icons.mjs",
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "build:preview": "uni build -p mp-weixin --mode development",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@idv-map/shared": "workspace:*",
+    "@dcloudio/uni-app": "3.0.0-5020620260917001",
+    "@dcloudio/uni-components": "3.0.0-5020620260917001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-5020620260917001",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "3.4.31",
+    "@dcloudio/uni-cli-shared": "3.0.0-5020620260917001",
+    "@dcloudio/vite-plugin-uni": "3.0.0-5020620260917001",
+    "@types/node": "^26.1.1",
+    "typescript": "~5.9.3",
+    "vite": "5.2.8",
+    "vitest": "^2.1.9",
+    "vue-tsc": "^3.0.0"
+  }
+}

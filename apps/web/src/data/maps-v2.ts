@@ -1,23 +1,5 @@
-import {
-  DEFAULT_FLOOR,
-  ENABLED_ENTRANCES,
-  type GameMap,
-  DIRECTION_LABELS,
-  DIRECTIONS_V2,
-  ENTRANCE_TYPES,
-  FLOOR_ORDER,
-  GAME_MODES,
-  PASSAGES_V2,
-  PASSAGE_LABELS,
-  type DirectionV2,
-  type EntranceType,
-  type FloorType,
-  type GameMode,
-  type PassageV2,
-  type PublicEntranceV2,
-  type PublicMapConfigV4,
-  type PublicLayoutV4,
-} from "@idv-map/shared";
+import { isPublicMapConfigV4, type GameMap, type GameMode, type PublicLayoutV4 } from "@idv-map/shared";
+export { isGameMode, isEntranceType, enabledEntranceTypesV2, isEnabledEntranceV2, defaultEntranceV2, catalogFilterValuesV2, isCatalogFilterV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2, availableFloors, type CatalogFilterV2 } from "@idv-map/shared";
 import { reactive, ref } from "vue";
 
 export const mapsV2 = reactive<PublicLayoutV4[]>([]);
@@ -35,18 +17,6 @@ export function publicEndpoint(): string {
   return `${base}/maps-v4.json`;
 }
 
-function isPublicConfig(input: unknown): input is PublicMapConfigV4 {
-  if (!input || typeof input !== "object") return false;
-  const config = input as Partial<PublicMapConfigV4>;
-  return (
-    config.schemaVersion === 4 &&
-    config.defaultFloor === DEFAULT_FLOOR &&
-    typeof config.dataVersion === "number" &&
-    Array.isArray(config.layouts) &&
-    Array.isArray(config.gameMaps)
-  );
-}
-
 export async function ensureMapsV2(): Promise<boolean> {
   if (gameMaps.length > 0) return true;
   if (loadPromise) return loadPromise;
@@ -61,7 +31,7 @@ export async function ensureMapsV2(): Promise<boolean> {
             : `HTTP ${response.status}`,
         );
       const data: unknown = await response.json();
-      if (!isPublicConfig(data)) throw new Error("地图协议不合法");
+      if (!isPublicMapConfigV4(data)) throw new Error("地图协议不合法");
       mapsV2.splice(0, mapsV2.length, ...data.layouts);
       gameMaps.splice(0, gameMaps.length, ...data.gameMaps);
       mapsV2UpdatedAt.value = data.updatedAt;
@@ -78,73 +48,6 @@ export async function ensureMapsV2(): Promise<boolean> {
   return loadPromise;
 }
 
-export function isGameMode(value: unknown): value is GameMode {
-  return typeof value === "string" && GAME_MODES.includes(value as GameMode);
-}
-
-export function isEntranceType(value: unknown): value is EntranceType {
-  return (
-    typeof value === "string" && ENTRANCE_TYPES.includes(value as EntranceType)
-  );
-}
-
-export function enabledEntranceTypesV2(
-  mode: GameMode,
-): readonly EntranceType[] {
-  return ENABLED_ENTRANCES[mode];
-}
-
-export function isEnabledEntranceV2(
-  mode: GameMode,
-  entrance: EntranceType,
-): boolean {
-  return enabledEntranceTypesV2(mode).includes(entrance);
-}
-
-export function defaultEntranceV2(mode: GameMode): EntranceType {
-  return enabledEntranceTypesV2(mode)[0]!;
-}
-
-export type CatalogFilterV2 = DirectionV2 | PassageV2;
-
-/** 正门按进门后的通道分类，其他入口继续按地图方向分类。 */
-export function catalogFilterValuesV2(
-  entrance: EntranceType,
-): readonly CatalogFilterV2[] {
-  return entrance === "front" ? PASSAGES_V2 : DIRECTIONS_V2;
-}
-
-export function isCatalogFilterV2(
-  entrance: EntranceType,
-  value: unknown,
-): value is CatalogFilterV2 {
-  return (
-    typeof value === "string" &&
-    catalogFilterValuesV2(entrance).includes(value as CatalogFilterV2)
-  );
-}
-
-export function catalogFilterLabelV2(
-  entrance: EntranceType,
-  value: CatalogFilterV2,
-): string {
-  return entrance === "front"
-    ? PASSAGE_LABELS[value as PassageV2]
-    : DIRECTION_LABELS[value as DirectionV2];
-}
-
-export function entranceFilterValueV2(
-  entrance: PublicEntranceV2,
-): CatalogFilterV2 | undefined {
-  return entrance.type === "front" ? entrance.passage : entrance.direction;
-}
-
-export function entranceFilterLabelV2(entrance: PublicEntranceV2): string {
-  return entrance.type === "front"
-    ? (entrance.passageLabel ?? "通道待分类")
-    : entrance.directionLabel;
-}
-
 export function findMapV2(
   id: number,
   mode?: GameMode,
@@ -156,15 +59,4 @@ export function findMapV2(
       (!mode || map.mode === mode) &&
       (!gameMapId || map.gameMapId === gameMapId),
   );
-}
-
-export function findEntranceV2(
-  map: PublicLayoutV4,
-  type: EntranceType,
-): PublicEntranceV2 | undefined {
-  return map.entrances.find((entrance) => entrance.type === type);
-}
-
-export function availableFloors(map: PublicLayoutV4): FloorType[] {
-  return FLOOR_ORDER.filter((floor) => !!map.floorImages[floor] || (floor !== "full" && !!map.floorRegions?.regions[floor]));
 }
