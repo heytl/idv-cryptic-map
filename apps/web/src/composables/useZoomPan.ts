@@ -1,10 +1,11 @@
 // ==========================================================================
-// 地图拖拽缩放平移交互（自旧站 script.js 平移，行为保持一致）：
+// 地图拖拽缩放与边缘切层交互：
 // 滚轮以指针为锚缩放、左键拖拽、双指捏合（中点锚定 + 抬指接续单指拖）、
 // clampScale/clampPosition 边界钳制、fitScale 自适应铺满
 // ==========================================================================
 import { clampPosition as clampAxis, fitScale as computeFitScale, rotatedSize, rotationOffset, type QuarterTurn } from "@idv-map/shared";
 import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue';
+import { createFloorSwipe } from './floorSwipe';
 
 // 缩放配置：最小/最大缩放均为相对“自适应铺满比例(fitScale)”的倍数
 export const ZOOM_CONFIG = {
@@ -19,9 +20,25 @@ interface Refs {
   wrapper: Ref<HTMLElement | null>;
   img: Ref<HTMLImageElement | null>;
   size?: () => { width: number; height: number } | undefined;
+  swipe?: {
+    blocked: () => boolean;
+    previous: () => boolean;
+    next: () => boolean;
+    move: (offset: number) => void;
+    end: (step: number) => void;
+    cancel: () => void;
+  };
 }
 
-export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
+export function useZoomPan({ viewport, wrapper, img, size, swipe }: Refs) {
+  const floorSwipe = createFloorSwipe();
+  let suppressClick = false;
+  function cancelGesture() {
+    isDragging = false;
+    touchActive = false;
+    if (viewport.value) viewport.value.style.cursor = 'grab';
+    swipe?.cancel();
+  }
   const state = reactive({
     scale: 1,
     x: 0,
@@ -99,6 +116,7 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
 
   // 以视口中心为锚点按倍率缩放（工具栏 +/- 按钮）
   function zoomByFactor(factor: number) {
+    cancelGesture();
     const vp = viewport.value;
     if (!vp) return;
     zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, state.scale * factor);
@@ -106,6 +124,7 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
 
   // 顺时针旋转地图 90 度
   function rotateMap() {
+    cancelGesture();
     const vp = viewport.value;
     if (!vp) return;
     state.rotation = (state.rotation + 90) % 360;
@@ -127,6 +146,7 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
 
   // 重置平移缩放 (铺满自适应并居中，resetRotation 控制是否重置旋转角度)
   function reset(resetRotation = false) {
+    cancelGesture();
     const vp = viewport.value;
     if (!vp) return;
     if (resetRotation) {
@@ -149,12 +169,29 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
 
   // ---- 事件绑定 ----
   let isDragging = false;
+  let touchActive = false;
   let startX = 0;
   let startY = 0;
   let touchStartDist = 0;
   let touchStartScale = 1;
   let pinchMapX = 0; // 捏合起始中点对应的地图坐标
   let pinchMapY = 0;
+  let pointerX = 0;
+  let pointerY = 0;
+
+  function begin(x: number, y: number) {
+    pointerX = x; pointerY = y;
+    suppressClick = false;
+    floorSwipe.start(x, y, state.x);
+  }
+  function pan(x: number, y: number) {
+    state.x = x - startX;
+    state.y = y - startY;
+    applyTransform();
+    if (Math.hypot(x - pointerX, y - pointerY) > 8) suppressClick = true;
+    const vp = viewport.value!;
+    swipe?.move(floorSwipe.move(x, y, state.x, vp.clientWidth, swipe.previous(), swipe.next()));
+  }
 
   function getTouchDistance(touches: TouchList) {
     const dx = touches[0].clientX - touches[1].clientX;
@@ -172,8 +209,9 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   }
 
   function onMouseDown(e: MouseEvent) {
-    if (e.button !== 0) return; // 只有左键拖拽
+    if (e.button !== 0 || (e.target as Element)?.closest?.('button') || swipe?.blocked()) return;
     isDragging = true;
+    begin(e.clientX, e.clientY);
     startX = e.clientX - state.x;
     startY = e.clientY - state.y;
     viewport.value!.style.cursor = 'grabbing';
@@ -181,27 +219,32 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   }
 
   function onMouseMove(e: MouseEvent) {
-    if (!isDragging) return;
-    state.x = e.clientX - startX;
-    state.y = e.clientY - startY;
-    applyTransform();
+    if (!isDragging || swipe?.blocked()) return;
+    pan(e.clientX, e.clientY);
   }
 
   function onMouseUp() {
     if (isDragging) {
       isDragging = false;
+      if (!swipe?.blocked()) swipe?.end(floorSwipe.end(viewport.value!.clientWidth));
       if (viewport.value) viewport.value.style.cursor = 'grab';
     }
   }
 
   function onTouchStart(e: TouchEvent) {
+    if ((e.target as Element)?.closest?.('button') || swipe?.blocked() || !e.touches.length) return;
+    touchActive = true;
     if (e.touches.length === 1) {
       isDragging = true;
+      begin(e.touches[0].clientX, e.touches[0].clientY);
       startX = e.touches[0].clientX - state.x;
       startY = e.touches[0].clientY - state.y;
-    } else if (e.touches.length === 2) {
+    } else if (e.touches.length >= 2) {
       // 双指缩放
       isDragging = false;
+      floorSwipe.multiple();
+      suppressClick = true;
+      swipe?.cancel();
       touchStartDist = getTouchDistance(e.touches);
       touchStartScale = state.scale;
       const mid = getTouchMidpoint(e.touches);
@@ -211,12 +254,11 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   }
 
   function onTouchMove(e: TouchEvent) {
+    if (!touchActive || (e.target as Element)?.closest?.('button') || swipe?.blocked()) return;
     if (isDragging && e.touches.length === 1) {
-      state.x = e.touches[0].clientX - startX;
-      state.y = e.touches[0].clientY - startY;
-      applyTransform();
+      pan(e.touches[0].clientX, e.touches[0].clientY);
       e.preventDefault();
-    } else if (e.touches.length === 2) {
+    } else if (e.touches.length >= 2) {
       // 双指捏合缩放：以两指中点为锚点，同时支持双指平移
       const dist = getTouchDistance(e.touches);
       if (dist > 0 && touchStartDist > 0) {
@@ -231,17 +273,32 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
   }
 
   function onTouchEnd(e: TouchEvent) {
-    if (e.touches.length === 1) {
+    if (!touchActive || (e.target as Element)?.closest?.('button') || swipe?.blocked()) return;
+    if (e.touches.length >= 2) {
+      onTouchStart(e);
+    } else if (e.touches.length === 1) {
       // 双指抬起一指后无缝转为单指拖拽
       isDragging = true;
       startX = e.touches[0].clientX - state.x;
       startY = e.touches[0].clientY - state.y;
+      floorSwipe.start(e.touches[0].clientX, e.touches[0].clientY, state.x);
+      floorSwipe.multiple();
     } else {
       isDragging = false;
+      touchActive = false;
+      swipe?.end(floorSwipe.end(viewport.value!.clientWidth));
+    }
+  }
+
+  function onTouchCancel() { suppressClick = true; cancelGesture(); }
+  function onClick(e: MouseEvent) {
+    if (suppressClick && !(e.target as Element)?.closest?.('button')) {
+      e.preventDefault(); e.stopPropagation(); suppressClick = false;
     }
   }
 
   function onWheel(e: WheelEvent) {
+    cancelGesture();
     e.preventDefault();
     const rect = viewport.value!.getBoundingClientRect();
     const factor = e.deltaY < 0 ? ZOOM_CONFIG.wheelZoomFactor : 1 / ZOOM_CONFIG.wheelZoomFactor;
@@ -257,18 +314,24 @@ export function useZoomPan({ viewport, wrapper, img, size }: Refs) {
     vp.addEventListener('touchstart', onTouchStart, { passive: true });
     vp.addEventListener('touchmove', onTouchMove, { passive: false });
     vp.addEventListener('touchend', onTouchEnd);
+    vp.addEventListener('touchcancel', onTouchCancel);
+    vp.addEventListener('click', onClick, true);
     vp.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('blur', onTouchCancel);
   });
 
   onBeforeUnmount(() => {
     const vp = viewport.value;
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
+    window.removeEventListener('blur', onTouchCancel);
     if (vp) {
       vp.removeEventListener('mousedown', onMouseDown);
       vp.removeEventListener('touchstart', onTouchStart);
       vp.removeEventListener('touchmove', onTouchMove);
       vp.removeEventListener('touchend', onTouchEnd);
+      vp.removeEventListener('touchcancel', onTouchCancel);
+      vp.removeEventListener('click', onClick, true);
       vp.removeEventListener('wheel', onWheel);
     }
   });

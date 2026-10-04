@@ -1,14 +1,31 @@
 <script setup lang="ts">
 import { computed, watch, nextTick, onMounted, onUnmounted, ref } from "vue";
 import { useZoomPan, ZOOM_CONFIG } from "../composables/useZoomPan";
+import { useFloorMotion } from '../composables/useFloorMotion';
 
-import type { PixelRect } from "@idv-map/shared";
-const props = defineProps<{ imageUrl: string; region?: PixelRect }>();
+import type { FloorSource, PixelRect } from "@idv-map/shared";
+import FloorStill from './FloorStill.vue';
+const props = withDefaults(defineProps<{ imageUrl: string; region?: PixelRect; sources?: FloorSource[]; floorIndex?: number }>(), { sources: () => [], floorIndex: 0 });
+const emit = defineEmits<{ changeFloor: [index: number]; floorMotion: [index: number, duration: number] }>();
 
 const viewportEl = ref<HTMLElement | null>(null);
 const wrapperEl = ref<HTMLElement | null>(null);
 const imgEl = ref<HTMLImageElement | null>(null);
 const naturalWidth = ref(0);
+const trackEl = ref<HTMLElement | null>(null);
+const viewportSize = ref({ width: 0, height: 0 });
+const { pendingFloor, settling, cancelMotion, dragTrack, returnTrack, requestFloor } = useFloorMotion({
+  track: trackEl,
+  width: () => viewportEl.value?.clientWidth ?? viewportSize.value.width,
+  index: () => props.floorIndex,
+  count: () => props.sources.length,
+  change: index => emit('changeFloor', index),
+  progress: (index, duration) => emit('floorMotion', index, duration),
+});
+const previousIndex = computed(() => pendingFloor.value !== null && pendingFloor.value < props.floorIndex ? pendingFloor.value : props.floorIndex - 1);
+const nextIndex = computed(() => pendingFloor.value !== null && pendingFloor.value > props.floorIndex ? pendingFloor.value : props.floorIndex + 1);
+const previousSource = computed(() => props.sources[previousIndex.value]);
+const nextSource = computed(() => props.sources[nextIndex.value]);
 
 const imgUrl = computed(() => props.imageUrl);
 
@@ -17,6 +34,14 @@ const zoom = useZoomPan({
   wrapper: wrapperEl,
   img: imgEl,
   size: () => props.region,
+  swipe: {
+    blocked: () => settling.value,
+    previous: () => !!previousSource.value,
+    next: () => !!nextSource.value,
+    move: dragTrack,
+    end: step => { if (step) void requestFloor(props.floorIndex + step); else returnTrack(); },
+    cancel: cancelMotion,
+  },
 });
 
 // 图片尺寸不统一（新图有 1650/1700/1800 等高度），
@@ -31,14 +56,17 @@ function fitWrapperToImage() {
   zoom.reset(true);
 }
 
-watch(() => props.region, () => nextTick(fitWrapperToImage), { deep: true });
 const imageStyle = computed(() => props.region ? {
   position: "absolute" as const, left: `${-props.region.x}px`, top: `${-props.region.y}px`,
   width: naturalWidth.value ? `${naturalWidth.value}px` : "auto", height: "auto", maxWidth: "none",
 } : { position: "static" as const, width: "auto", height: "auto", maxWidth: "none" });
 let resizeObserver: ResizeObserver | undefined;
 onMounted(() => {
-  resizeObserver = new ResizeObserver(() => { if (imgEl.value?.complete && imgEl.value.naturalWidth) zoom.reset(true); });
+  resizeObserver = new ResizeObserver(() => {
+    viewportSize.value = { width: viewportEl.value?.clientWidth ?? 0, height: viewportEl.value?.clientHeight ?? 0 };
+    if (imgEl.value?.complete && imgEl.value.naturalWidth) zoom.reset(true);
+    else cancelMotion();
+  });
   if (viewportEl.value) resizeObserver.observe(viewportEl.value);
   // 命中缓存时 load 事件可能早于监听，兜底一次
   if (imgEl.value?.complete && imgEl.value.naturalWidth > 0) {
@@ -47,6 +75,12 @@ onMounted(() => {
 });
 
 onUnmounted(() => resizeObserver?.disconnect());
+watch(() => [props.floorIndex, props.imageUrl, props.region], async () => {
+  cancelMotion();
+  await nextTick();
+  fitWrapperToImage();
+}, { flush: 'post' });
+defineExpose({ requestFloor, cancelMotion });
 
 // ---- 页内全屏 ----
 const isFullscreen = ref(false);
@@ -60,7 +94,7 @@ async function toggleFullscreen() {
 
 // 点击图片外部（即视口黑边背景）退出全屏
 function onViewportClick(e: MouseEvent) {
-  if (isFullscreen.value && e.target === viewportEl.value) {
+  if (isFullscreen.value && (e.target === viewportEl.value || (e.target as Element).classList.contains('current-floor-window'))) {
     toggleFullscreen();
   }
 }
@@ -72,7 +106,7 @@ function onViewportClick(e: MouseEvent) {
     id="map-viewport"
     ref="viewportEl"
     class="map-viewport"
-    :class="{ 'in-page-fullscreen': isFullscreen }"
+    :class="{ 'in-page-fullscreen': isFullscreen, 'floor-settling': settling }"
     @click="onViewportClick"
   >
     <!-- 全屏关闭按钮 -->
@@ -83,17 +117,23 @@ function onViewportClick(e: MouseEvent) {
     >
       &times;
     </button>
-    <div id="map-wrapper" ref="wrapperEl" class="map-wrapper">
-      <img
-        id="main-map-img"
-        ref="imgEl"
-        :src="imgUrl"
-        :style="imageStyle"
-        alt="交互地图"
-        draggable="false"
-        fetchpriority="high"
-        @load="fitWrapperToImage"
-      />
+    <div ref="trackEl" class="floor-track">
+      <div v-if="previousSource" class="floor-neighbor previous"><FloorStill :key="previousIndex + previousSource.url" :source="previousSource" :width="viewportSize.width" :height="viewportSize.height" /></div>
+      <div v-if="nextSource" class="floor-neighbor next"><FloorStill :key="nextIndex + nextSource.url" :source="nextSource" :width="viewportSize.width" :height="viewportSize.height" /></div>
+      <div class="current-floor-window">
+        <div id="map-wrapper" ref="wrapperEl" class="map-wrapper">
+          <img
+            id="main-map-img"
+            ref="imgEl"
+            :src="imgUrl"
+            :style="imageStyle"
+            alt="交互地图"
+            draggable="false"
+            fetchpriority="high"
+            @load="fitWrapperToImage"
+          />
+        </div>
+      </div>
     </div>
     <!-- 遮罩图层，制造神秘感 -->
     <div class="vignette-overlay"></div>
@@ -232,4 +272,11 @@ function onViewportClick(e: MouseEvent) {
 .map-wrapper { transition: none; overflow: hidden; position: absolute; }
 .map-floating-controls { top: 8px; right: 8px; gap: 6px; }
 .tool-btn { width: 40px; height: 40px; }
+.map-viewport { touch-action: none; overscroll-behavior: contain; }
+.floor-track, .current-floor-window, .floor-neighbor { position: absolute; inset: 0; }
+.floor-track { will-change: transform; }
+.current-floor-window { overflow: hidden; }
+.floor-neighbor { pointer-events: none; }
+.floor-neighbor.previous { transform: translateX(calc(-100% - 12px)); }
+.floor-neighbor.next { transform: translateX(calc(100% + 12px)); }
 </style>
