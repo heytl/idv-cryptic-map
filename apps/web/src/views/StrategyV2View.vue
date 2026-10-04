@@ -23,6 +23,8 @@ import {
 import { navState } from "../navState";
 
 const referenceDialog = ref<HTMLDialogElement | null>(null);
+const viewer = ref<InstanceType<typeof MapViewport> | null>(null);
+const floorMotion = ref<{ index: number; duration: number } | null>(null);
 // iPad Safari may size 100dvh beyond the currently visible area when its bars
 // are shown. Use the visual viewport so the map's fitted image stays visible.
 const viewportHeight = ref(0);
@@ -76,6 +78,8 @@ const floor = computed<FloorType>(() => {
 const source = computed(() => map.value ? resolveFloorSource(map.value, floor.value) : undefined);
 const region = computed(() => source.value?.region);
 const imageUrl = computed(() => source.value?.url ?? "");
+const floorIndex = computed(() => floors.value.indexOf(floor.value));
+const floorSources = computed(() => map.value ? floors.value.map(item => resolveFloorSource(map.value!, item)!) : []);
 
 watchEffect(() => {
   if (route.name === "map-v2" && (!map.value || !entrance.value))
@@ -90,6 +94,8 @@ function setFloor(next: FloorType) {
   const base = `/maps/${route.params.gameMapId}/${mode.value}/${entranceType.value}/layout/${map.value!.id}`;
   router.replace(next === DEFAULT_FLOOR ? base : `${base}/${next}`);
 }
+function selectFloor(next: FloorType) { void viewer.value?.requestFloor(floors.value.indexOf(next)); }
+function trackFloorMotion(index: number, duration: number) { floorMotion.value = { index, duration }; }
 
 function setEntrance(next: EntranceType) {
   router.replace(
@@ -118,7 +124,7 @@ function goBack() {
         >
       </div>
       <div class="floor-toggle-wrapper">
-        <FloorSwitchV2 :floor="floor" :floors="floors" @change="setFloor" />
+        <FloorSwitchV2 :floor="floor" :floors="floors" :motion-index="floorMotion?.index" :duration="floorMotion?.duration" @change="selectFloor" />
       </div>
       <button class="reference-trigger" @click="referenceDialog?.showModal()">入口参考</button>
     </div>
@@ -165,7 +171,7 @@ function goBack() {
       </dialog>
 
       <section class="map-main-panel">
-        <MapViewport :image-url="imageUrl" :region="region" />
+        <MapViewport :key="map.id" ref="viewer" :image-url="imageUrl" :region="region" :sources="floorSources" :floor-index="floorIndex" @change-floor="setFloor(floors[$event]!)" @floor-motion="trackFloorMotion" />
       </section>
     </div>
   </main>
@@ -234,7 +240,7 @@ function goBack() {
 .floor-toggle-wrapper :deep(.floor-switch) { border: 1px solid var(--detail-line); border-radius: 999px; background: var(--detail-ink); padding: 2px; gap: 2px; }
 .floor-toggle-wrapper :deep(.switch-btn) { color: var(--detail-muted); border-radius: 999px; min-width: 52px; padding: 6px 12px; background: transparent; font-family: inherit; font-weight: 500; transition: color .18s ease, background-color .18s ease; }
 .floor-toggle-wrapper :deep(.switch-btn:hover) { color: #f0d8ab; }
-.floor-toggle-wrapper :deep(.switch-btn.active) { color: #171710; background: var(--detail-brass); box-shadow: inset 0 1px 0 #ead5aa; }
+.floor-toggle-wrapper :deep(.switch-btn.active) { color: #171710; background: transparent; box-shadow: none; }
 .map-main-panel :deep(.map-viewport) {
   background: transparent;
 }
