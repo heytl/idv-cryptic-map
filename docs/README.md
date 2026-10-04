@@ -2,11 +2,15 @@
 
 当前代码为 V3 升级，尚待发布；历史上线记录不代表当前代码已部署。新接手建议按「项目 README → 当前架构 → V3 升级 → V3 版本记录」阅读。
 
+微信小程序初版已获用户初步功能验收通过，尚未微信发布。小程序接手按「MINIPROGRAM → 初版记录与验收清单」阅读。
+
 ## 当前实现与发布准备
 
 | 文档 | 内容 |
 |---|---|
 | [项目 README](../README.md) | 项目介绍、功能、使用、开发与日常维护 |
+| [MINIPROGRAM.md](MINIPROGRAM.md) | 微信小程序当前架构、开发 / 构建、手势、预览缓存与联调排查 |
+| [releases/MINIPROGRAM-0.1.0.md](releases/MINIPROGRAM-0.1.0.md) | 微信小程序初版范围、自动验证、平台证据与功能验收清单 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | V3 分层、数据流与兼容边界 |
 | [V3-UPGRADE.md](V3-UPGRADE.md) | 数据迁移、D1、部署、统计、备份和回滚 |
 | [releases/V3.md](releases/V3.md) | 本轮版本变化、验证记录、发布前清单 |
@@ -17,6 +21,7 @@
 
 | 文档 | 历史用途 |
 |---|---|
+| [releases/MINIPROGRAM-DEVELOPMENT.md](releases/MINIPROGRAM-DEVELOPMENT.md) | 2026-10-02—03 小程序逐轮开发、旧方案与平台验证记录 |
 | [ADMIN-BACKEND.md](ADMIN-BACKEND.md) | Phase 2 KV/R2/Access 后台设计与上线过程 |
 | [OPERATIONS.md](OPERATIONS.md) | V1/V2 运维流程；含已退役脚本与操作 |
 | [MAP-V2.md](MAP-V2.md) | V2 多模式、多入口与公开协议设计 |
