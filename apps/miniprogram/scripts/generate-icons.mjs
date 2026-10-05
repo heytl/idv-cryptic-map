@@ -5,6 +5,13 @@ import sharp from "sharp";
 
 const viewport = await readFile(new URL("../../web/src/components/MapViewport.vue", import.meta.url), "utf8");
 const density = await readFile(new URL("../../web/src/components/DensitySwitch.vue", import.meta.url), "utf8");
+const handbook = await readFile(new URL("../../web/src/components/HandbookIcon.vue", import.meta.url), "utf8");
+// Extract the literal path map only; never evaluate component source.
+const pathMap = handbook.match(/const paths = \{([\s\S]*?)\n\};/)?.[1];
+if (!pathMap) throw new Error("Missing Web handbook icon paths.");
+const handbookIcons = Object.fromEntries([...pathMap.matchAll(/(?:"([\w-]+)"|(\w+)):\s*"([^"]+)"/g)].map(([, quoted, bare, path]) => [quoted || bare,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>`]));
+if (Object.keys(handbookIcons).length !== 9) throw new Error("Incomplete Web handbook icon paths.");
 function iconInButton(source, selector) {
   const marker = source.indexOf(selector);
   const start = source.lastIndexOf("<svg", marker);
@@ -14,6 +21,7 @@ function iconInButton(source, selector) {
   return svg.replace(/\s(?:v-[\w-]+|:[\w-]+)(?:="[^"]*")?/g, "");
 }
 const icons = {
+  ...handbookIcons,
   comfort: iconInButton(density, 'data-density="comfort"'),
   compact: iconInButton(density, 'data-density="compact"'),
   expand: iconInButton(viewport, 'class="fullscreen-icon-expand"'),
@@ -26,12 +34,16 @@ const icons = {
 };
 const output = new URL("../src/static/icons/", import.meta.url);
 await mkdir(output, { recursive: true });
+let generated = 0;
 for (const [name, svg] of Object.entries(icons)) {
   for (const [tone, color] of Object.entries({ brass: "#c3a168", ink: "#0a0b0d", light: "#d1c7b7" })) {
+    // Handbook pages only use brass, plus the light archive chevron.
+    if (name in handbookIcons && tone !== "brass" && !(name === "chevron" && tone === "light")) continue;
     let source = svg.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"').replaceAll("currentColor", color);
     // Density SVGs inherit fill in Web CSS; include it explicitly in image assets.
     if (name === "comfort" || name === "compact") source = source.replace("<svg", `<svg fill="${color}"`);
     await sharp(Buffer.from(source), { density: 288 }).resize(72, 72).png().toFile(fileURLToPath(new URL(`${name}-${tone}.png`, output)));
+    generated++;
   }
 }
-console.log(`Generated ${Object.keys(icons).length} UI icons in three tones.`);
+console.log(`Generated ${generated} UI icon assets.`);

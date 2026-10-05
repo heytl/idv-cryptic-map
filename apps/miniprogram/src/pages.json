@@ -3,7 +3,8 @@
     {
       "path": "pages/maps/index",
       "style": {
-        "navigationBarTitleText": "加页手记解密手册"
+        "navigationBarTitleText": "加页手记解密手册",
+        "disableScroll": true
       }
     },
     {
@@ -12,6 +13,22 @@
         "navigationBarTitleText": "地图攻略",
         "pageOrientation": "auto",
         "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/about/index",
+      "style": {
+        "navigationBarTitleText": "关于手册",
+        "navigationBarBackgroundColor": "#0a0b0d",
+        "backgroundColor": "#0a0b0d"
+      }
+    },
+    {
+      "path": "pages/changelog/index",
+      "style": {
+        "navigationBarTitleText": "更新日志",
+        "navigationBarBackgroundColor": "#0a0b0d",
+        "backgroundColor": "#0a0b0d"
       }
     }
   ],

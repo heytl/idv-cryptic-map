@@ -32,10 +32,10 @@ async function copyWebsite() {
           <span class="cover-brand-zh">{{ projectInfo.name }}</span>
         </h1>
         <p class="cover-description">
-          《第五人格》「加页手记」地图攻略工具。<br />按地图、模式与入口查找布局，支持全图与分层查看。
+          {{ projectInfo.description }}<br />{{ projectInfo.usage }}
         </p>
         <div class="cover-tags">
-          <span>玩家社区作品</span><span>开源免费</span>
+          <span v-for="tag in projectInfo.tags" :key="tag">{{ tag }}</span>
         </div>
       </div>
       <div class="book-art" aria-hidden="true">
@@ -164,19 +164,21 @@ async function copyWebsite() {
             :href="projectInfo.authorUrl"
             target="_blank"
             rel="noopener noreferrer"
-            >凉哈皮<HandbookIcon name="arrow-up-right" /></a
+            >{{ projectInfo.authorName }}<HandbookIcon name="arrow-up-right" /></a
           >，感谢整理与分享。游戏及地图版权归《第五人格》官方所有。
         </p>
       </div>
-      <div class="open-source-info">
-        <p>本项目开源免费，欢迎 Star 与反馈</p>
-        <a
-          :href="projectInfo.repository"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="source-link"
-          >GitHub 开源<HandbookIcon name="arrow-up-right"
-        /></a>
+    </section>
+
+    <section class="credits-section open-source-info" aria-labelledby="open-source-title">
+      <div>
+        <h2 id="open-source-title">开源与反馈</h2>
+        <p>本项目开源免费，欢迎 Star 与反馈。<a
+            :href="projectInfo.repository"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub 开源<HandbookIcon name="arrow-up-right" /></a>
+        </p>
       </div>
     </section>
   </main>
@@ -216,8 +218,7 @@ async function copyWebsite() {
   font-size: 14px;
   text-decoration: none;
 }
-.back-link:hover,
-.source-link:hover {
+.back-link:hover {
   color: var(--gold-hover);
 }
 .about-cover {
@@ -634,7 +635,7 @@ async function copyWebsite() {
   justify-content: space-between;
   gap: 32px;
   margin-top: 40px;
-  padding: 26px 0;
+  padding: 26px 0 0;
   border-top: 1px solid var(--about-border);
 }
 .credits-section h2 {
@@ -659,26 +660,10 @@ async function copyWebsite() {
   width: 12px;
   height: 12px;
 }
-.source-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  flex-shrink: 0;
-  color: var(--gold);
-  font-size: 12px;
-  text-decoration: none;
-}
-.source-link svg {
-  width: 16px;
-  height: 16px;
-}
-.open-source-info {
-  flex-shrink: 0;
-  text-align: right;
-}
-.open-source-info p {
-  margin-top: 0;
+.credits-section.open-source-info {
+  margin-top: 24px;
+  padding-top: 0;
+  border-top: 0;
 }
 @media (max-width: 900px) {
   .about-columns {
@@ -782,10 +767,6 @@ async function copyWebsite() {
   }
   .credits-section h2 {
     font-size: 16px;
-  }
-  .open-source-info {
-    margin-top: 18px;
-    text-align: left;
   }
 }
 @media (max-width: 360px) {

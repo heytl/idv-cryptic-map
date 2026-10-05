@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineOptions({ options: { virtualHost: true } });
 withDefaults(defineProps<{
-  name: "comfort" | "compact" | "expand" | "compress" | "rotate" | "reset" | "plus" | "minus" | "close";
+  name: "comfort" | "compact" | "expand" | "compress" | "rotate" | "reset" | "plus" | "minus" | "close" | "book" | "arrow-left" | "arrow-up-right" | "globe" | "copy" | "check" | "message" | "chevron" | "scan";
   tone?: "brass" | "ink" | "light";
   size?: number;
 }>(), { tone: "brass", size: 18 });
