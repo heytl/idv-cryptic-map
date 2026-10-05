@@ -23,7 +23,7 @@ try {
   await page.locator(".condition-summary").click();
   await page.getByRole("dialog").getByRole("button", { name: "测试地图", exact: true }).click();
   await page.getByRole("dialog").getByRole("button", { name: /^侧门(?:\s*✓)?$/ }).click();
-  await page.getByRole("button", { name: "下载当前地图离线包" }).click();
+  await page.getByRole("button", { name: "下载地图离线包" }).click();
   await page
     .getByRole("button", { name: "✓ 已可离线使用 · 复查" })
     .waitFor({ timeout: 30000 });
@@ -42,6 +42,7 @@ try {
     return i?.complete && i.naturalWidth > 0;
   });
   await page.getByRole("button", { name: "二楼", exact: true }).click();
+  await page.waitForURL(/floor2$/);
   await page.waitForFunction(() => {
     const i = document.querySelector("#main-map-img");
     return i?.complete && i.naturalWidth > 0;
@@ -49,6 +50,7 @@ try {
   assert.equal(await page.locator("#main-map-img").getAttribute("src"), fullUrl);
   assert.equal(await page.locator("#map-wrapper").evaluate(el => el.style.height), "800px");
   await page.getByRole("button", { name: "一楼", exact: true }).click();
+  await page.waitForURL(/floor1$/);
   assert.equal(await page.locator("#main-map-img").getAttribute("src"), fullUrl);
   await page.getByRole("button", { name: "返回手记目录" }).click();
   await page.locator(".map-card-item").waitFor();

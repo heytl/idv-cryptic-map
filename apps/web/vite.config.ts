@@ -31,7 +31,7 @@ export default defineConfig({
       },
       workbox: {
         // 预缓存应用壳和图标；地图图片按需缓存或通过离线包主动下载。
-        globPatterns: ["**/*.{js,css,html,woff2,png}", "icons/*.webp"],
+        globPatterns: ["**/*.{js,css,html,woff2,png,ico}", "icons/*.webp"],
         runtimeCaching: [
           {
             // 地图大图：访问过才缓存（URL 带内容哈希，天然 immutable，CacheFirst 安全）

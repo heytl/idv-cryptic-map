@@ -62,6 +62,16 @@ const oldLayout = (to: RouteLocationGeneric) =>
   `/maps/${DEFAULT_GAME_MAP_ID}/${to.params.mode}/${to.params.entrance}/layout/${to.params.id}${to.params.floor ? `/${to.params.floor}` : ""}`;
 export const routes: RouteRecordRaw[] = [
   { path: "/", redirect: "/maps" },
+  {
+    path: "/about",
+    name: "about",
+    component: () => import("./views/AboutView.vue"),
+  },
+  {
+    path: "/changelog",
+    name: "changelog",
+    component: () => import("./views/ChangelogView.vue"),
+  },
   { path: "/maps", name: "game-maps", component: GameMapsView },
   {
     path: "/maps/:gameMapId/:mode/:entrance/layout/:layoutId/:floor?",

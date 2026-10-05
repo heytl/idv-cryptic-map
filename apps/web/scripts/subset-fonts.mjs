@@ -33,7 +33,10 @@ function collectText(dir, exts, acc) {
   }
 }
 
-const sources = [readFileSync(join(webRoot, 'index.html'), 'utf8')];
+const sources = [
+  readFileSync(join(webRoot, 'index.html'), 'utf8'),
+  readFileSync(join(webRoot, '../../docs/CHANGELOG.md'), 'utf8'),
+];
 collectText(join(webRoot, 'src'), ['.vue', '.ts', '.json', '.css'], sources);
 
 // ASCII 可打印区 + 全角标点等常用符号兜底，避免细碎缺字

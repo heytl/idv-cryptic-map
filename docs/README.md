@@ -9,6 +9,7 @@
 | 文档 | 内容 |
 |---|---|
 | [项目 README](../README.md) | 项目介绍、功能、使用、开发与日常维护 |
+| [CHANGELOG.md](CHANGELOG.md) | 玩家端更新日志内容源；编辑此文档即可维护独立日志页面 |
 | [MINIPROGRAM.md](MINIPROGRAM.md) | 微信小程序当前架构、开发 / 构建、手势、预览缓存与联调排查 |
 | [releases/MINIPROGRAM-0.1.0.md](releases/MINIPROGRAM-0.1.0.md) | 微信小程序初版范围、自动验证、平台证据与功能验收清单 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | V3 分层、数据流与兼容边界 |

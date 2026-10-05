@@ -20,6 +20,16 @@ beforeEach(() => {
   mapsV2.splice(0, mapsV2.length, ...c.layouts);
 });
 describe("multi-map routes", () => {
+  it.each(["/about", "/changelog"])(
+    "%s opens independently of map data",
+    async (path) => {
+      gameMaps.splice(0);
+      mapsV2.splice(0);
+      const r = router();
+      await r.push(path);
+      expect(r.currentRoute.value.path).toBe(path);
+    },
+  );
   it.each(["/", "/v1", "/v1/map/name/1", "/legacy", "/dir/北", "/map/旧名称"])(
     "%s retires to the default catalog",
     async (path) => {
