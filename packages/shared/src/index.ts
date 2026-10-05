@@ -5,3 +5,5 @@ export * from "./date";
 export * from "./catalog";
 export * from "./map-client";
 export * from "./viewport";
+export * from "./project-info";
+export * from "./changelog";

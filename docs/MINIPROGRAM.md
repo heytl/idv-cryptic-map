@@ -1,14 +1,15 @@
 # 微信小程序开发指南
 
-更新日期：2026-10-04（Asia/Shanghai）。当前工程版本为 `0.1.0`，开发分支为 `feat/wechat-miniprogram`。用户确认初版全部验收项大致通过；范围、验证证据与验收清单见 [初版记录](releases/MINIPROGRAM-0.1.0.md)。
+更新日期：2026-10-06（Asia/Shanghai）。当前工程版本为 `0.1.0`。用户确认初版全部验收项大致通过；范围、验证证据与验收清单见 [初版记录](releases/MINIPROGRAM-0.1.0.md)。
 
 ## 功能范围
 
-- 目录按地图、困难 / 噩梦模式及入口查询布局，支持方向 / 通道筛选、两列 / 三列卡片和手动刷新。
+- 目录按地图、困难 / 噩梦模式及入口查询布局，支持方向 / 通道筛选、两列 / 三列卡片和金箱下拉刷新。
 - 条件弹窗使用草稿，点击入口后应用；取消不修改目录。地图、模式、入口及卡片密度在本地记忆。
 - 详情使用微信原生导航栏，支持全图 / 可用楼层、四方向旋转、重置、1–4 倍缩放和页面内全屏。
 - 单指拖图、双指捏合及边缘横滑切层由 WXS 处理；楼层胶囊与图片切换共用动画。
 - 点击地图打开微信原生图片预览，区域楼层在空闲时预生成 PNG，并跨页面、跨启动缓存。
+- 目录页底部提供“关于手册”入口；关于页包含项目简介、网页地址复制、最新更新、小程序码 / 发布状态、反馈占位及素材致谢。更新日志支持时间线、独立展开 / 收起和每批 10 条加载。
 
 详情工具栏保留全屏、旋转、重置、放大、缩小五项。入口参考、备注和图例面板不在本初版界面中。分享直达、访问统计、配置与主图的完整离线下载尚未接入；楼层 PNG 缓存不等同于离线包。
 
@@ -20,12 +21,17 @@
 |---|---|
 | `src/pages/maps/index.vue` | 目录、条件草稿、筛选、密度与刷新 |
 | `src/pages/strategy/index.vue` | 布局读取、楼层顺序、胶囊动画、页面尺寸与前后台状态 |
+| `src/pages/about/index.vue` | 关于手册、原生剪贴板、外部链接提示与小程序码预览 |
+| `src/pages/changelog/index.vue` | 更新日志时间线、展开状态与分页 |
+| `src/data/handbook.ts` | 与 Web 共用项目资料、日志文档与解析器 |
+| `src/services/handbook-navigation.ts` | 返回已有目录 / 关于页，保留目录筛选状态 |
 | `src/components/MapViewport.vue` | 图片尺寸校验、裁切 / 旋转、内联 WXS 手势、工具栏 |
 | `src/components/FloorStill.vue` | 横滑时相邻楼层的静态裁切图 |
 | `src/components/ImageProbe.vue` | 通过原生图片加载事件读取真实尺寸，隔离旧请求事件 |
 | `src/components/FloorPreview.vue` | Canvas 2D 适配、空闲预生成、原生图片预览 |
 | `src/services/content-client.ts` | V4 校验、会话配置复用、并发请求合并与刷新 |
 | `src/services/catalog-preferences.ts` | 条件持久化及无效偏好回退 |
+| `src/services/pull-refresh.ts` | 下拉刷新状态、并发保护与动画收尾 |
 | `src/services/map-gestures.ts` | 点击识别、按胶囊顺序选择相邻楼层；切层手势由 WXS 判断 |
 | `src/services/floor-preview*.ts` | 楼层 PNG 生成、缓存索引及微信文件系统适配 |
 | `src/services/preview-idle.ts` | 空闲等待、交互 / 后台暂停及主动预览接管 |
@@ -94,6 +100,8 @@ pnpm --filter miniprogram generate:icons
 ```
 
 提交生成的 `src/static/icons/*.png` 和生成脚本。构建产物、`.env.*.local`、个人 `project.private.config.json`、`.tmp` 验证输出不提交。
+
+关于页的项目名称、简介、网址、作者、小程序状态及码图地址统一维护在 `packages/shared/src/project-info.ts`；更新日志统一编辑 `docs/CHANGELOG.md`，两端重新构建后生效。关于页与日志页不依赖地图 API。微信内外部链接使用原生剪贴板，并提示在浏览器打开；返回时优先复用已有目录 / 关于页，直接进入日志页时也可返回。
 
 正式构建前，将 `.env.example` 复制为 `apps/miniprogram/.env.production.local` 并填写：
 
