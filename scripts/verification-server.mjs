@@ -123,6 +123,7 @@ const mime = {
   ".webmanifest": "application/manifest+json",
   ".woff2": "font/woff2",
   ".png": "image/png",
+  ".ico": "image/x-icon",
   ".webp": "image/webp",
 };
 const env = {

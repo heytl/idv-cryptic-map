@@ -4,12 +4,33 @@ import { useRoute, useRouter } from "vue-router";
 import { formatUpdatedAt } from "@idv-map/shared";
 import OfflineCache from "./components/OfflineCache.vue";
 import { mapsV2UpdatedAt } from "./data/maps-v2";
+import { projectInfo } from "./data/project-info";
 
 const route = useRoute();
 const router = useRouter();
-const mapsUpdatedAt = computed(() =>
-  mapsV2UpdatedAt.value ? formatUpdatedAt(mapsV2UpdatedAt.value) : "",
+const isAppendix = computed(() =>
+  ["about", "changelog"].includes(String(route.name)),
 );
+const showProjectEntry = computed(() =>
+  ["game-maps", "catalog-v2"].includes(String(route.name)),
+);
+const mapsUpdatedAt = computed(() => {
+  const value = mapsV2UpdatedAt.value;
+  if (!value) return "";
+  const date = new Date(
+    /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00+08:00` : value,
+  );
+  if (Number.isNaN(date.getTime())) return "时间未知";
+  const parts = new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  return ["year", "month", "day"]
+    .map((type) => parts.find((part) => part.type === type)?.value)
+    .join(".");
+});
 
 const goHome = () => {
   router.push("/");
@@ -25,6 +46,7 @@ watchEffect(() => {
     "catalog-v2-view-active",
     route.name === "catalog-v2",
   );
+  document.body.classList.toggle("about-view-active", isAppendix.value);
 });
 </script>
 
@@ -37,7 +59,8 @@ watchEffect(() => {
     <header class="app-header">
       <div class="header-decoration left-deco"></div>
       <h1 class="app-title" @click="goHome">
-        <span class="en-font">CRYPTIC HANDBOOK</span><br />加页手记解密手册
+        <span class="en-font">CRYPTIC HANDBOOK</span>
+        <span>{{ projectInfo.name }}</span>
       </h1>
       <div class="header-decoration right-deco"></div>
     </header>
@@ -45,45 +68,58 @@ watchEffect(() => {
     <router-view />
 
     <!-- 页脚 -->
-    <footer class="app-footer">
-      <p>
-        © 2026 OUU 第五人格“加页手记”解密手册 | 地图数据源自<a
-          href="https://space.bilibili.com/8618005"
-          target="_blank"
-          class="author-link"
-          >凉哈皮</a
+    <footer v-if="!isAppendix" class="app-footer">
+      <div class="footer-copyright">
+        <span>© 2026 OUU 第五人格</span>
+        <span class="footer-copyright-title">
+          <span aria-hidden="true">·</span>
+          <span>{{ projectInfo.name }}</span>
+        </span>
+        <span v-if="showProjectEntry" class="footer-about-entry">
+          <span aria-hidden="true">·</span>
+          <RouterLink to="/about" class="footer-link">关于手册</RouterLink>
+        </span>
+      </div>
+      <div class="footer-meta">
+        <span class="footer-source"
+          >素材来源<a
+            :href="projectInfo.authorUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+            >凉哈皮</a
+          ></span
         >
-      </p>
-      <p class="footer-meta">
-        <span class="update-time">地图数据更新于 {{ mapsUpdatedAt }}</span>
-        <span class="footer-divider">·</span>
-        <a
-          href="https://github.com/heytl/idv-cryptic-map"
-          target="_blank"
-          class="author-link github-link"
+        <span v-if="mapsUpdatedAt" class="footer-divider" aria-hidden="true"
+          >·</span
         >
-          <svg
-            class="github-icon"
-            viewBox="0 0 16 16"
-            width="14"
-            height="14"
-            aria-hidden="true"
-          >
-            <path
-              fill="currentColor"
-              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-            />
-          </svg>
-          GitHub 开源
-        </a>
-        <span class="footer-divider">·</span>
-        <span class="footer-slogan">本项目开源免费，欢迎 Star 与反馈</span>
-        <!-- 选定地图后提供对应的离线包下载 -->
-        <template v-if="route.params.gameMapId">
-          <span class="footer-divider">·</span>
-          <OfflineCache />
-        </template>
-      </p>
+        <span
+          v-if="mapsUpdatedAt"
+          class="update-time"
+          :title="`北京时间 ${formatUpdatedAt(mapsV2UpdatedAt)}`"
+          >数据更新
+          <time :datetime="mapsV2UpdatedAt">{{ mapsUpdatedAt }}</time></span
+        >
+        <span
+          v-if="route.params.gameMapId"
+          class="footer-divider"
+          aria-hidden="true"
+          >·</span
+        >
+        <OfflineCache v-if="route.params.gameMapId" />
+      </div>
     </footer>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 768px) {
+  .app-header .app-title {
+    font-size: 1rem;
+  }
+  .app-header .app-title .en-font {
+    font-size: 0.5rem;
+    letter-spacing: 1px;
+  }
+}
+</style>

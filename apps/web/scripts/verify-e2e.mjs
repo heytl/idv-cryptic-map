@@ -39,7 +39,7 @@ try {
   await page.locator("#main-map-img").waitFor();
   await expectCount(before + 1);
   await page.getByRole("button", { name: "一楼", exact: true }).click();
-  assert.match(page.url(), /floor1$/);
+  await page.waitForURL(/floor1$/);
   await expectCount(before + 1);
   await page.reload();
   await page.locator("#main-map-img").waitFor();
@@ -58,7 +58,7 @@ try {
   await page.locator(".map-card-item").waitFor();
   assert.equal(await page.locator(".map-card-item").count(), 1);
   await page.locator(".map-card-item").click();
-  assert.match(page.url(), /second\/hard\/side\/layout\/999/);
+  await page.waitForURL(/second\/hard\/side\/layout\/999/);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: resolve(shots, "mobile-detail.png") });
   assert(

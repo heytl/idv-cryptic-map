@@ -12,7 +12,6 @@ import { useRoute, useRouter } from "vue-router";
 import FloorSwitchV2 from "../components/FloorSwitchV2.vue";
 import LegendBox from "../components/LegendBox.vue";
 import MapViewport from "../components/MapViewport.vue";
-import { BASE_TITLE } from "../constants";
 import {
   availableFloors,
   enabledEntranceTypesV2,
@@ -84,10 +83,6 @@ const floorSources = computed(() => map.value ? floors.value.map(item => resolve
 watchEffect(() => {
   if (route.name === "map-v2" && (!map.value || !entrance.value))
     router.replace("/maps");
-  if (map.value) document.title = `${map.value.displayName} | ${BASE_TITLE}`;
-});
-onUnmounted(() => {
-  document.title = BASE_TITLE;
 });
 
 function setFloor(next: FloorType) {

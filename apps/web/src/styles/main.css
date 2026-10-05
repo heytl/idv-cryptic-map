@@ -80,6 +80,10 @@ body {
 }
 
 .app-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   font-size: 1.8rem;
   color: var(--gold);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
@@ -87,8 +91,9 @@ body {
   cursor: pointer;
 }
 
-.app-title span {
+.app-title .en-font {
   font-size: 1rem;
+  line-height: 1.2;
   color: var(--red-accent);
 }
 
@@ -141,7 +146,6 @@ body.catalog-v2-view-active .app-title {
 }
 
 body.catalog-v2-view-active .app-title .en-font {
-  display: inline;
   font-size: 0.62rem;
   letter-spacing: 1.4px;
 }
@@ -1095,45 +1099,57 @@ body.catalog-v2-view-active .header-decoration {
   padding: 20px 0 10px;
   border-top: 1px solid rgba(195, 161, 104, 0.1);
   font-size: 0.8rem;
+  line-height: 1.5;
   color: rgba(209, 199, 183, 0.5);
   /* 保证页脚始终绘制在地图视口等 positioned 元素之上，不被遮挡 */
   position: relative;
   z-index: 1;
 }
 
-.author-link {
+.footer-link {
   color: var(--gold);
   text-decoration: none;
-  transition: color 0.3s ease;
-  font-weight: bold;
+  text-underline-offset: 2px;
+  transition: color 160ms;
+  font: inherit;
+  font-weight: 600;
 }
 
-.author-link:hover {
-  color: var(--gold-light);
+.footer-link:hover {
+  color: var(--gold-hover);
   text-decoration: underline;
 }
 
+.footer-copyright,
 .footer-meta {
-  margin-top: 6px;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 2px 6px;
 }
 
-.footer-divider {
-  color: rgba(209, 199, 183, 0.3);
+.footer-meta {
+  margin-top: 4px;
 }
 
-.github-link {
+.footer-copyright-title,
+.footer-about-entry {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.footer-source,
+.update-time {
+  display: inline-flex;
+  align-items: baseline;
   gap: 4px;
 }
 
-.github-icon {
-  vertical-align: middle;
+.update-time time {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ==========================================================================
@@ -1517,3 +1533,12 @@ body.strategy-view-active .app-container {
 }
 body.strategy-view-active .app-header,
 body.strategy-view-active .app-footer { display: none; }
+
+/* The appendix has its own compact navigation and a comfortable reading width. */
+body.about-view-active .app-header {
+  display: none;
+}
+body.about-view-active .app-container {
+  max-width: 1120px;
+  padding-top: 18px;
+}

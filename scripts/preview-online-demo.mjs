@@ -45,7 +45,8 @@ function imageUrl(value) {
   // Preserve the original image path so existing PWA image caching rules still apply.
   const local = `/_demo-media/${hash}${url.pathname}`;
   media.set(local, url.href);
-  return local;
+  // The public V4 boundary requires absolute HTTP(S) media URLs.
+  return `http://127.0.0.1:${port}${local}`;
 }
 async function loadConfig() {
   if (cached && Date.now() - loadedAt < 30000) return cached;

@@ -39,7 +39,7 @@ const { phase, done, total, error, warm, clear } = useOfflineCache(
       @click="warm"
     >
       <template v-if="phase === 'error'">离线缓存未完成 · 重试</template>
-      <template v-else>下载当前地图离线包</template>
+      <template v-else>下载地图离线包</template>
     </button>
   </span>
 </template>

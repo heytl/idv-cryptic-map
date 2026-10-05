@@ -1,1 +1,1 @@
-export const BASE_TITLE = '加页手记 | 解密手册';
+export const BASE_TITLE = "加页手记解密手册";
