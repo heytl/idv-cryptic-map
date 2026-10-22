@@ -7,6 +7,7 @@ import MapViewport from "../../components/MapViewport.vue";
 import FloorPreview from "../../components/FloorPreview.vue";
 import { adjacentFloor } from "../../services/map-gestures";
 import { content } from "../../services/content";
+import { createMiniProgramVisitTracker } from "../../services/telemetry";
 
 const layout = shallowRef<PublicLayoutV4>();
 const floor = ref<FloorType>(DEFAULT_FLOOR);
@@ -32,6 +33,14 @@ const indicatorStyle = computed(() => {
     transform: `translateX(calc(${highlightedFloor.value * 100}% + ${highlightedFloor.value * 2}px))` };
 });
 let disposed = false;
+const tracker = createMiniProgramVisitTracker();
+function trackVisit() {
+  const selected = layout.value;
+  const entrance = selected?.entrances.find(e => e.type === params.entrance) ?? selected?.entrances[0];
+  if (selected && entrance) tracker.navigate({
+    gameMapId: selected.gameMapId, layoutId: selected.id, entranceId: entrance.id,
+  }, foreground.value, true);
+}
 
 async function load() {
   loading.value = true; error.value = "";
@@ -43,6 +52,7 @@ async function load() {
     const allowed = selected.entrances.filter(e => enabledEntranceTypesV2(selected.mode).includes(e.type));
     if (!allowed.length) throw new Error("此地图暂无可用入口");
     layout.value = selected;
+    trackVisit();
     uni.setNavigationBarTitle({ title: selected.displayName });
     floor.value = DEFAULT_FLOOR;
   } catch (cause) { if (!disposed) error.value = cause instanceof Error ? cause.message : "加载失败"; }
@@ -68,7 +78,7 @@ onLoad(query => {
   void load();
 });
 onResize(event => { windowHeight.value = event.size?.windowHeight ?? uni.getWindowInfo().windowHeight; viewer.value?.measure(); });
-onShow(() => { foreground.value = true; });
+onShow(() => { foreground.value = true; trackVisit(); });
 onHide(() => { foreground.value = false; });
 onBeforeUnmount(() => { disposed = true; });
 </script>

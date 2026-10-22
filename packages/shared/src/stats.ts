@@ -1,4 +1,5 @@
 export interface VisitEvent {
+  client?: "web" | "wechat";
   eventId: string;
   layoutId: number;
   entranceId: string;
@@ -20,6 +21,7 @@ export interface StatRow {
   label?: string;
 }
 export interface StatsReport {
+  clients?: StatRow[];
   query: StatsQuery;
   total: number;
   startedAt: string | null;

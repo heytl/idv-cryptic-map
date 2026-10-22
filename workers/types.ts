@@ -9,6 +9,8 @@ export interface Env {
     limit(input: { key: string }): Promise<{ success: boolean }>;
   };
   TELEMETRY_ORIGIN?: string;
+  /** Native mini-program Referer allowlist; not a secret or user authentication. */
+  TELEMETRY_WECHAT_APP_ID?: string;
 
   // ---- vars（wrangler.jsonc / dashboard 配置）----
   /** 图片对外 URL 前缀：img 子域绑定前为 "/r2"（同 Worker 出图），绑定后改为 https://img.<domain> */

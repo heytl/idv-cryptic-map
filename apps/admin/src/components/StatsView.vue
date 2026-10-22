@@ -257,6 +257,7 @@ onMounted(load);
       <n-tag v-else size="small" type="info" :bordered="false">正式主站数据</n-tag>
       <span v-if="localApi">仅用于预览交互与图表，不代表线上访问情况；服务重启后重置。</span>
       <span v-else>记录在线查阅次数，不代表游戏内布局出现概率；刷新、重新进入分别计数，不统计 UV。</span>
+      <span v-if="report?.clients?.length">　来源：{{ report.clients.map(row => `${row.key === 'wechat' ? '微信小程序' : 'Web'} ${row.count}`).join(' · ') }}</span>
       <span class="stats-source-spacer"></span>
       <span>北京时间 · 明细保留 90 天</span>
     </div>

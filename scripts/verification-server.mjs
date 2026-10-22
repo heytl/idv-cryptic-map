@@ -49,6 +49,7 @@ const db = new DatabaseSync(":memory:");
 db.exec(
   readFileSync(resolve(root, "workers/migrations/0001_statistics.sql"), "utf8"),
 );
+db.exec(readFileSync(resolve(root, "workers/migrations/0002_visit_client.sql"), "utf8"));
 // Give the local admin demo a useful analytics preview without implying that
 // these synthetic visits came from the production site. TEST_EMPTY keeps the
 // intentionally empty fixture available for manual empty-state checks.
