@@ -1,13 +1,19 @@
 {
   "schemaVersion": 3,
-  "version": 32,
-  "updatedAt": "2026-09-19",
+  "version": 41,
+  "updatedAt": "2026-10-22T14:16:27.867Z",
   "gameMaps": [
     {
       "id": "lady-of-doom",
       "name": "厄运之女",
       "sort": 10,
       "published": true
+    },
+    {
+      "id": "map-7a45fc46-f521-4acd-ad8e-324487800680",
+      "name": "3213",
+      "sort": 20,
+      "published": false
     }
   ],
   "layouts": [
@@ -37,7 +43,7 @@
         {
           "id": "1-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/e816ab24.webp"
           },
@@ -61,12 +67,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/64e33f48.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/56f5d9ff.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/9b0b993f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/64e33f48.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 735
+          },
+          "floor2": {
+            "x": 0,
+            "y": 741,
+            "width": 900,
+            "height": 759
+          }
         }
       }
     },
@@ -96,7 +115,7 @@
         {
           "id": "2-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/617bc883.webp"
           },
@@ -120,12 +139,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/18785ff4.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/8a3ddd50.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/b350c3f3.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/18785ff4.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 800
+          },
+          "floor2": {
+            "x": 0,
+            "y": 800,
+            "width": 900,
+            "height": 700
+          }
         }
       }
     },
@@ -155,7 +187,7 @@
         {
           "id": "3-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/aa7674c6.webp"
           },
@@ -179,12 +211,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/b260897e.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/67137475.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/0757dfa6.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/b260897e.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -214,7 +259,7 @@
         {
           "id": "4-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/6c221dd3.webp"
           },
@@ -238,12 +283,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/9c4e2ec5.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/a632573c.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/e4fe8db9.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/9c4e2ec5.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 745
+          },
+          "floor2": {
+            "x": 0,
+            "y": 745,
+            "width": 900,
+            "height": 755
+          }
         }
       }
     },
@@ -273,7 +331,7 @@
         {
           "id": "5-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/b0d66966.webp"
           },
@@ -297,12 +355,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/33eda373.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/24ab1a40.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/5003b538.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/33eda373.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 719
+          },
+          "floor2": {
+            "x": 0,
+            "y": 713,
+            "width": 900,
+            "height": 787
+          }
         }
       }
     },
@@ -332,7 +403,7 @@
         {
           "id": "6-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/a22fd2f1.webp"
           },
@@ -356,12 +427,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/e36561e5.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/d0ae5686.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/50023234.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/e36561e5.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 777
+          },
+          "floor2": {
+            "x": 0,
+            "y": 777,
+            "width": 900,
+            "height": 723
+          }
         }
       }
     },
@@ -391,7 +475,7 @@
         {
           "id": "7-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/62ef6248.webp"
           },
@@ -415,12 +499,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/6448e9c7.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/0aa78555.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/56671c86.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/6448e9c7.webp",
+        "imageWidth": 900,
+        "imageHeight": 1700,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 895
+          },
+          "floor2": {
+            "x": 0,
+            "y": 895,
+            "width": 900,
+            "height": 805
+          }
         }
       }
     },
@@ -451,7 +548,7 @@
         {
           "id": "24-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/39ecc8e1.webp"
           },
@@ -475,12 +572,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/80e6eaa9.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/35dbb8a7.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/71a750d2.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/80e6eaa9.webp",
+        "imageWidth": 900,
+        "imageHeight": 1600,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 800
+          },
+          "floor2": {
+            "x": 0,
+            "y": 800,
+            "width": 900,
+            "height": 800
+          }
         }
       }
     },
@@ -511,7 +621,7 @@
         {
           "id": "27-front",
           "type": "front",
-          "direction": "left",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/ea7a76be.webp"
           },
@@ -535,12 +645,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/42ba933c.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/820a3560.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/0359e116.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/42ba933c.webp",
+        "imageWidth": 900,
+        "imageHeight": 1600,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 784
+          },
+          "floor2": {
+            "x": 0,
+            "y": 784,
+            "width": 900,
+            "height": 816
+          }
         }
       }
     },
@@ -570,7 +693,7 @@
         {
           "id": "8-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/c6f9ca1c.webp"
           },
@@ -594,12 +717,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/68459dc4.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/f40edc9d.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/8b5dcf9e.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/68459dc4.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -629,7 +765,7 @@
         {
           "id": "9-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/e4896fd1.webp"
           },
@@ -653,12 +789,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/775803ce.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/f3b84407.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/31f38ebf.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/775803ce.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -688,7 +837,7 @@
         {
           "id": "10-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/72dabbb1.webp"
           },
@@ -712,12 +861,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/1062a6d1.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/9633dbe6.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/b2b4b334.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/1062a6d1.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -747,7 +909,7 @@
         {
           "id": "11-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/a5172cd4.webp"
           },
@@ -771,12 +933,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/73a85e21.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/140beddf.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/023ebd2e.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/73a85e21.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 690
+          },
+          "floor2": {
+            "x": 0,
+            "y": 690,
+            "width": 900,
+            "height": 810
+          }
         }
       }
     },
@@ -806,7 +981,7 @@
         {
           "id": "12-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/1d97672f.webp"
           },
@@ -830,12 +1005,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/073a380e.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/cc8b72d3.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/96dc04e3.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/073a380e.webp",
+        "imageWidth": 900,
+        "imageHeight": 1650,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 895
+          },
+          "floor2": {
+            "x": 0,
+            "y": 895,
+            "width": 900,
+            "height": 755
+          }
         }
       }
     },
@@ -866,7 +1054,7 @@
         {
           "id": "26-front",
           "type": "front",
-          "direction": "right",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/3b81943e.webp"
           },
@@ -890,12 +1078,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/eade262d.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/b08f5bd0.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/bb087ca1.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/eade262d.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 752,
+            "width": 900,
+            "height": 748
+          }
         }
       }
     },
@@ -949,12 +1150,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/7c4e9323.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/03bc19d0.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/99d64725.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/7c4e9323.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1008,12 +1222,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/61719348.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/bec4b157.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/2538bd4c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/61719348.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1067,12 +1294,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/b0927261.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/cbe3ae6b.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/dd17b84e.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/b0927261.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1126,12 +1366,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/4262756e.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/0a7448d7.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/b2bcc56d.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/4262756e.webp",
+        "imageWidth": 900,
+        "imageHeight": 1800,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 888
+          },
+          "floor2": {
+            "x": 0,
+            "y": 888,
+            "width": 900,
+            "height": 912
+          }
         }
       }
     },
@@ -1186,12 +1439,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/05edd21b.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/9777cc82.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/be6117f3.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/05edd21b.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 752,
+            "width": 900,
+            "height": 748
+          }
         }
       }
     },
@@ -1221,7 +1487,7 @@
         {
           "id": "17-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/2bdf250e.webp"
           },
@@ -1245,12 +1511,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/8d20fc2c.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/0981a1a8.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/eec81318.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/8d20fc2c.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1280,7 +1559,7 @@
         {
           "id": "18-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/af5cd3bb.webp"
           },
@@ -1304,12 +1583,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/149d87f9.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/338e7601.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/df2d2b9f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/149d87f9.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1339,7 +1631,7 @@
         {
           "id": "19-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/8c05a78b.webp"
           },
@@ -1363,12 +1655,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/20a9f472.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/7a998697.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/8bd0365b.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/20a9f472.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1398,7 +1703,7 @@
         {
           "id": "20-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/4e3c34c4.webp"
           },
@@ -1422,12 +1727,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/585df652.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/2e9f2e52.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/04e31649.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/585df652.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1457,7 +1775,7 @@
         {
           "id": "21-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/f4dde24b.webp"
           },
@@ -1481,12 +1799,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/5baef489.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/87d7513c.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/8a8a38dd.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/5baef489.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1516,7 +1847,7 @@
         {
           "id": "22-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/5b6161b5.webp"
           },
@@ -1540,12 +1871,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/92e71ef8.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/887af021.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/031049c7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/92e71ef8.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1576,7 +1920,7 @@
         {
           "id": "23-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/303a22c0.webp"
           },
@@ -1600,12 +1944,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/0f5beec5.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/504fb727.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/f1914eec.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/0f5beec5.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
         }
       }
     },
@@ -1636,7 +1993,7 @@
         {
           "id": "28-front",
           "type": "front",
-          "direction": "north",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/8c2f0ed4.webp"
           },
@@ -1660,12 +2017,25 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/bb4d0fc3.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/f8300357.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/ef39de31.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/bb4d0fc3.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 748
+          },
+          "floor2": {
+            "x": 0,
+            "y": 748,
+            "width": 900,
+            "height": 752
+          }
         }
       }
     },
@@ -1677,18 +2047,19 @@
       "remarks": "进入正门后，仅有左右两个通道",
       "sort": 290,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "41-front",
           "type": "front",
           "direction": "south",
+          "passage": "both",
           "image": {
             "key": "maps/entrance/b6332caa.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/b6825e7d.webp"
-          },
-          "passage": "both"
+          }
         },
         {
           "id": "41-upstairs",
@@ -1706,15 +2077,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/8b620e4b.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/4d9fb2ef.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/c05a2c73.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/8673ed41.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/8b620e4b.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2207,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1394,
+            "width": 1000,
+            "height": 587
+          },
+          "floor1": {
+            "x": 0,
+            "y": 740,
+            "width": 1000,
+            "height": 680
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 762
+          }
         }
       }
     },
@@ -1726,18 +2113,19 @@
       "remarks": "进入正门后，仅有左边和上边两个通道",
       "sort": 300,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "40-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperLeft",
           "image": {
             "key": "maps/entrance/2f1f913c.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/cf8326c0.webp"
-          },
-          "passage": "upperLeft"
+          }
         },
         {
           "id": "40-upstairs",
@@ -1755,15 +2143,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/1ae441c5.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/a0e5ef70.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/e85d0349.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/23b0bc1d.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/1ae441c5.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1670,
+            "width": 1000,
+            "height": 595
+          },
+          "floor1": {
+            "x": 0,
+            "y": 820,
+            "width": 1000,
+            "height": 860
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 820
+          }
         }
       }
     },
@@ -1775,18 +2179,19 @@
       "remarks": "进入正门后，三方均有通道",
       "sort": 310,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "38-front",
           "type": "front",
           "direction": "south",
+          "passage": "triple",
           "image": {
             "key": "maps/entrance/3fc9ed5d.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/393f6183.webp"
-          },
-          "passage": "triple"
+          }
         },
         {
           "id": "38-upstairs",
@@ -1804,15 +2209,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/a7e3e534.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/00ea1716.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/57219b7a.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/8f078992.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/a7e3e534.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1742,
+            "width": 1000,
+            "height": 537
+          },
+          "floor1": {
+            "x": 0,
+            "y": 868,
+            "width": 1000,
+            "height": 894
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 850
+          }
         }
       }
     },
@@ -1824,18 +2245,19 @@
       "remarks": "进入正门后，仅有右边和上边两个通道",
       "sort": 320,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "37-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/62818415.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/329be788.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "37-upstairs",
@@ -1853,15 +2275,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/994f7db7.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/943ba2d0.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/92879547.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/214d8cb7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/994f7db7.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1660,
+            "width": 1000,
+            "height": 540
+          },
+          "floor1": {
+            "x": 0,
+            "y": 821,
+            "width": 1000,
+            "height": 856
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 839
+          }
         }
       }
     },
@@ -1873,18 +2311,19 @@
       "remarks": "进入正门后，仅有右边和上边两个通道",
       "sort": 330,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "39-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/47db7020.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/97316a53.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "39-upstairs",
@@ -1902,15 +2341,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/36908278.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/42a89314.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/80613f81.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/e65802d7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/36908278.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1627,
+            "width": 1000,
+            "height": 554
+          },
+          "floor1": {
+            "x": 0,
+            "y": 794,
+            "width": 1000,
+            "height": 841
+          },
+          "floor2": {
+            "x": 0,
+            "y": 22,
+            "width": 1000,
+            "height": 785
+          }
         }
       }
     },
@@ -1922,18 +2377,19 @@
       "remarks": "进入正门后，仅有右边和上边两个通道",
       "sort": 340,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "36-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/0fd86aa3.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/66ecea20.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "36-upstairs",
@@ -1951,15 +2407,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/a33a12ca.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/c4dac9a7.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/e658f887.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/4cbbf635.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/a33a12ca.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2926,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1956,
+            "width": 1000,
+            "height": 721
+          },
+          "floor1": {
+            "x": 0,
+            "y": 900,
+            "width": 1000,
+            "height": 1070
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 900
+          }
         }
       }
     },
@@ -1971,18 +2443,19 @@
       "remarks": "进入正门后，仅有左边和上边两个通道",
       "sort": 350,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "35-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperLeft",
           "image": {
             "key": "maps/entrance/7c1ba4b7.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/dd2b638d.webp"
-          },
-          "passage": "upperLeft"
+          }
         },
         {
           "id": "35-upstairs",
@@ -2000,15 +2473,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/06ab68fe.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/46bdd0b3.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/da0ccdcc.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/f95440a6.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/06ab68fe.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1480,
+            "width": 1000,
+            "height": 720
+          },
+          "floor1": {
+            "x": 0,
+            "y": 653,
+            "width": 1000,
+            "height": 839
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 666
+          }
         }
       }
     },
@@ -2020,18 +2509,19 @@
       "remarks": "进入正门后，仅有左右两个通道",
       "sort": 360,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "34-front",
           "type": "front",
           "direction": "south",
+          "passage": "both",
           "image": {
             "key": "maps/entrance/951f222c.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/1056e341.webp"
-          },
-          "passage": "both"
+          }
         },
         {
           "id": "34-upstairs",
@@ -2049,15 +2539,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/74c765c6.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/ae1c35f7.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/9e788643.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/17ecdbcf.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/74c765c6.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2655,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1797,
+            "width": 1000,
+            "height": 628
+          },
+          "floor1": {
+            "x": 0,
+            "y": 850,
+            "width": 1000,
+            "height": 930
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 939
+          }
         }
       }
     },
@@ -2069,18 +2575,19 @@
       "remarks": "进入正门后，仅有左边和上边两个通道",
       "sort": 370,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "30-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperLeft",
           "image": {
             "key": "maps/entrance/d76d9ba7.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/ec7f09ee.webp"
-          },
-          "passage": "upperLeft"
+          }
         },
         {
           "id": "30-upstairs",
@@ -2098,15 +2605,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/f7b5e169.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/cf873e75.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/fe359f25.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/49c42622.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/f7b5e169.webp",
+        "imageWidth": 1000,
+        "imageHeight": 3000,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1921,
+            "width": 1000,
+            "height": 755
+          },
+          "floor1": {
+            "x": 0,
+            "y": 933,
+            "width": 1000,
+            "height": 1006
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 965
+          }
         }
       }
     },
@@ -2118,18 +2641,19 @@
       "remarks": "进入正门后，仅有左右两个通道",
       "sort": 380,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "31-front",
           "type": "front",
           "direction": "south",
+          "passage": "both",
           "image": {
             "key": "maps/entrance/8e642ae1.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/779112e8.webp"
-          },
-          "passage": "both"
+          }
         },
         {
           "id": "31-upstairs",
@@ -2147,15 +2671,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/67a7b874.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/b6074dd2.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/aa6c2db0.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/d278546f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/67a7b874.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1510,
+            "width": 1000,
+            "height": 690
+          },
+          "floor1": {
+            "x": 0,
+            "y": 640,
+            "width": 1000,
+            "height": 870
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 640
+          }
         }
       }
     },
@@ -2167,18 +2707,19 @@
       "remarks": "进入正门后，三方均有通道",
       "sort": 390,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "32-front",
           "type": "front",
           "direction": "south",
+          "passage": "triple",
           "image": {
             "key": "maps/entrance/1d664c81.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/441d6126.webp"
-          },
-          "passage": "triple"
+          }
         },
         {
           "id": "32-upstairs",
@@ -2196,15 +2737,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/fe9ada02.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/a5928c98.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/6c415702.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/246e2960.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/fe9ada02.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1572,
+            "width": 1000,
+            "height": 604
+          },
+          "floor1": {
+            "x": 0,
+            "y": 777,
+            "width": 1000,
+            "height": 821
+          },
+          "floor2": {
+            "x": 0,
+            "y": 24,
+            "width": 1000,
+            "height": 777
+          }
         }
       }
     },
@@ -2216,18 +2773,19 @@
       "remarks": "进入正门后，三方均有通道",
       "sort": 400,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "29-front",
           "type": "front",
           "direction": "south",
+          "passage": "triple",
           "image": {
             "key": "maps/entrance/10fb8363.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/497ee1a5.webp"
-          },
-          "passage": "triple"
+          }
         },
         {
           "id": "29-upstairs",
@@ -2245,15 +2803,31 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/4aa0c590.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/b545c635.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/b91cc72a.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/0043c305.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/4aa0c590.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1660,
+            "width": 1000,
+            "height": 540
+          },
+          "floor1": {
+            "x": 0,
+            "y": 866,
+            "width": 1000,
+            "height": 807
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 840
+          }
         }
       }
     },
@@ -2265,18 +2839,19 @@
       "remarks": "进入正门后，仅有右边和上边两个通道",
       "sort": 410,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "33-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/f497e090.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/108a0121.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "33-upstairs",
@@ -2294,40 +2869,33 @@
       "floorImages": {
         "full": {
           "key": "maps/layout/full/7833a3a8.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/61199d28.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/d92848b3.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/1384715c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/7833a3a8.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1500,
+            "width": 1000,
+            "height": 700
+          },
+          "floor1": {
+            "x": 0,
+            "y": 751,
+            "width": 1000,
+            "height": 785
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 740
+          }
         }
       }
-    },
-    {
-      "id": 42,
-      "mode": "nightmare",
-      "name": "222",
-      "displayName": "22",
-      "remarks": "22",
-      "sort": 420,
-      "published": false,
-      "entrances": [
-        {
-          "id": "42-front",
-          "type": "front",
-          "direction": "south"
-        },
-        {
-          "id": "42-upstairs",
-          "type": "upstairs"
-        }
-      ],
-      "deletedAt": "2026-08-23T09:01:43.326Z",
-      "gameMapId": "lady-of-doom",
-      "floorImages": {}
     },
     {
       "id": 43,
@@ -2335,46 +2903,63 @@
       "name": "左-竖1图书走廊门",
       "displayName": "左-竖1图书走廊门",
       "remarks": "",
-      "sort": 430,
+      "sort": 420,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "43-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperLeft",
           "image": {
             "key": "maps/entrance/a143fda0.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/fd5e5ddb.webp"
-          },
-          "passage": "upperLeft"
+          }
         },
         {
           "id": "43-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/8cc825cd.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/60b8916d.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/5e241d0b.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/ab4894cf.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/533ae043.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/2ab968ea.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/5e241d0b.webp",
+        "imageWidth": 829,
+        "imageHeight": 1560,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1011,
+            "width": 829,
+            "height": 543
+          },
+          "floor1": {
+            "x": 0,
+            "y": 537,
+            "width": 829,
+            "height": 496
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 519
+          }
         }
       }
     },
@@ -2384,46 +2969,63 @@
       "name": "左-竖L门",
       "displayName": "左-竖L门",
       "remarks": "",
-      "sort": 440,
+      "sort": 430,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "46-front",
           "type": "front",
           "direction": "south",
+          "passage": "both",
           "image": {
             "key": "maps/entrance/b1a66d96.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/80e12182.webp"
-          },
-          "passage": "both"
+          }
         },
         {
           "id": "46-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/544d6b8a.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/a28aa71c.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/92f7b763.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/0c750d94.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/3701fa77.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/a77c78d4.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/92f7b763.webp",
+        "imageWidth": 829,
+        "imageHeight": 1827,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1055,
+            "width": 829,
+            "height": 536
+          },
+          "floor1": {
+            "x": 0,
+            "y": 486,
+            "width": 829,
+            "height": 559
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 620
+          }
         }
       }
     },
@@ -2433,46 +3035,63 @@
       "name": "左-竖1图书门",
       "displayName": "左-竖1图书门",
       "remarks": "",
-      "sort": 450,
+      "sort": 440,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "44-front",
           "type": "front",
           "direction": "south",
+          "passage": "both",
           "image": {
             "key": "maps/entrance/9d1b0ab4.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/d269b1c0.webp"
-          },
-          "passage": "both"
+          }
         },
         {
           "id": "44-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/a90125a5.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/bf8444fa.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/045131c0.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/e0f7f267.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/b69549bc.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/1436b360.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/045131c0.webp",
+        "imageWidth": 829,
+        "imageHeight": 1827,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1066,
+            "width": 829,
+            "height": 537
+          },
+          "floor1": {
+            "x": 0,
+            "y": 510,
+            "width": 829,
+            "height": 562
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 571
+          }
         }
       }
     },
@@ -2482,46 +3101,63 @@
       "name": "左-倒T门",
       "displayName": "左-倒T门",
       "remarks": "",
-      "sort": 460,
+      "sort": 450,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "45-front",
           "type": "front",
           "direction": "south",
+          "passage": "triple",
           "image": {
             "key": "maps/entrance/9e424bfa.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/2a4f3fac.webp"
-          },
-          "passage": "triple"
+          }
         },
         {
           "id": "45-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/b8cf66eb.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/07a24d7b.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/37e079ae.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/c3bedd8a.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/36c8eb06.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/d42d8646.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/37e079ae.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1457,
+            "width": 1000,
+            "height": 696
+          },
+          "floor1": {
+            "x": 0,
+            "y": 772,
+            "width": 1000,
+            "height": 714
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 801
+          }
         }
       }
     },
@@ -2531,8 +3167,9 @@
       "name": "南-悬空桌门",
       "displayName": "南-悬空桌门",
       "remarks": "",
-      "sort": 470,
+      "sort": 460,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "47-front",
@@ -2549,28 +3186,44 @@
         {
           "id": "47-upstairs",
           "type": "upstairs",
+          "direction": "south",
           "image": {
             "key": "maps/entrance/bfef3d4c.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/d26f0634.webp"
-          },
-          "direction": "south"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/f8f84ce2.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/2a912675.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/98d0f3b5.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/fa969cbf.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/f8f84ce2.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1524,
+            "width": 1000,
+            "height": 645
+          },
+          "floor1": {
+            "x": 0,
+            "y": 753,
+            "width": 1000,
+            "height": 792
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 804
+          }
         }
       }
     },
@@ -2580,46 +3233,63 @@
       "name": "左 - 11图",
       "displayName": "左 - 11图",
       "remarks": "左 - 11图（09.17更新）",
-      "sort": 480,
+      "sort": 470,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "48-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperLeft",
           "image": {
             "key": "maps/entrance/3d1581b0.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/968b4f1b.webp"
-          },
-          "passage": "upperLeft"
+          }
         },
         {
           "id": "48-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/3a6b0ad7.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/24bc6b0d.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/22b59bae.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/16187167.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/9aea87b1.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/98095862.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/22b59bae.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1490,
+            "width": 1000,
+            "height": 701
+          },
+          "floor1": {
+            "x": 0,
+            "y": 750,
+            "width": 1000,
+            "height": 762
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 770
+          }
         }
       }
     },
@@ -2629,46 +3299,63 @@
       "name": "左 - 竖5床房",
       "displayName": "左 - 竖5床房",
       "remarks": "左 - 竖5床房（09.17更新）",
-      "sort": 490,
+      "sort": 480,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "49-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/b1d7b39e.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/c3e6eedc.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "49-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/48b89dab.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/5aba06ad.webp"
-          },
-          "direction": "left"
+          }
         }
       ],
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
           "key": "maps/layout/full/1cabb3a5.webp"
-        },
-        "basement": {
-          "key": "maps/layout/basement/2f0921d7.webp"
-        },
-        "floor1": {
-          "key": "maps/layout/floor1/cad6a40c.webp"
-        },
-        "floor2": {
-          "key": "maps/layout/floor2/fb46c4d8.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/1cabb3a5.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2156,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1533,
+            "width": 1000,
+            "height": 623
+          },
+          "floor1": {
+            "x": 0,
+            "y": 763,
+            "width": 1000,
+            "height": 762
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 812
+          }
         }
       }
     },
@@ -2678,29 +3365,175 @@
       "name": "左 - 竖拐角楼梯门",
       "displayName": "左 - 竖拐角楼梯门",
       "remarks": "左 - 竖拐角楼梯门（09.17更新）",
-      "sort": 500,
+      "sort": 490,
       "published": true,
+      "legacyNames": [],
       "entrances": [
         {
           "id": "50-front",
           "type": "front",
           "direction": "south",
+          "passage": "upperRight",
           "image": {
             "key": "maps/entrance/eaa8e6b7.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/a7a3b1b0.webp"
-          },
-          "passage": "upperRight"
+          }
         },
         {
           "id": "50-upstairs",
           "type": "upstairs",
+          "direction": "left",
           "image": {
             "key": "maps/entrance/4ae3a1b6.webp"
           },
           "thumb": {
             "key": "maps/entrance-thumb/8bb1681e.webp"
+          }
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/3af6e392.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/3af6e392.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1469,
+            "width": 1000,
+            "height": 790
+          },
+          "floor1": {
+            "x": 0,
+            "y": 724,
+            "width": 1000,
+            "height": 811
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 828
+          }
+        }
+      }
+    },
+    {
+      "id": 42,
+      "mode": "nightmare",
+      "name": "222",
+      "displayName": "22",
+      "remarks": "22",
+      "sort": 500,
+      "published": false,
+      "entrances": [
+        {
+          "id": "42-front",
+          "type": "front",
+          "direction": "south"
+        },
+        {
+          "id": "42-upstairs",
+          "type": "upstairs"
+        }
+      ],
+      "deletedAt": "2026-09-23T07:43:32.844Z",
+      "gameMapId": "lady-of-doom",
+      "floorImages": {}
+    },
+    {
+      "id": 51,
+      "gameMapId": "map-7a45fc46-f521-4acd-ad8e-324487800680",
+      "mode": "hard",
+      "name": "测试",
+      "displayName": "测试",
+      "remarks": "",
+      "sort": 510,
+      "published": false,
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/fb7a84ce83e780a8eda78d96984a485e8612bfbdcb5f7e10f8a36d20a07c80c4.webp"
+        },
+        "floor1": {
+          "key": "maps/layout/floor1/4e80b911c765418469ad295ff413fdb3b4c64b97d932e03a67bef7be49b73daa.webp"
+        },
+        "floor2": {
+          "key": "maps/layout/floor2/07c2d67c1ba0ddef0784452217db23e35f5dac1e00798fe696f50ffb9bab1489.webp"
+        }
+      },
+      "entrances": [
+        {
+          "id": "51-side",
+          "type": "side",
+          "image": {
+            "key": "maps/entrance/66e755dff4966cd3a1465172a02f27b4470b2e86c61571296d2f37980699c491.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b5dd1df3aa6e6459742ed7e76a3cc97376fc91f6929316e24ced473ca4ca2bb0.webp"
+          },
+          "direction": "left"
+        },
+        {
+          "id": "51-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/82dc3afc4bc35a3047ad7a1d1d81c7979895539afe9ff8e4dbb2ea8bc7e36f15.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c6badac94e905d92656a5548345a3d8a3357f1f82a451d11afd5916cb7121e27.webp"
+          }
+        },
+        {
+          "id": "51-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/82dc3afc4bc35a3047ad7a1d1d81c7979895539afe9ff8e4dbb2ea8bc7e36f15.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c6badac94e905d92656a5548345a3d8a3357f1f82a451d11afd5916cb7121e27.webp"
+          },
+          "direction": "right"
+        }
+      ],
+      "deletedAt": "2026-09-23T15:08:03.979Z"
+    },
+    {
+      "id": 57,
+      "mode": "nightmare",
+      "name": "左-骑士门",
+      "displayName": "左-骑士门",
+      "remarks": "",
+      "sort": 520,
+      "published": true,
+      "entrances": [
+        {
+          "id": "57-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/5113ac92.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a794a8a4.webp"
+          },
+          "passage": "triple"
+        },
+        {
+          "id": "57-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/6c7a1c8d.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/9ac7ae8f.webp"
           },
           "direction": "left"
         }
@@ -2708,16 +3541,357 @@
       "gameMapId": "lady-of-doom",
       "floorImages": {
         "full": {
-          "key": "maps/layout/full/3af6e392.webp"
+          "key": "maps/layout/full/6bc99714.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/6bc99714.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1512,
+            "width": 1000,
+            "height": 733
+          },
+          "floor1": {
+            "x": 0,
+            "y": 784,
+            "width": 1000,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 803
+          }
+        }
+      }
+    },
+    {
+      "id": 52,
+      "mode": "nightmare",
+      "name": "左 - 1竖图书走廊门",
+      "displayName": "左 - 1竖图书走廊门",
+      "remarks": "",
+      "sort": 530,
+      "published": true,
+      "entrances": [
+        {
+          "id": "52-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/2ecf2a32.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/80e88b57.webp"
+          },
+          "passage": "triple"
         },
-        "basement": {
-          "key": "maps/layout/basement/44ee8710.webp"
+        {
+          "id": "52-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/3ce5defe.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/dbc2f9ae.webp"
+          },
+          "direction": "left"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/435dd6f0.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/435dd6f0.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 38,
+            "y": 1574,
+            "width": 962,
+            "height": 654
+          },
+          "floor1": {
+            "x": 0,
+            "y": 761,
+            "width": 1000,
+            "height": 848
+          },
+          "floor2": {
+            "x": 0,
+            "y": 41,
+            "width": 1000,
+            "height": 739
+          }
+        }
+      }
+    },
+    {
+      "id": 53,
+      "mode": "nightmare",
+      "name": "南 - n门",
+      "displayName": "南 - n门",
+      "remarks": "",
+      "sort": 540,
+      "published": true,
+      "entrances": [
+        {
+          "id": "53-front",
+          "type": "front",
+          "direction": "south",
+          "image": {
+            "key": "maps/entrance/ae630da9.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/b018e97e.webp"
+          },
+          "passage": "triple"
         },
-        "floor1": {
-          "key": "maps/layout/floor1/3e1806b5.webp"
+        {
+          "id": "53-upstairs",
+          "type": "upstairs",
+          "image": {
+            "key": "maps/entrance/e1f51bcf.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c27ad834.webp"
+          },
+          "direction": "south"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/4735754d.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/4735754d.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1530,
+            "width": 1000,
+            "height": 648
+          },
+          "floor1": {
+            "x": 0,
+            "y": 786,
+            "width": 1000,
+            "height": 761
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 803
+          }
+        }
+      }
+    },
+    {
+      "id": 54,
+      "mode": "nightmare",
+      "name": "左 - 骑士1门",
+      "displayName": "左 - 骑士1门",
+      "remarks": "",
+      "sort": 550,
+      "published": true,
+      "entrances": [
+        {
+          "id": "54-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/c5889702.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/726e8fb0.webp"
+          }
         },
-        "floor2": {
-          "key": "maps/layout/floor2/b1606a7f.webp"
+        {
+          "id": "54-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/5bc33173.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/a11c4732.webp"
+          }
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/d3c3a1f7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/d3c3a1f7.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2213,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1581,
+            "width": 1000,
+            "height": 630
+          },
+          "floor1": {
+            "x": 0,
+            "y": 748,
+            "width": 1000,
+            "height": 851
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 757
+          }
+        }
+      }
+    },
+    {
+      "id": 55,
+      "mode": "nightmare",
+      "name": "左-十字门",
+      "displayName": "左-十字门",
+      "remarks": "",
+      "sort": 560,
+      "published": true,
+      "entrances": [
+        {
+          "id": "55-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/ea0238d7.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/49378a6b.webp"
+          }
+        },
+        {
+          "id": "55-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/911b4e4e.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/8c587cdb.webp"
+          }
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/9be6737f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/9be6737f.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2220,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1526,
+            "width": 1000,
+            "height": 678
+          },
+          "floor1": {
+            "x": 0,
+            "y": 726,
+            "width": 1000,
+            "height": 820
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 738
+          }
+        }
+      }
+    },
+    {
+      "id": 56,
+      "mode": "nightmare",
+      "name": "左-z门",
+      "displayName": "左-z门",
+      "remarks": "",
+      "sort": 570,
+      "published": true,
+      "entrances": [
+        {
+          "id": "56-front",
+          "type": "front",
+          "direction": "south",
+          "passage": "triple",
+          "image": {
+            "key": "maps/entrance/6ec5e699.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/c81ab563.webp"
+          }
+        },
+        {
+          "id": "56-upstairs",
+          "type": "upstairs",
+          "direction": "left",
+          "image": {
+            "key": "maps/entrance/b5e971bb.webp"
+          },
+          "thumb": {
+            "key": "maps/entrance-thumb/615ab39c.webp"
+          }
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "key": "maps/layout/full/5e2cd65f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceKey": "maps/layout/full/5e2cd65f.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2209,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1539,
+            "width": 1000,
+            "height": 670
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 797
+          },
+          "floor1": {
+            "x": 0,
+            "y": 789,
+            "width": 1000,
+            "height": 765
+          }
         }
       }
     }

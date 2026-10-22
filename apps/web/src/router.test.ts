@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
-import { toPublicMapConfigV3, type MapConfigV3 } from "@idv-map/shared";
+import { toPublicMapConfigV4, type MapConfigV3 } from "@idv-map/shared";
 import snapshot from "./data/maps-v3.snapshot.json";
 import { gameMaps, mapsV2 } from "./data/maps-v2";
 import { normalizeV2Route, routes } from "./routes";
@@ -10,7 +10,7 @@ function router() {
   return r;
 }
 beforeEach(() => {
-  const c = toPublicMapConfigV3(snapshot as MapConfigV3, "https://media.test");
+  const c = toPublicMapConfigV4(snapshot as MapConfigV3, "https://media.test");
   gameMaps.splice(0, gameMaps.length, ...c.gameMaps, {
     id: "second",
     name: "第二地图",
