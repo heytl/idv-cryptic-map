@@ -6,9 +6,9 @@
 - 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（需要 Cloudflare Access 授权）
 - 源码与反馈：[GitHub](https://github.com/heytl/idv-cryptic-map) · [Issues](https://github.com/heytl/idv-cryptic-map/issues)
 
-**版本状态：**当前工作区为 V3 多地图升级，尚待预览验收与正式发布。上述站点地址不代表已部署 V3；历史正式基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。本轮变化与待办见 [V3 版本记录](docs/releases/V3.md)。
+**版本状态：**V3 已于 2026-10-22 发布到正式站，公开数据使用 V4 协议，正式内容版本为 41。Web 与新版小程序共用正式统计接口，后台区分来源。发布、备份与验收见 [正式上线记录](docs/releases/V3-PRODUCTION-2026-10-22.md)，历史基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。
 
-微信小程序 `0.1.0` 初版已获用户初步功能验收通过，尚未上传审核或发布。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
+微信小程序 `0.1.0` 初版已获用户初步功能验收通过。本轮已生成指向正式 API、包含访问统计的新版产物；微信平台上传、审核与发布需单独执行，旧包不会自动接入统计。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
 
 ## 功能与使用方式
 
@@ -104,7 +104,7 @@ pnpm verify:pwa
 ## 部署与发布
 
 - **Cloudflare 主站**：推送 `feat/admin-backend` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
-- **V3 前置条件**：生产发布前配置真实 D1 ID。开发分支部署前，在 GitHub 仓库 Actions Variables 设置 `V3_PREVIEW_D1_ID`，值为隔离数据库 `idv-map-stats-preview` 的 UUID。详情见 [V3 版本记录](docs/releases/V3.md)。
+- **统计数据库**：正式 D1 `idv-map-stats` 已创建、迁移并绑定，独立于预览库。开发分支部署仍需设置 GitHub Actions Variable `V3_PREVIEW_D1_ID`。预览默认关闭采集，不会写入正式统计。
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
 - **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
 
