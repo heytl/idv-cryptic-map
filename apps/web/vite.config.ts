@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      // 后台发现新版本自动激活（配合下方 skipWaiting），保证“部署即生效”
+      // Register immediately, and migrate already-controlled legacy tabs too.
       registerType: "autoUpdate",
+      injectRegister: false,
       devOptions: {
         enabled: true, // 允许在 pnpm dev 开发模式下调试 PWA 和 Service Worker
       },
@@ -30,9 +31,24 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        importScripts: ["/sw-update.js"],
         // 预缓存应用壳和图标；地图图片按需缓存或通过离线包主动下载。
         globPatterns: ["**/*.{js,css,html,woff2,png,ico}", "icons/*.webp"],
+        globIgnores: ["index.html", "registerSW.js", "sw-update.js", "admin/**"],
+        // HTML must reach the network before falling back to an offline copy.
+        navigateFallback: null,
         runtimeCaching: [
+          {
+            urlPattern: ({ url, sameOrigin }) => sameOrigin && ["/", "/index.html"].includes(url.pathname),
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "app-navigation-v1",
+              networkTimeoutSeconds: 3,
+              cacheableResponse: { statuses: [200] },
+            },
+          },
           {
             // 地图大图：访问过才缓存（URL 带内容哈希，天然 immutable，CacheFirst 安全）
             urlPattern: /\/assets\/(?!t-).*\.webp$/,
@@ -69,11 +85,6 @@ export default defineConfig({
             options: { cacheName: "maps-config-v4", networkTimeoutSeconds: 3 },
           },
         ],
-        // 前台是纯 hash 路由（createWebHashHistory），真实 pathname 永远只有 "/"——
-        // 用白名单而非黑名单兜底导航：只有 "/" 允许被 SW 接管离线兜底，其余一律放行给网络，
-        // 天然免疫 /admin、/api、/r2、/cdn-cgi（Access 登录回调）等任何现在或未来的系统路径，
-        // 不必逐个记黑名单（History 曾因漏记 /cdn-cgi 导致 Access 登录回调被 SW 缓存壳子劫持）
-        navigateFallbackAllowlist: [/^\/$/],
       },
     }),
   ],

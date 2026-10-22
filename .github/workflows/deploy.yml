@@ -37,6 +37,18 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Verify upgrade from a cached app
+        run: |
+          pnpm exec wrangler deploy --dry-run --env dev --outdir .tmp/worker-build
+          node scripts/verification-server.mjs &
+          verification_pid=$!
+          trap 'kill "$verification_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:8787/maps-v4.json > /dev/null; then break; fi
+            sleep 1
+          done
+          pnpm verify:pwa:update
+
       # Dedicated V3 development branch only. This reuses the isolated
       # v2-preview Worker, KV, and R2 environment and never touches production.
       - name: Configure preview D1 binding
