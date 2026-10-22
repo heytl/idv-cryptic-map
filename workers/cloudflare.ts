@@ -142,7 +142,7 @@ export class D1Statistics implements StatisticsRepository {
     await this.db.batch([
       this.db
         .prepare(
-          "INSERT OR IGNORE INTO visits (event_id,layout_id,entrance_id,entrance_type,game_map_id,mode,received_at,day) VALUES (?,?,?,?,?,?,?,?)",
+          "INSERT OR IGNORE INTO visits (event_id,layout_id,entrance_id,entrance_type,game_map_id,mode,received_at,day,client) VALUES (?,?,?,?,?,?,?,?,?)",
         )
         .bind(
           e.eventId,
@@ -153,6 +153,7 @@ export class D1Statistics implements StatisticsRepository {
           e.mode,
           e.receivedAt,
           beijingDay(new Date(e.receivedAt)),
+          e.client ?? "web",
         ),
       this.db
         .prepare(
@@ -200,6 +201,7 @@ export class D1Statistics implements StatisticsRepository {
           .bind(...args),
       ),
       this.db.prepare("SELECT value FROM stats_meta WHERE key='started_at'"),
+      this.db.prepare(`SELECT client AS key, COUNT(*) AS count FROM visits WHERE ${sql} GROUP BY client ORDER BY count DESC, key`).bind(...args),
     ]);
     const total = Number(results[0]!.results[0]?.count ?? 0);
     const rows = (i: number): StatRow[] =>
@@ -221,13 +223,14 @@ export class D1Statistics implements StatisticsRepository {
       layouts: rows(3),
       modes: rows(4),
       entrances: rows(5),
+      clients: rows(7),
     };
   }
   async export(q: StatsQuery): Promise<VisitEvent[]> {
     const { sql, args } = this.where(q);
     const result = await this.db
       .prepare(
-        `SELECT event_id AS eventId, layout_id AS layoutId, entrance_id AS entranceId, entrance_type AS entranceType, game_map_id AS gameMapId, mode, received_at AS receivedAt FROM visits WHERE ${sql} ORDER BY received_at,event_id LIMIT 10001`,
+        `SELECT event_id AS eventId, layout_id AS layoutId, entrance_id AS entranceId, entrance_type AS entranceType, game_map_id AS gameMapId, mode, received_at AS receivedAt, client FROM visits WHERE ${sql} ORDER BY received_at,event_id LIMIT 10001`,
       )
       .bind(...args)
       .all<VisitEvent>();
