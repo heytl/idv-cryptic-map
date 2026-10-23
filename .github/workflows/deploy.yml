@@ -1,11 +1,11 @@
 name: Test & Deploy
 
 # 长期分支职责：
-# - feat/admin-backend：线上 Worker、后台与动态站点的唯一正式部署来源。
+# - production：线上 Worker、后台与动态站点的唯一正式部署来源。
 # - main：只用于静态页面版本发布，绝不由本工作流部署 Worker。
 on:
   push:
-    branches: [feat/admin-backend, v3-dev]
+    branches: [production, v3-dev]
   pull_request:
 
 concurrency:
@@ -88,7 +88,7 @@ jobs:
           command: versions upload --env v2-preview
 
       - name: Migrate production statistics database
-        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/admin-backend'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/production'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
 
       # 仅 Worker 正式分支部署生产；main 的静态页面走独立发布渠道。
       - name: Deploy to Cloudflare Workers
-        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/admin-backend'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/production'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

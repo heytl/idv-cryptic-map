@@ -28,14 +28,14 @@
 
 | 分支 | 用途 | 发布渠道 |
 |------|------|---------|
-| feat/admin-backend | **动态版生产**：Worker + 后台 + V2 数据，`idv-map.321666.xyz` | push 即 test + build + `wrangler deploy` |
+| production | **动态版生产**：Worker + 后台 + V2 数据，`idv-map.321666.xyz` | push 即 test + build + `wrangler deploy` |
 | main | 纯静态页面版本，可读取正式公开 V2 接口 | 独立静态发布渠道；不触发 Worker 部署 |
 | dev / 功能分支 | 日常开发 | PR 时：test + build + 上传 Workers 预览版本（预览 URL 见 CI 日志） |
 
-- 功能分支合入 `feat/admin-backend` 前，在预览 URL 用手机真机过一遍核心交互（缩放拖拽最易回归）。
+- 功能分支合入 `production` 前，在预览 URL 用手机真机过一遍核心交互（缩放拖拽最易回归）。
 - Vercel 镜像跟随仓库自动构建，无需额外操作。
 
-明确约束：`feat/admin-backend` 不合并到 `main`。`main` 长期保留为静态页面发布分支，仅通过 `VITE_MAP_API_BASE_URL` 读取正式环境的公开 V2 接口。
+明确约束：`production` 不合并到 `main`。`main` 长期保留为静态页面发布分支，仅通过 `VITE_MAP_API_BASE_URL` 读取正式环境的公开 V2 接口。
 
 ## 3. 缓存速查
 
@@ -59,7 +59,7 @@ node apps/web/scripts/verify-pwa.mjs   # PWA 离线 5 项
 
 按影响面从小到大：
 
-1. **代码问题**：`git revert` 问题提交 → push `feat/admin-backend` 重新部署（几分钟）。
+1. **代码问题**：`git revert` 问题提交 → push `production` 重新部署（几分钟）。
 2. **急停**：`pnpm exec wrangler rollback --message "Rollback production Worker" --yes` 回退 Worker 上一版本（不动 git、KV 或 R2）。
 3. **指定稳定基线**：`pnpm exec wrangler rollback 2a13463a-9a42-45cf-9ba6-1c2b12f1d50d --message "Rollback to V2.1.0 baseline" --yes`。
 4. **退回 V1 默认首页**：`pnpm exec wrangler rollback 8b4a7767-12dd-42ba-869b-f6194c03b635 --message "Emergency rollback to pre-V2" --yes`。
