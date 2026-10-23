@@ -6,14 +6,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import { request as httpRequest } from 'node:http';
+import { DatabaseSync } from 'node:sqlite';
 
 test('server authentication, SQLite migrations, media, backups, conflicts and restart persistence', async () => {
   const data = mkdtempSync(join(tmpdir(), 'idv-docker-'));
   const base = 'http://localhost:18767';
-  const auth = { Authorization: `Basic ${Buffer.from('admin:integration-test-password').toString('base64')}` };
+  const key = 'integration-test-random-key-with-32-characters';
+  const auth = { Authorization: `Bearer ${key}` };
   let child;
-  const start = async () => {
-    child = spawn(process.execPath, ['deploy/server.mjs'], { env: { ...process.env, DATA_DIR: data, PORT: '18767', ADMIN_PASSWORD: 'integration-test-password' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const start = async (loginKey = key) => {
+    child = spawn(process.execPath, ['deploy/server.mjs'], { env: { ...process.env, DATA_DIR: data, PORT: '18767', ADMIN_KEY: loginKey }, stdio: ['ignore', 'pipe', 'pipe'] });
     await Promise.race([once(child.stdout, 'data'), once(child, 'exit').then(() => { throw new Error('Server exited before startup'); })]);
   };
   const stop = async () => { child.kill(); await once(child, 'exit'); };
@@ -33,7 +35,20 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
   try {
     await start();
     assert.equal((await fetch(base + '/api/admin/v3/maps')).status, 401);
-    assert.equal((await fetch(base + '/admin/')).status, 401);
+    assert.equal((await fetch(base + '/admin/', { redirect: 'manual' })).status, 303);
+    assert.match(await (await fetch(base + '/admin/')).text(), /登录工作台/);
+    const login = body => fetch(base + '/auth/login', { method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    assert.equal((await login({ key: 'wrong' })).status, 401);
+    assert.equal((await fetch(base + '/api/admin/stats')).headers.get('WWW-Authenticate'), null);
+    assert.equal((await fetch(base + '/auth/login', { method: 'POST', headers: { Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) })).status, 403);
+    const signedIn = await login({ key });
+    assert.equal(signedIn.status, 200);
+    const setCookie = signedIn.headers.get('set-cookie');
+    assert.match(setCookie, /HttpOnly/); assert.match(setCookie, /SameSite=Strict/);
+    const Cookie = setCookie.split(';')[0];
+    assert.equal((await fetch(base + '/api/admin/stats', { headers: { Authorization: 'Basic '+Buffer.from('admin:'+key).toString('base64') } })).status, 401);
+    assert.equal((await fetch(base + '/api/admin/stats', { headers: { Cookie } })).status, 200);
+    assert.equal((await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers: { Cookie, 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
     assert.equal((await call('/healthz')).status, 200);
     assert.equal((await call('/api/admin/stats')).status, 200);
     const config = await (await call('/api/admin/v3/maps')).json();
@@ -61,8 +76,26 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     assert.equal((await fetch(base + '/r2/backups-v3/snapshot-v0.json')).status, 404);
     assert.equal((await call('/api/admin/v3/maps', { method: 'PUT', headers: { Origin: 'https://evil.example' } })).status, 403);
     await stop(); await start();
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie } })).status, 200);
     assert.equal((await (await call('/api/admin/v3/maps')).json()).version, 1);
     assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
     assert.equal((await call('/api/admin/stats/export')).status, 200);
+    assert.equal((await fetch(base + '/auth/logout', { method: 'POST', headers: { Cookie, Origin: base } })).status, 200);
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie } })).status, 401);
+    const expiredLogin = await login({ key });
+    const expiredCookie = expiredLogin.headers.get('set-cookie').split(';')[0];
+    const db = new DatabaseSync(join(data, 'app.sqlite'));
+    const row = db.prepare('SELECT token_hash FROM admin_sessions').get();
+    assert.ok(row); assert.notEqual(row.token_hash, expiredCookie.split('=')[1]);
+    db.exec('UPDATE admin_sessions SET expires=0'); db.close();
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: expiredCookie } })).status, 401);
+    const beforeRotation = await login({ key });
+    const rotationCookie = beforeRotation.headers.get('set-cookie').split(';')[0];
+    await stop(); await start('a-different-key-that-is-longer-than-32-characters');
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: rotationCookie } })).status, 401);
+    await stop(); await start();
+    for (let i = 0; i < 10; i++) assert.equal((await login({ key: 'wrong' })).status, 401);
+    const limited = await login({ key });
+    assert.equal(limited.status, 429); assert.ok(Number(limited.headers.get('retry-after')) > 0);
   } finally { if (child && child.exitCode === null) await stop(); rmSync(data, { recursive: true, force: true }); }
 });

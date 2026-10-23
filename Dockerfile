@@ -12,6 +12,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY deploy/server.mjs ./deploy/server.mjs
+COPY deploy/auth.mjs deploy/login.html ./deploy/
 COPY workers/migrations ./workers/migrations
 RUN mkdir /data && chown node:node /data
 USER node
