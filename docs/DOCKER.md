@@ -9,6 +9,7 @@
 ```sh
 cp deploy/.env.example .env
 # 编辑 .env，设置随机 ADMIN_PASSWORD（至少 16 字符）
+sudo install -d -m 750 -o 1000 -g 1000 /opt/idv-map/data
 docker compose up -d --build
 docker compose ps
 curl -f http://127.0.0.1:8080/healthz
@@ -42,7 +43,7 @@ node scripts/content-transfer.mjs import https://maps.example.com ./content-back
 
 ## 备份、恢复与升级
 
-所有持久数据均在命名卷 `app-data` 中的 `/data/app.sqlite`，运行中可能同时有 WAL/SHM 文件。每日进程内维护生成配置快照、清理过期统计；配置快照与图片在同一个 SQLite 数据库中，不能代替异地灾备。单实例部署，请勿增加副本共享此卷。请求按顺序执行，避免多个后台编辑者并发写入覆盖。
+所有持久数据均在服务器目录 `/opt/idv-map/data` 中，数据库为 `/opt/idv-map/data/app.sqlite`，该目录绑定到容器内 `/data`，运行中可能同时有 WAL/SHM 文件。每日进程内维护生成配置快照、清理过期统计；配置快照与图片在同一个 SQLite 数据库中，不能代替异地灾备。单实例部署，请勿增加副本共享此卷。请求按顺序执行，避免多个后台编辑者并发写入覆盖。
 
 最简单可靠的灾备是停机后复制数据库：
 
@@ -52,9 +53,9 @@ docker compose cp app:/data/app.sqlite ./app.sqlite.backup
 docker compose start app
 ```
 
-将备份复制到服务器外并保管好权限，数据库含完整内容及统计。恢复时停机，先保存当前数据库，再删除卷内旧 `app.sqlite-wal` 与 `app.sqlite-shm`（使用临时容器挂载同一卷），将备份复制回 `/data/app.sqlite`，保证 UID/GID 1000 可写，启动并检查公开配置、图片及后台统计。不要在运行中直接复制单个 SQLite 主文件。
+将备份复制到服务器外并保管好权限，数据库含完整内容及统计。恢复时停机，先保存当前数据库，再删除卷内旧 `app.sqlite-wal` 与 `app.sqlite-shm`（在服务器数据目录中操作），将备份复制回 `/data/app.sqlite`，保证 UID/GID 1000 可写，启动并检查公开配置、图片及后台统计。不要在运行中直接复制单个 SQLite 主文件。
 
-升级前执行以上备份，再运行 `docker compose up -d --build`。迁移按文件名自动执行且在事务中记录。回滚时检出旧代码重建；若数据库结构已变化，则同时恢复升级前数据库。`docker compose down` 保留卷，`down -v` 会删除所有数据。
+升级前执行以上备份，再运行 `docker compose up -d --build`。迁移按文件名自动执行且在事务中记录。回滚时检出旧代码重建；若数据库结构已变化，则同时恢复升级前数据库。`docker compose down` 和 `down -v` 均不会删除此绑定目录，但不要手动删除 `/opt/idv-map/data`。
 
 ## 验证与限制
 
@@ -72,3 +73,9 @@ docker compose build
 集成测试启动真实 Node 服务及临时 SQLite，验证认证、配置保存/版本冲突、备份隔离、上传与重启持久化。容器以非 root 用户、只读根文件系统运行，并配置健康检查和优雅停止。
 
 适用于当前社区工具的单服务器负载。图片以 BLOB 保存在 SQLite，提供整体备份和迁移便利；大量媒体或高并发服务应再拆分对象存储与数据库。统计限流使用连接 IP，反向代理后会按代理连接地址共享每分钟 60 次额度；不要直接相信任意客户端的 IP 请求头。维护周期依赖进程持续运行，频繁重启时可由外部定时备份弥补。
+
+## 从旧命名卷迁移
+
+已有部署切勿直接更换挂载后启动空目录。先停机，将原卷 `/data` 下全部文件（含可能存在的 WAL/SHM）备份并复制到 `/opt/idv-map/data`，设置 UID/GID 1000 可写，再重新创建容器。校验数据库完整性和配置、图片、统计后再清理临时文件。原卷和迁移备份保留用于回退。
+
+服务器部署配置和源码放 `/opt/idv-map`，备份放 `/opt/backups/idv-map`；上传包、构建中转文件使用 `mktemp -d /tmp/idv-map-deploy.XXXXXX` 创建的临时目录，结束后仅清理该次创建的目录。
