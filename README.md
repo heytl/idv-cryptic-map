@@ -110,7 +110,7 @@ pnpm verify:pwa
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
 - **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
 
-具体部署命令、备份、验收与回滚以 [V3 升级与运维](docs/V3-UPGRADE.md) 为准。未来 Docker 自托管只有业务 / 平台接口准备，本版本不包含 Docker 运行环境。
+Cloudflare 部署命令、备份、验收与回滚以 [V3 升级与运维](docs/V3-UPGRADE.md) 为准。服务器自托管现已提供 Node.js + SQLite 单容器版本，启动、HTTPS、迁移与恢复见 [Docker 部署指南](docs/DOCKER.md)。
 
 ## 文档
 

@@ -1,0 +1,44 @@
+name: Docker server
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/docker-server]
+  pull_request:
+    paths:
+      - 'apps/web/**'
+      - 'apps/admin/**'
+      - 'packages/**'
+      - 'workers/**'
+      - 'docs/CHANGELOG.md'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'deploy/**'
+      - 'Dockerfile'
+      - 'compose.yaml'
+      - '.dockerignore'
+      - '.github/workflows/docker.yml'
+permissions:
+  contents: read
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t idv-map:test .
+      - name: Check container startup and authentication
+        run: |
+          docker run -d --name idv-map -p 127.0.0.1:8080:8080 -e ADMIN_PASSWORD=ci-integration-password idv-map:test
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/healthz; then break; fi
+            sleep 1
+          done
+          curl -fsS http://localhost:8080/healthz
+          curl -fsS http://localhost:8080/
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/admin/v3/maps)" = 401
+          curl -fsS -u admin:ci-integration-password http://localhost:8080/api/admin/v3/maps
+          curl -fsS -u admin:ci-integration-password http://localhost:8080/api/admin/stats
+      - name: Container logs
+        if: always()
+        run: docker logs idv-map

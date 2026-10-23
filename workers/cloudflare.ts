@@ -122,6 +122,7 @@ export class CloudflareAssets implements AssetStorage {
     });
   }
   url(key: string) {
+    if (this.env.RELATIVE_MEDIA_URLS === '1') return `/r2/${key}`;
     return new URL(
       `${(this.env.IMG_BASE_URL || "/r2").replace(/\/$/, "")}/${key}`,
       this.origin,
