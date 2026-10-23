@@ -103,7 +103,7 @@ pnpm verify:pwa
 
 ## 部署与发布
 
-- **Cloudflare 主站**：推送 `feat/admin-backend` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
+- **Cloudflare 主站**：推送 `production` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
 - **统计数据库**：正式 D1 `idv-map-stats` 已创建、迁移并绑定，独立于预览库。开发分支部署仍需设置 GitHub Actions Variable `V3_PREVIEW_D1_ID`。预览默认关闭采集，不会写入正式统计。
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
 - **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。

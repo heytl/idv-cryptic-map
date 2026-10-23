@@ -24,7 +24,7 @@
     // Cron 快照永久回写 Worker 正式分支（配合 secret GITHUB_TOKEN 生效）。
     // main 专用于静态页面发布，不接收 Worker 后台快照。
     "GITHUB_REPO": "heytl/idv-cryptic-map",
-    "GITHUB_BRANCH": "feat/admin-backend",
+    "GITHUB_BRANCH": "production",
     // Cloudflare Access（Zero Trust 应用 idv-map-admin，保护 /admin 与 /api）
     "ACCESS_TEAM_DOMAIN": "https://zwdwrg.cloudflareaccess.com",
     "ACCESS_AUD": "4e19758aa55c7ac99c86bd294f3947a4de492b3042272ad38b1318ae10328bee"
