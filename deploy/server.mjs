@@ -2,13 +2,12 @@ import { createServer } from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, sep, extname } from 'node:path';
-import { timingSafeEqual, createHash } from 'node:crypto';
+import { createHash } from 'node:crypto';
+import { createAuth } from './auth.mjs';
 import { Readable } from 'node:stream';
 import worker from '../dist/worker.mjs';
 
-const username = process.env.ADMIN_USER || 'admin';
-const password = process.env.ADMIN_PASSWORD;
-if (!password || password.length < 16) throw new Error('ADMIN_PASSWORD must contain at least 16 characters');
+const adminKey = process.env.ADMIN_KEY || process.env.ADMIN_PASSWORD;
 const data = resolve(process.env.DATA_DIR || './data');
 mkdirSync(data, { recursive: true });
 const db = new DatabaseSync(resolve(data, 'app.sqlite'));
@@ -77,10 +76,10 @@ const env = {
     } catch { return new Response(null, { status: 404 }); }
   } },
 };
+const auth = createAuth(db, adminKey);
 const limits = new Map();
 // Serialize requests so read/check/backup/save cannot interleave across editors.
 let queue = Promise.resolve();
-const expected = createHash('sha256').update(`Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`).digest();
 const server = createServer((req, res) => {
   const run = async () => {
     // The reverse proxy must preserve Host. Do not trust forwarded headers.
@@ -92,11 +91,14 @@ const server = createServer((req, res) => {
     const sameHost = browserOrigin && ['http:', 'https:'].includes(browserOrigin.protocol) && browserOrigin.host === host;
     const origin = sameHost ? browserOrigin.origin : `http://${host}`;
     const url = new URL(req.url, origin);
+    if (await auth.handle(req, res, url, sameHost)) return;
     const admin = url.pathname === '/admin' || url.pathname.startsWith('/admin/') || url.pathname.startsWith('/api/');
-    if (admin && !timingSafeEqual(expected, createHash('sha256').update(req.headers.authorization || '').digest())) {
-      res.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Map administration", charset="UTF-8"', 'Cache-Control': 'no-store' }); res.end(); return;
+    if (admin && !auth.authenticated(req)) {
+      const page = (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) && ['GET', 'HEAD'].includes(req.method);
+      res.writeHead(page ? 303 : 401, { ...(page ? { Location: '/admin/login' } : { 'Content-Type': 'application/json' }), 'Cache-Control': 'no-store' }); res.end(page ? undefined : JSON.stringify({ error: '登录已过期，请重新登录', loginUrl: '/admin/login' })); return;
     }
     if (admin && !['GET', 'HEAD', 'OPTIONS'].includes(req.method) && ((incomingOrigin && !sameHost) || req.headers['sec-fetch-site'] === 'cross-site')) { res.writeHead(403); res.end(); return; }
+    if (admin && !['GET', 'HEAD', 'OPTIONS'].includes(req.method) && !req.headers.authorization?.startsWith('Bearer ') && !sameHost) { res.writeHead(403); res.end(); return; }
     if (url.pathname === '/healthz') { db.prepare('SELECT 1').get(); res.writeHead(200); res.end('ok'); return; }
     if (url.pathname === '/admin') { res.writeHead(308, { Location: '/admin/' }); res.end(); return; }
     const headers = new Headers();

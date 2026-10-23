@@ -10,14 +10,14 @@
 
 ```sh
 cp deploy/.env.example .env
-# 编辑 .env，设置随机 ADMIN_PASSWORD（至少 16 字符）
+# 编辑 .env，设置随机 ADMIN_KEY（至少 32 字符，建议 openssl rand -hex 32）
 sudo install -d -m 750 -o 1000 -g 1000 /opt/idv-map/data
 docker compose up -d --build
 docker compose ps
 curl -f http://127.0.0.1:8080/healthz
 ```
 
-无需配置公开域名。玩家端 `/`，后台 `/admin/`，浏览器弹出用户名和密码输入框。首次启动为空内容，可后台新增地图或导入已有内容。密码从环境读取，不写入镜像，未配置或过短会拒绝启动。
+无需配置公开域名。玩家端 `/`，后台 `/admin/`，未登录时进入 `/admin/login` 站内登录页，只输入管理密钥。首次启动为空内容，可后台新增地图或导入已有内容。密钥从环境读取，不写入镜像，未配置或少于 32 字符会拒绝启动。
 
 Compose 仅监听服务器回环地址，使用现有 Nginx/Caddy 终止 HTTPS 并转发到 `127.0.0.1:8080`。例如 Caddy 配置：
 
@@ -27,7 +27,7 @@ maps.example.com {
 }
 ```
 
-图片、缩略图、楼层区域和上传/导出响应均使用 `/r2/...` 同源相对路径，换域名无需修改容器配置。反向代理应保留原始 `Host`（Nginx/OpenResty 使用 `proxy_set_header Host $http_host;`，Caddy 默认保留），并将 `/`、`/api/`、`/r2/` 等路径一起转发。后台写入与访问统计按请求 Host 校验浏览器 Origin，兼容代理终止 HTTPS；不信任客户端提交的转发头。原 `PUBLIC_ORIGIN` 设置不再使用。API 由外部客户端或小程序读取时，应基于 API 站点地址解析相对图片 URL。后台采用 HTTP Basic，必须通过 HTTPS 对外提供。更换密码后重新创建容器生效。小程序统计可选配置真实 `TELEMETRY_WECHAT_APP_ID`，并在微信平台更新合法请求域名。
+图片、缩略图、楼层区域和上传/导出响应均使用 `/r2/...` 同源相对路径，换域名无需修改容器配置。反向代理应保留原始 `Host`（Nginx/OpenResty 使用 `proxy_set_header Host $http_host;`，Caddy 默认保留），并将 `/`、`/api/`、`/r2/` 等路径一起转发。后台写入与访问统计按请求 Host 校验浏览器 Origin，兼容代理终止 HTTPS；不信任客户端提交的转发头。原 `PUBLIC_ORIGIN` 设置不再使用。API 由外部客户端或小程序读取时，应基于 API 站点地址解析相对图片 URL。后台采用密钥登录页与 8 小时会话，必须通过 HTTPS 对外提供。更换 ADMIN_KEY 后重建容器会撤销旧会话。旧 ADMIN_PASSWORD 可作为升级兼容密钥，长度需至少 32 字符。会话 Cookie 使用 HttpOnly、SameSite=Strict，公网域名另加 Secure；支持退出、登录失败限流和跨站提交检查。命令行工具使用 Bearer 密钥认证，不再支持 Basic。反向代理后的登录限流按连接地址共享，10 次失败后需等待最多 15 分钟。小程序统计可选配置真实 `TELEMETRY_WECHAT_APP_ID`，并在微信平台更新合法请求域名。
 
 ## 内容迁移
 
@@ -36,8 +36,7 @@ maps.example.com {
 ```sh
 node scripts/content-transfer.mjs export https://old.example.com ./content-backup
 # 切换到 Docker 管理凭据后导入（不要同时保留原站点凭据）
-export ADMIN_USER=admin
-export ADMIN_PASSWORD='与服务器配置一致的密码'
+export ADMIN_KEY='与服务器配置一致的管理密钥'
 node scripts/content-transfer.mjs import https://maps.example.com ./content-backup
 ```
 

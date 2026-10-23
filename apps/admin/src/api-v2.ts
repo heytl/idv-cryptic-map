@@ -13,6 +13,7 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
       const b = await res.json();
       code = b.error || code;
       detail = b.detail;
+      if (res.status === 401 && b.loginUrl === '/admin/login') window.dispatchEvent(new Event('admin-session-expired'));
     } catch {}
     throw new ApiError(res.status, code, detail);
   }
