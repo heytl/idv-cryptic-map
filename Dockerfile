@@ -11,9 +11,9 @@ ENV NODE_ENV=production DATA_DIR=/data PORT=8080
 WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/apps/web/dist ./apps/web/dist
-COPY --chmod=644 deploy/server.mjs deploy/auth.mjs deploy/login.html ./deploy/
+COPY deploy/server.mjs deploy/auth.mjs deploy/login.html ./deploy/
 COPY workers/migrations ./workers/migrations
-RUN mkdir /data && chown node:node /data
+RUN mkdir /data && chown node:node /data && chmod 755 /app/deploy && chmod 644 /app/deploy/*.mjs /app/deploy/*.html
 USER node
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s CMD node -e "fetch('http://127.0.0.1:8080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
