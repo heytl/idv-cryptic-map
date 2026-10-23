@@ -2,7 +2,7 @@
 
 # 地图 V2.1 多模式、多入口重构实施方案
 
-> 状态：已上线。正式 Worker 分支 `feat/admin-backend`。本方案以不修改 V1 正式配置和公开协议为首要约束。
+> 状态：已上线。正式 Worker 分支 `production`。本方案以不修改 V1 正式配置和公开协议为首要约束。
 
 ## 1. 目标与边界
 
@@ -217,7 +217,7 @@ backups-v2/
 
 通过 `VITE_MAP_API_BASE_URL` 跨域读取正式公开 API；访问成功后由 Service Worker 保留最近缓存。`main` 只部署静态网页，不执行 Worker 部署，不拥有 KV/R2 写权限。完全离线首次访问所需的 V2 构建快照属于发版切换前的待办项。
 
-分支策略固定为：V2 Worker 与后台代码只从功能分支合入 `feat/admin-backend`；`main` 长期保留为静态页面发布分支，不与 `feat/admin-backend` 合并。正式静态版使用 `VITE_MAP_API_BASE_URL=https://idv-map.321666.xyz` 读取 `/maps-v2.json`。
+分支策略固定为：V2 Worker 与后台代码只从功能分支合入 `production`；`main` 长期保留为静态页面发布分支，不与 `production` 合并。正式静态版使用 `VITE_MAP_API_BASE_URL=https://idv-map.321666.xyz` 读取 `/maps-v2.json`。
 
 ### 微信小程序
 
