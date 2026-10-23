@@ -6,6 +6,21 @@ const text = (v: unknown): v is string => typeof v === "string";
 const url = (v: unknown): v is string => text(v) && /^https?:\/\/[^\s]+$/.test(v);
 const integer = (v: unknown) => Number.isSafeInteger(v);
 
+/** Resolve same-origin media before validating the shared absolute-URL contract. */
+export function resolvePublicMediaUrls(value: unknown, endpoint: string): unknown {
+  const origin = endpoint.match(/^https?:\/\/[^/]+/)?.[0];
+  if (!origin) throw new Error('Invalid API endpoint');
+  const walk = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(walk);
+    if (!object(v)) return v;
+    return Object.fromEntries(Object.entries(v).map(([key, child]) => [key,
+      /url$/i.test(key) && text(child) && /^\/r2\/[^\\\s]+$/.test(child)
+        ? origin + child : walk(child),
+    ]));
+  };
+  return walk(value);
+}
+
 /** Validate the public boundary before either client renders it. No browser APIs. */
 export function isPublicMapConfigV4(value: unknown): value is PublicMapConfigV4 {
   if (!object(value) || value.schemaVersion !== 4 || value.defaultFloor !== DEFAULT_FLOOR ||

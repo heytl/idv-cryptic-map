@@ -133,11 +133,11 @@ export async function handleRequest(
     if (!["GET", "HEAD"].includes(request.method))
       return jsonError(405, "method_not_allowed");
     const config = await repo.read();
-    const etag = `"maps-v4-${config.version}"`;
+    const etag = `"maps-v4-${config.version}${env.RELATIVE_MEDIA_URLS === '1' ? '-relative' : ''}"`;
     const responseHeaders = { ...headers, ETag: etag };
     if (request.headers.get("If-None-Match") === etag)
       return new Response(null, { status: 304, headers: responseHeaders });
-    const base = new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
+    const base = env.RELATIVE_MEDIA_URLS === '1' ? '/r2' : new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
     const output = toPublicMapConfigV4(config, base);
     return request.method === "HEAD"
       ? new Response(null, { headers: responseHeaders })
