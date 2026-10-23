@@ -1,5 +1,7 @@
 # 第五人格加页手记 · 解密手册
 
+当前正式发布分支为 `production`；分支职责与改名记录见 [分支与发布约定](docs/BRANCHES.md)。
+
 面向《第五人格》“加页手记”玩家的互动地图攻略工具，提供 Web 与微信小程序。按地图、困难 / 噩梦模式、入口、方向或正门通道类型查找布局，再查看全图与分层攻略。
 
 - 项目站点：[idv-map.321666.xyz](https://idv-map.321666.xyz/)
@@ -103,7 +105,7 @@ pnpm verify:pwa
 
 ## 部署与发布
 
-- **Cloudflare 主站**：推送 `feat/admin-backend` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
+- **Cloudflare 主站**：推送 `production` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
 - **V3 前置条件**：生产发布前配置真实 D1 ID。开发分支部署前，在 GitHub 仓库 Actions Variables 设置 `V3_PREVIEW_D1_ID`，值为隔离数据库 `idv-map-stats-preview` 的 UUID。详情见 [V3 版本记录](docs/releases/V3.md)。
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
 - **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
