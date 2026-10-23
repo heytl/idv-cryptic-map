@@ -50,6 +50,11 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     assert.equal((await fetch(base + '/api/admin/stats', { headers: { Cookie } })).status, 200);
     assert.equal((await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers: { Cookie, 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
     assert.equal((await call('/healthz')).status, 200);
+    const httpsLogin = await call('/auth/login', { method: 'POST', headers: { Host: 'maps.example', Origin: 'https://maps.example', 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
+    assert.equal(httpsLogin.status, 200);
+    assert.match(httpsLogin.headers.get('set-cookie'), /; Secure/);
+    assert.match(httpsLogin.headers.get('set-cookie'), /Max-Age=28800/);
+    assert.equal(httpsLogin.headers.get('set-cookie').includes(key), false);
     assert.equal((await call('/api/admin/stats')).status, 200);
     const config = await (await call('/api/admin/v3/maps')).json();
     const save = () => call('/api/admin/v3/maps', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config, baseVersion: 0 }) });
