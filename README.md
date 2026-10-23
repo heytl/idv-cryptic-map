@@ -103,6 +103,8 @@ pnpm verify:pwa
 
 ## 部署与发布
 
+当前分支职责与 2026-10-23 正式分支改名记录见 [分支与发布约定](docs/BRANCHES.md)。历史资料中的 `feat/admin-backend` 已迁移为 `production`。
+
 - **Cloudflare 主站**：推送 `production` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
 - **统计数据库**：正式 D1 `idv-map-stats` 已创建、迁移并绑定，独立于预览库。开发分支部署仍需设置 GitHub Actions Variable `V3_PREVIEW_D1_ID`。预览默认关闭采集，不会写入正式统计。
 - **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。

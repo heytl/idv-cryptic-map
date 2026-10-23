@@ -2,6 +2,8 @@
 
 上线日期：2026-10-22（Asia/Shanghai）。
 
+后续说明：2026-10-23 正式分支由 `feat/admin-backend` 迁移为 `production`，详见 [分支与发布约定](../BRANCHES.md)。下文保留上线当天的原始分支名及提交标识。
+
 - 正式站：https://idv-map.321666.xyz/
 - 首次上线代码：`b2e3766c1f3f6163fd0cd3bbbdce27f525c73734`，来自 `v3-dev`，已合并正式分支基线并推送 `feat/admin-backend`。
 - 首次上线 Worker Version：`28a67c9f-b3e4-4092-9d49-c1e2890709c7`。GitHub Actions 排队期间使用同一提交的本机构建发布；后续文案与运维记录更新另行提交。
