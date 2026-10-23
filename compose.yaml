@@ -10,10 +10,8 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env (at least 16 characters)}
       TELEMETRY_WECHAT_APP_ID: ${TELEMETRY_WECHAT_APP_ID:-}
     volumes:
-      - app-data:/data
+      - /opt/idv-map/data:/data
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     stop_grace_period: 40s
-volumes:
-  app-data:
