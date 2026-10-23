@@ -4,6 +4,8 @@
 
 ## 启动
 
+容器固定命名为 `idv-cryptic-map`，便于在面板中识别及配置停机备份任务。
+
 服务器安装 Docker Engine 和 Compose 插件，在仓库根目录执行：
 
 ```sh

@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: idv-cryptic-map
     build: .
     restart: unless-stopped
     init: true
