@@ -1,6 +1,7 @@
 services:
   app:
     container_name: idv-cryptic-map
+    image: ${APP_IMAGE:-idv-cryptic-map:local}
     build: .
     restart: unless-stopped
     init: true

@@ -1,44 +1,32 @@
-name: Docker server
+name: Docker verification
 on:
-  workflow_dispatch:
-  push:
-    branches: [codex/docker-server]
-  pull_request:
-    paths:
-      - 'apps/web/**'
-      - 'apps/admin/**'
-      - 'packages/**'
-      - 'workers/**'
-      - 'docs/CHANGELOG.md'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
-      - 'deploy/**'
-      - 'Dockerfile'
-      - 'compose.yaml'
-      - '.dockerignore'
-      - '.github/workflows/docker.yml'
+  workflow_call:
 permissions:
   contents: read
 jobs:
   container:
-    runs-on: ubuntu-latest
+    name: Docker (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build image
-        run: docker build -t idv-map:test .
-      - name: Check container startup and authentication
-        run: |
-          docker run -d --name idv-map -p 127.0.0.1:8080:8080 -e ADMIN_PASSWORD=ci-integration-password idv-map:test
-          for i in $(seq 1 30); do
-            if curl -fsS http://localhost:8080/healthz; then break; fi
-            sleep 1
-          done
-          curl -fsS http://localhost:8080/healthz
-          curl -fsS http://localhost:8080/
-          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/admin/v3/maps)" = 401
-          curl -fsS -u admin:ci-integration-password http://localhost:8080/api/admin/v3/maps
-          curl -fsS -u admin:ci-integration-password http://localhost:8080/api/admin/stats
-      - name: Container logs
-        if: always()
-        run: docker logs idv-map
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: idv-map:test
+          cache-from: type=gha,scope=verify-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=verify-${{ matrix.arch }}
+      - name: Verify health, authentication and restart persistence
+        run: node scripts/verify-docker.mjs idv-map:test
