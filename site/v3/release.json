@@ -1,13 +1,13 @@
 {
   "version": "v3",
   "base": "/v3/",
-  "releaseId": "bc8eae619240c07d",
+  "releaseId": "050b23b6db62f62f",
   "sourceSha": "badc484a8c100e3b50415f3b606c014f441b77d4",
-  "publisherSha256": "f0860cb6faf1f062a7d925c101d15870c36b81f1026653e923ee16d02cc7dab9",
+  "publisherSha256": "e819a229b3fd02e23576953ae6d01448344ca0e63f23c5b03e274106e7bb0449",
   "sourceUrl": "https://idv-map.321666.xyz/maps-v4.json",
   "capturedAt": "2026-10-24T15:25:52.182Z",
   "sourceConfigSha256": "5c2d3bf060914621fd2b8ad26c52d244ce94fd4b970b79abd933725bcb563646",
-  "integritySha256": "3c8986797d274334fe6b9fbbb7877317f4e66cc20198152cd8ad40408e0c55d9",
+  "integritySha256": "ec7d7a9634b5622262407071a61b16f8a5e21bce1bc9300041515a2a17fce176",
   "schemaVersion": 4,
   "dataVersion": 2,
   "updatedAt": "2026-10-22T17:22:43.445Z",
@@ -19,6 +19,11 @@
     {
       "at": "2026-10-24T15:48:29.075Z",
       "fix": "Serve redirected precache HTML as a navigation response for first-visit offline reload",
+      "uiAndMapsUnchanged": true
+    },
+    {
+      "at": "2026-10-24T15:54:33.330Z",
+      "fix": "Keep archive worker activation independent from the parent root worker; preserve first-visit offline navigation",
       "uiAndMapsUnchanged": true
     }
   ]

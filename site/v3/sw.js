@@ -1,4 +1,4 @@
-const BASE = "/v3/", SHELL = "static-v3-shell-bc8eae619240c07d";
+const BASE = "/v3/", SHELL = "static-v3-shell-050b23b6db62f62f";
 const PREFIX = "static-v3-shell-", CONFIG = "static-v3-maps-config-v4", MEDIA = "static-v3-map-images-r2";
 const PRECACHE = ["/v3/assets/9unVA9SI.css","/v3/assets/AboutView-CDoy6ogn.js","/v3/assets/C8w1RCmA.css","/v3/assets/CffDn5qI.woff2","/v3/assets/ChangelogView-Cca6KXTI.js","/v3/assets/CzXfDS-Z.css","/v3/assets/D8SXnS9M.woff2","/v3/assets/DJq4MdCl.css","/v3/assets/DK4MbIvE.woff2","/v3/assets/Xa87wuGl.png","/v3/assets/changelog-CZZAyGsl.js","/v3/assets/index-C6QU0Cv4.js","/v3/favicon.ico","/v3/icons/treasure.webp","/v3/index.html","/v3/pwa-192.png","/v3/pwa-512.png","/v3/registerSW.js","/v3/manifest.webmanifest"];
 self.addEventListener('install', event => event.waitUntil((async () => { await (await caches.open(SHELL)).addAll(PRECACHE); await self.skipWaiting(); })()));

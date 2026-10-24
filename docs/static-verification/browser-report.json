@@ -1,6 +1,6 @@
 {
-  "target": "http://127.0.0.1:8795",
-  "verifiedAt": "2026-10-24T15:34:14.526Z",
+  "target": "http://127.0.0.1:8796",
+  "verifiedAt": "2026-10-24T15:54:00.487Z",
   "reports": [
     {
       "allUniqueImagesDecoded": 223
@@ -82,6 +82,7 @@
         "/",
         "/v3/"
       ],
+      "firstVisitPackageWithoutOnlineReload": true,
       "isolatedWorkerScopes": [
         "/",
         "/v3/"

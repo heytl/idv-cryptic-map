@@ -43,3 +43,23 @@ test('First offline navigation serves redirected precache HTML as a usable respo
     assert.equal(await result.text(), html);
   }
 });
+test('Switching from a root worker to an archive does not reload or interrupt downloads', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'idv-static-scope-'));
+  await createPwa(root, '/v3/', 'scope-regression');
+  const registration = await readFile(resolve(root, 'registerSW.js'), 'utf8');
+  for (const currentScope of ['/', '/v3/']) {
+    let reloads = 0; const listeners = new Map();
+    runInNewContext(registration, {
+      navigator: { onLine: true, serviceWorker: {
+        controller: { scriptURL: 'https://handbook.test' + currentScope + 'sw.js' },
+        addEventListener: (name, handler) => listeners.set(name, handler),
+        register: async () => ({ update: async () => {} }),
+      } },
+      location: { href: 'https://handbook.test/v3/', reload: () => reloads++ },
+      addEventListener() {}, setInterval() {}, document: { hidden: false }, URL,
+    });
+    listeners.get('controllerchange')();
+    listeners.get('controllerchange')();
+    assert.equal(reloads, currentScope === '/v3/' ? 1 : 0);
+  }
+});

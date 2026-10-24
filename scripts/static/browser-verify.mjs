@@ -120,7 +120,7 @@ try {
   const page2 = await context2.newPage();
   for (const prefix of offlinePrefixes) {
     await page2.goto(base + prefix, { waitUntil: 'networkidle' });
-    await page2.waitForFunction(async prefix => (await navigator.serviceWorker.getRegistrations()).some(registration => new URL(registration.scope).pathname === prefix && registration.active), prefix, { timeout: 20000 });
+    await page2.waitForFunction(async prefix => new URL(navigator.serviceWorker.controller?.scriptURL || location.origin).pathname === prefix + 'sw.js' && (await navigator.serviceWorker.getRegistrations()).some(registration => new URL(registration.scope).pathname === prefix && registration.active), prefix, { timeout: 20000 });
     await page2.getByRole('button', { name: '下载地图离线包', exact: true }).click();
     await page2.getByRole('button', { name: '✓ 已可离线使用 · 复查', exact: true }).waitFor({ timeout: 120000 });
     await page2.locator('.map-card-item').first().click(); await imageLoaded(page2);

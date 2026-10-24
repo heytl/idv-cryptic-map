@@ -8,12 +8,15 @@ export async function createPwa(root, base, releaseId) {
   const precache = (await files(root)).filter(path => /\.(?:html|js|css|woff2|png|ico|webp)$/.test(path) && !path.startsWith('media/') && !['sw.js', 'sw-update.js', 'registerSW.js'].includes(path));
   await write(resolve(root, 'registerSW.js'), `(() => {
     if (!('serviceWorker' in navigator)) return;
-    const hadController = !!navigator.serviceWorker.controller;
+    const workerURL = new URL(${JSON.stringify(base + 'sw.js')}, location.href).href;
+    // A newly opened archive may inherit the root worker until its own worker claims it.
+    // Only an update within this same scope should reload the already running UI.
+    const hadController = navigator.serviceWorker.controller?.scriptURL === workerURL;
     let reloading = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (hadController && !reloading) { reloading = true; location.reload(); }
     });
-    navigator.serviceWorker.register(${JSON.stringify(base + 'sw.js')}, { scope: ${JSON.stringify(base)}, updateViaCache: 'none' }).then(registration => {
+    navigator.serviceWorker.register(workerURL, { scope: ${JSON.stringify(base)}, updateViaCache: 'none' }).then(registration => {
       const update = () => { if (navigator.onLine && !document.hidden) void registration.update().catch(() => {}); };
       addEventListener('online', update); addEventListener('focus', update);
       setInterval(update, 300000);

@@ -1221,8 +1221,8 @@
   },
   {
     "path": "registerSW.js",
-    "bytes": 688,
-    "sha256": "ec6b8ceb000d748f41741a92daade745fbeec74858898214989b467b8ca5e34f"
+    "bytes": 946,
+    "sha256": "eb8c28821f254d994a79a7eb4c6cf9a9ae3b40750621e12ee24e9766ed64e186"
   },
   {
     "path": "source-maps-v4.json",
@@ -1237,6 +1237,6 @@
   {
     "path": "sw.js",
     "bytes": 3098,
-    "sha256": "6804c13baaa1b3e0d38845eae67985dfd4d42bae5bf64fa3c6c643db248f807c"
+    "sha256": "7c03833d86ab737c60040e07bdb3f34eeda0fbae5180421a55fe53667f2aa595"
   }
 ]
