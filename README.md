@@ -107,7 +107,7 @@ pnpm verify:pwa
 统一正式源码为 `production`，开发分支为 `dev`；`main` 保留静态版本职责。详见 [分支与发布约定](docs/BRANCHES.md)。
 
 - **验证**：PR、`dev` 和 `production` 更新运行共享测试、类型检查、构建、PWA 升级和 AMD64 / ARM64 容器验证。
-- **开发预览**：`dev` 验证通过后自动部署隔离 CF `v2-preview`，需配置 `V3_PREVIEW_D1_ID`；AMD1 测试站另行部署。
+- **开发预览**：[AMD1 Docker 测试站](https://idv-map-dev.321666.xyz/) 已手动部署，更新方式见 [测试环境](docs/TEST-ENVIRONMENT.md)。`dev` 验证通过后仍自动更新隔离 CF `v2-preview` 的 Workers 地址，需配置 `V3_PREVIEW_D1_ID`；不会自动更新 AMD1。
 - **正式发布**：合入 `production` 不更新线上。GitHub Actions 的 **Release** 选择 `production`，再选择 `docker`、`cloudflare` 或 `both`，发布前重新验证同一提交。
 - **Docker**：发布双架构镜像 `ghcr.io/heytl/idv-cryptic-map:<完整提交 SHA>`，输出摘要；服务器手动拉取指定版本。发布镜像不会更新服务器。
 - **Cloudflare**：迁移正式 D1 后发布备用 Worker，保持 `idvmap.321666.xyz` / `new-map.321666.xyz`；不重新绑定 Docker 主域名。
