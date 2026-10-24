@@ -1,4 +1,4 @@
-当前正式发布分支为 `production`（原 `feat/admin-backend`），开发预览为 `v3-dev`；分支职责、工作流条件和改名验证见 [分支与发布约定](BRANCHES.md)。
+当前正式发布分支为 `production`（原 `feat/admin-backend`），开发预览为 `dev`；分支职责、工作流条件和改名验证见 [分支与发布约定](BRANCHES.md)。
 
 > 后续区域改造已将公开接口升级到 V4；本文中的 V2/V3 公开接口兼容描述仅代表历史升级阶段。当前发布须遵循 [楼层区域改造说明](FLOOR-REGIONS.md)。
 
@@ -12,7 +12,7 @@
 - `GameMap → Layout → entrances / floorImages`，原 V2 基线的 50 个布局（49 个公开）归入厄运之女；图片键和 ID 不变。
 - 地图选择、按模式/入口/门型或方向查找布局，按地图下载离线包。V2 正式链接仍可使用。
 - 后台新增地图管理、访问统计、备份恢复。当前 API 为 `/api/admin/v3/*`，V2 编辑接口返回 410。
-- `packages/server/src` 是与平台无关的业务服务及接口；`workers/cloudflare.ts` 提供 KV、R2、D1、Access 适配。Docker 运行入口、服务器存储和登录系统尚未实施。
+- `packages/server/src` 是与平台无关的业务服务及接口；`workers/cloudflare.ts` 提供 KV、R2、D1、Access 适配。Docker 已通过 `deploy` 提供 Node.js 入口、SQLite 存储和密钥登录；发布流程以 [分支约定](BRANCHES.md) 为准，服务器运维以 [Docker 指南](DOCKER.md) 为准。本文中的 Worker 自动发布描述属于历史记录。
 
 ## 数据与兼容
 

@@ -1,16 +1,15 @@
 # 第五人格加页手记 · 解密手册
 
-当前正式发布分支为 `production`；分支职责与改名记录见 [分支与发布约定](docs/BRANCHES.md)。
-
 面向《第五人格》“加页手记”玩家的互动地图攻略工具，提供 Web 与微信小程序。按地图、困难 / 噩梦模式、入口、方向或正门通道类型查找布局，再查看全图与分层攻略。
 
 - 项目站点：[idv-map.321666.xyz](https://idv-map.321666.xyz/)
-- 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（需要 Cloudflare Access 授权）
+- Cloudflare 备用入口：[idvmap.321666.xyz](https://idvmap.321666.xyz/)（主域名已切换 Oracle Docker，备用站内容尚未自动同步）
+- 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（Docker 管理密钥登录；CF 备用后台继续由 Access 保护）
 - 源码与反馈：[GitHub](https://github.com/heytl/idv-cryptic-map) · [Issues](https://github.com/heytl/idv-cryptic-map/issues)
 
-**版本状态：**当前工作区为 V3 多地图升级，尚待预览验收与正式发布。上述站点地址不代表已部署 V3；历史正式基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。本轮变化与待办见 [V3 版本记录](docs/releases/V3.md)。
+**版本状态：**V3 已于 2026-10-22 发布到正式站，公开数据使用 V4 协议；CF 上线基线内容版本为 41，Docker 与 CF 的内容版本独立递增。Web 与新版小程序共用正式统计接口，后台区分来源。发布、备份与验收见 [正式上线记录](docs/releases/V3-PRODUCTION-2026-10-22.md)，历史基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。
 
-微信小程序 `0.1.0` 初版已获用户初步功能验收通过，尚未上传审核或发布。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
+微信小程序 `0.1.0` 初版已获用户初步功能验收通过。本轮已生成指向正式 API、包含访问统计的新版产物；微信平台上传、审核与发布需单独执行，旧包不会自动接入统计。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
 
 ## 功能与使用方式
 
@@ -26,9 +25,9 @@
 
 ## 技术与数据
 
-pnpm 工作区，前后台采用 **Vue 3 + TypeScript + Vite**。主站使用 **Cloudflare Workers + KV + R2**，V3 访问统计新增 **D1**；后台由 Cloudflare Access 保护。
+pnpm 工作区，前后台采用 **Vue 3 + TypeScript + Vite**。同一正式源码同时支持 **Node.js + SQLite Docker** 和 **Cloudflare Workers + KV + R2 + D1**；Docker 后台使用站内密钥会话，CF 后台由 Cloudflare Access 保护。
 
-内容真源为 KV `config:v3:current`，图片与版本备份存于 R2，统计独立存于 D1。修改地图通过后台发布，无需重新构建前端。首次读取可从现有 V2 配置转换，首次保存前归档 V2 基线。旧分享链接继续兼容，公开数据使用 V4（旧 V2/V3 图片协议返回升级提示）；V1 页面、编辑 API 和静态图片链路已退役。
+Docker 配置、图片、版本备份与统计保存在 SQLite；CF 配置在 KV `config:v3:current`，图片与版本备份在 R2，统计在 D1。两端内容和统计独立，不自动同步。修改地图通过后台发布，无需重新构建前端。首次读取可从现有 V2 配置转换，首次保存前归档 V2 基线。旧分享链接继续兼容，公开数据使用 V4（旧 V2/V3 图片协议返回升级提示）；V1 页面、编辑 API 和静态图片链路已退役。
 
 部分文件名和路由内部名称仍保留 `V2`，用于延续原组件与接口调用，**不表示存在第二套可编辑内容源**。详见 [架构总览](docs/ARCHITECTURE.md)。
 
@@ -105,12 +104,16 @@ pnpm verify:pwa
 
 ## 部署与发布
 
-- **Cloudflare 主站**：推送 `production` 时执行生产 D1 迁移和 Worker 部署；推送 `v3-dev` 时执行预览 D1 迁移并部署至隔离的 `v2-preview` Worker；`main` 保留独立静态发布职责。
-- **V3 前置条件**：生产发布前配置真实 D1 ID。开发分支部署前，在 GitHub 仓库 Actions Variables 设置 `V3_PREVIEW_D1_ID`，值为隔离数据库 `idv-map-stats-preview` 的 UUID。详情见 [V3 版本记录](docs/releases/V3.md)。
-- **预览先行**：独立环境名仍为 `v2-preview`，不表示部署旧代码。PR 上传预览不能代替数据库准备与完整验收。
-- **静态镜像**：保留 Vercel 配置；构建时设置 `VITE_MAP_API_BASE_URL` 指向提供 `/maps-v4.json` 的 Worker origin，并验证媒体跨域可用。镜像不提供管理 API，也不作为主站访问统计来源。
+统一正式源码为 `production`，开发分支为 `dev`；`main` 保留静态版本职责。详见 [分支与发布约定](docs/BRANCHES.md)。
 
-具体部署命令、备份、验收与回滚以 [V3 升级与运维](docs/V3-UPGRADE.md) 为准。未来 Docker 自托管只有业务 / 平台接口准备，本版本不包含 Docker 运行环境。
+- **验证**：PR、`dev` 和 `production` 更新运行共享测试、类型检查、构建、PWA 升级和 AMD64 / ARM64 容器验证。
+- **开发预览**：`dev` 验证通过后自动部署隔离 CF `v2-preview`，需配置 `V3_PREVIEW_D1_ID`；AMD1 测试站另行部署。
+- **正式发布**：合入 `production` 不更新线上。GitHub Actions 的 **Release** 选择 `production`，再选择 `docker`、`cloudflare` 或 `both`，发布前重新验证同一提交。
+- **Docker**：发布双架构镜像 `ghcr.io/heytl/idv-cryptic-map:<完整提交 SHA>`，输出摘要；服务器手动拉取指定版本。发布镜像不会更新服务器。
+- **Cloudflare**：迁移正式 D1 后发布备用 Worker，保持 `idvmap.321666.xyz` / `new-map.321666.xyz`；不重新绑定 Docker 主域名。
+- **静态镜像**：保留 Vercel 配置，通过 `VITE_MAP_API_BASE_URL` 指向提供公开 V4 API 的站点，并验证跨域媒体读取；不提供管理 API。
+
+Docker 启动、镜像升级和恢复见 [Docker 部署指南](docs/DOCKER.md)。CF 数据归档和历史运维见 [V3 升级与运维](docs/V3-UPGRADE.md)；CF 定时快照不能代替 Docker 数据库异地备份。
 
 ## 文档
 

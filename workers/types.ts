@@ -9,10 +9,14 @@ export interface Env {
     limit(input: { key: string }): Promise<{ success: boolean }>;
   };
   TELEMETRY_ORIGIN?: string;
+  /** Native mini-program Referer allowlist; not a secret or user authentication. */
+  TELEMETRY_WECHAT_APP_ID?: string;
 
   // ---- vars（wrangler.jsonc / dashboard 配置）----
   /** 图片对外 URL 前缀：img 子域绑定前为 "/r2"（同 Worker 出图），绑定后改为 https://img.<domain> */
   IMG_BASE_URL?: string;
+  /** Self-hosted same-origin media, independent of the reverse proxy domain. */
+  RELATIVE_MEDIA_URLS?: string;
   /** Cloudflare Access 团队域，如 https://xxx.cloudflareaccess.com；与 AUD 同时配置后鉴权生效 */
   ACCESS_TEAM_DOMAIN?: string;
   /** Access 应用的 Audience 标签 */

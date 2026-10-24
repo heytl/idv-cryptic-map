@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPublicMapConfigV4, resolveFloorSource } from "./map-client";
+import { isPublicMapConfigV4, resolveFloorSource, resolvePublicMediaUrls } from "./map-client";
 import { availableFloors, catalogFilterValuesV2, enabledEntranceTypesV2 } from "./catalog";
 import type { PublicMapConfigV4 } from "./map-v3";
 
@@ -15,6 +15,23 @@ export function fixture(): PublicMapConfigV4 {
 }
 
 describe("V4 client boundary", () => {
+  it('accepts Docker same-origin media after resolving against each API domain', () => {
+    const raw = fixture();
+    raw.layouts[0].floorImages.full!.url = '/r2/maps/full/full.webp';
+    raw.layouts[0].floorRegions!.sourceUrl = '/r2/maps/full/full.webp';
+    raw.layouts[0].entrances = [{ id: 'side', type: 'side', typeLabel: '侧门', direction: 'left', directionLabel: '左', imageUrl: '/r2/maps/entrance/a.webp', thumbUrl: '/r2/maps/entrance-thumb/a.webp' }];
+    expect(isPublicMapConfigV4(raw)).toBe(false);
+    for (const domain of ['https://first.example', 'https://second.example']) {
+      const resolved = resolvePublicMediaUrls(raw, domain + '/maps-v4.json');
+      expect(isPublicMapConfigV4(resolved)).toBe(true);
+      if (!isPublicMapConfigV4(resolved)) throw Error('Invalid config');
+      expect(resolveFloorSource(resolved.layouts[0], 'floor1')?.url).toBe(domain + '/r2/maps/full/full.webp');
+      expect(resolved.layouts[0].entrances[0].thumbUrl).toBe(domain + '/r2/maps/entrance-thumb/a.webp');
+    }
+    expect(raw.layouts[0].floorImages.full!.url).toBe('/r2/maps/full/full.webp');
+    raw.layouts[0].floorImages.full!.url = '//evil.example/image.webp';
+    expect(isPublicMapConfigV4(resolvePublicMediaUrls(raw, 'https://safe.example/maps-v4.json'))).toBe(false);
+  });
   it("resolves full, region and legacy floors without inventing missing floors", () => {
     const data = fixture(), layout = data.layouts[0];
     expect(isPublicMapConfigV4(data)).toBe(true);

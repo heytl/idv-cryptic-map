@@ -15,6 +15,8 @@ if (
 )
   throw new Error("远端迁移必须使用 HTTPS");
 const headers = {};
+if (process.env.ADMIN_KEY || process.env.ADMIN_PASSWORD)
+  headers.Authorization = `Bearer ${process.env.ADMIN_KEY || process.env.ADMIN_PASSWORD}`;
 if (process.env.CF_ACCESS_CLIENT_ID)
   headers["CF-Access-Client-Id"] = process.env.CF_ACCESS_CLIENT_ID;
 if (process.env.CF_ACCESS_CLIENT_SECRET)

@@ -1,3 +1,5 @@
+> 当前运维入口：[统一分支与手动发布](BRANCHES.md)、[Docker 部署与灾备](DOCKER.md)。下文 Worker 自动发布和旧版本回滚命令仅供历史查阅。
+
 > 历史 V2 文档。当前版本的部署、数据源与运维以 [V3-UPGRADE.md](V3-UPGRADE.md) 为准。
 
 # 运维手册

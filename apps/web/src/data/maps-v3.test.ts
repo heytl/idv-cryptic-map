@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   assetKeys,
   migrateV2ToV3,
+  validateMapConfigV3,
   toPublicMapConfigV4,
   type MapConfigV2,
   type MapConfigV3,
@@ -18,12 +19,14 @@ describe("baseline and offline packages", () => {
       ...toPublicMapConfigV4(snapshot as MapConfigV3, "https://test").layouts,
     ),
   );
-  it("checked-in migration exactly matches the V2 baseline", () => {
-    expect(snapshot).toEqual(migrateV2ToV3(oldSnapshot as MapConfigV2));
+  it("validates the current V3 snapshot independently of the frozen V2 baseline", () => {
+    // Production V3 edits/regions and daily snapshots must not be required to
+    // equal a fresh conversion of the archived V2 content.
+    expect(validateMapConfigV3(snapshot)).toEqual({ valid: true, errors: [] });
     expect(assetKeys(snapshot as MapConfigV3).length).toBeGreaterThan(0);
   });
   it("downloads the full image only for converted floors and includes unmigrated floors", () => {
-    const config = structuredClone(snapshot) as MapConfigV3;
+    const config = migrateV2ToV3(structuredClone(oldSnapshot) as MapConfigV2);
     const layout = config.layouts[0]!;
     const legacyFloor = layout.floorImages.floor2!.key;
     const removed = layout.floorImages.floor1!.key;
