@@ -1,0 +1,6 @@
+# Static release checksums must survive Git checkouts on Windows and Linux.
+/site/** -text
+/scripts/static/** text eol=lf
+/.github/workflows/** text eol=lf
+/README.md text eol=lf
+/vercel.json text eol=lf

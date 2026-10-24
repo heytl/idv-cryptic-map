@@ -1,0 +1,35 @@
+{
+  "latest": {
+    "version": "v3",
+    "base": "/",
+    "releaseId": "bc8eae619240c07d",
+    "sourceSha": "badc484a8c100e3b50415f3b606c014f441b77d4",
+    "publisherSha256": "4b80d80d4787416835bf240fd1ce6fb75ddd72323c647f99041a802a0f2c8239",
+    "sourceUrl": "https://idv-map.321666.xyz/maps-v4.json",
+    "capturedAt": "2026-10-24T15:25:52.182Z",
+    "sourceConfigSha256": "5c2d3bf060914621fd2b8ad26c52d244ce94fd4b970b79abd933725bcb563646",
+    "integritySha256": "acebdfd792b7b397a1d3d71a436f3ff3c9f88249c2f6b524a344c1780c7084fe",
+    "schemaVersion": 4,
+    "dataVersion": 2,
+    "updatedAt": "2026-10-22T17:22:43.445Z",
+    "layouts": 55,
+    "gameMaps": 1,
+    "sourceImages": 223,
+    "uniqueImages": 223
+  },
+  "versions": [
+    {
+      "version": "v3",
+      "url": "/v3/",
+      "layouts": 55,
+      "capturedAt": "2026-10-24T15:25:52.182Z",
+      "description": "完整保留发布时的界面、地图配置与图片。"
+    },
+    {
+      "version": "v1",
+      "url": "/v1/",
+      "layouts": 28,
+      "description": "最初的静态手册，保留当时的界面与地图。"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+name: Prepare static handbook
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Formal UI branch, tag or commit
+        required: true
+        default: production
+      archive:
+        description: New frozen version (v4), or leave empty to update latest only
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: static-handbook-prepare
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require main
+        env:
+          REF: ${{ github.ref }}
+        run: test "$REF" = refs/heads/main
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Capture production UI, config and every referenced image
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+          ARCHIVE: ${{ inputs.archive }}
+        run: |
+          if [ -n "$ARCHIVE" ]; then
+            node scripts/static/release.mjs --source-ref "$SOURCE_REF" --archive "$ARCHIVE"
+          else
+            node scripts/static/release.mjs --source-ref "$SOURCE_REF"
+          fi
+      - run: node scripts/static/verify.mjs
+      - name: Install acceptance browser and start a plain static server
+        run: |
+          SOURCE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('.tmp/static-build.json')).source)")
+          echo "STATIC_SOURCE_DIR=$SOURCE" >> "$GITHUB_ENV"
+          node "$SOURCE/apps/web/node_modules/playwright-core/cli.js" install chromium --with-deps
+          node scripts/static/serve.mjs > /tmp/static-preview.log 2>&1 &
+      - name: Verify UI, complete maps, mobile, version isolation and offline use
+        env:
+          STATIC_BROWSER_CHANNEL: chromium
+        run: node scripts/static/browser-verify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-handbook-verification
+          path: .tmp/static-verification
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-static-site
+          path: site
+      - name: Report reviewable release
+        run: echo "Download verified-static-site, replace site/ on main, review and commit. This workflow never pushes or deploys." >> "$GITHUB_STEP_SUMMARY"

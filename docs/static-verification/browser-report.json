@@ -1,0 +1,93 @@
+{
+  "target": "http://127.0.0.1:8795",
+  "verifiedAt": "2026-10-24T15:34:14.526Z",
+  "reports": [
+    {
+      "allUniqueImagesDecoded": 223
+    },
+    {
+      "prefix": "/",
+      "viewport": "desktop",
+      "layouts": 55,
+      "renderedEntrances": 138,
+      "renderedFloors": 192,
+      "filterDialog": true,
+      "reload": true,
+      "aboutAndChangelog": true,
+      "errors": [],
+      "failed": [],
+      "remoteRuntime": [],
+      "writes": []
+    },
+    {
+      "prefix": "/",
+      "viewport": "mobile",
+      "layouts": 55,
+      "renderedEntrances": 138,
+      "renderedFloors": 192,
+      "filterDialog": true,
+      "reload": true,
+      "aboutAndChangelog": true,
+      "errors": [],
+      "failed": [],
+      "remoteRuntime": [],
+      "writes": []
+    },
+    {
+      "prefix": "/v3/",
+      "viewport": "desktop",
+      "layouts": 55,
+      "renderedEntrances": 138,
+      "renderedFloors": 192,
+      "filterDialog": true,
+      "reload": true,
+      "aboutAndChangelog": true,
+      "errors": [],
+      "failed": [],
+      "remoteRuntime": [],
+      "writes": []
+    },
+    {
+      "prefix": "/v3/",
+      "viewport": "mobile",
+      "layouts": 55,
+      "renderedEntrances": 138,
+      "renderedFloors": 192,
+      "filterDialog": true,
+      "reload": true,
+      "aboutAndChangelog": true,
+      "errors": [],
+      "failed": [],
+      "remoteRuntime": [],
+      "writes": []
+    },
+    {
+      "prefix": "/v1/",
+      "viewport": "desktop",
+      "cards": 28,
+      "floorSwitching": true,
+      "deepLinkReload": true,
+      "errors": []
+    },
+    {
+      "prefix": "/v1/",
+      "viewport": "mobile",
+      "cards": 28,
+      "floorSwitching": true,
+      "deepLinkReload": true,
+      "errors": []
+    },
+    {
+      "offlineReloadAndFloorSwitch": [
+        "/",
+        "/v3/"
+      ],
+      "isolatedWorkerScopes": [
+        "/",
+        "/v3/"
+      ],
+      "oldVersionAfterNewWorker": true,
+      "versionDirectory": true
+    }
+  ]
+}

@@ -2,23 +2,27 @@
   "cleanUrls": true,
   "buildCommand": null,
   "outputDirectory": "site",
+  "redirects": [
+    { "source": "/:version(v[0-9.]+)", "destination": "/:version/", "permanent": true },
+    { "source": "/versions", "destination": "/versions/", "permanent": true }
+  ],
   "headers": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
       ]
     },
     {
-      "source": "/index.html",
+      "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/(style.css|script.js|maps.json)",
+      "source": "/media/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ]

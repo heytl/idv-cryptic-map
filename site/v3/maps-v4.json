@@ -1,0 +1,3597 @@
+{
+  "dataVersion": 2,
+  "updatedAt": "2026-10-22T17:22:43.445Z",
+  "defaultFloor": "full",
+  "dictionaries": {
+    "modes": [
+      {
+        "value": "hard",
+        "label": "困难"
+      },
+      {
+        "value": "nightmare",
+        "label": "噩梦"
+      }
+    ],
+    "entrances": [
+      {
+        "value": "side",
+        "label": "侧门"
+      },
+      {
+        "value": "front",
+        "label": "正门"
+      },
+      {
+        "value": "upstairs",
+        "label": "二楼门"
+      }
+    ],
+    "directions": [
+      {
+        "value": "left",
+        "label": "左"
+      },
+      {
+        "value": "right",
+        "label": "右"
+      },
+      {
+        "value": "south",
+        "label": "南"
+      },
+      {
+        "value": "north",
+        "label": "北"
+      }
+    ],
+    "passages": [
+      {
+        "value": "upperLeft",
+        "label": "左上门"
+      },
+      {
+        "value": "upperRight",
+        "label": "右上门"
+      },
+      {
+        "value": "both",
+        "label": "左右门"
+      },
+      {
+        "value": "triple",
+        "label": "三门"
+      }
+    ],
+    "floors": [
+      {
+        "value": "full",
+        "label": "全图"
+      },
+      {
+        "value": "basement",
+        "label": "地下室",
+        "shortLabel": "负一楼"
+      },
+      {
+        "value": "floor1",
+        "label": "一楼"
+      },
+      {
+        "value": "floor2",
+        "label": "二楼"
+      }
+    ]
+  },
+  "schemaVersion": 4,
+  "gameMaps": [
+    {
+      "id": "lady-of-doom",
+      "name": "厄运之女",
+      "sort": 10,
+      "published": true
+    }
+  ],
+  "layouts": [
+    {
+      "id": 1,
+      "mode": "hard",
+      "name": "左-Y门",
+      "displayName": "左-Y门",
+      "remarks": "左侧入口，呈现Y字形墙体结构",
+      "sort": 10,
+      "legacyNames": [
+        "左-Y门"
+      ],
+      "entrances": [
+        {
+          "id": "1-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/1a38704b068566a6e6fc4c9f0535bb7afa001c3eac8edae1286a40e51b799d53.webp",
+          "thumbUrl": "/v3/media/ebc109daa804451db95009ce87f58eb66219a6f16e3e28cf966185b5e09fcf35.webp"
+        },
+        {
+          "id": "1-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e816ab24cf1cbe563f97dace554388ea7d333907a31f4b9e2a1bb8a8ccdd526b.webp",
+          "thumbUrl": "/v3/media/d905094bae8ebb18b7a4497980f377dcf9433ba3e5349bc2dee9975cd7c3bd5b.webp"
+        },
+        {
+          "id": "1-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/d660d0687be6495acc2e88a5d695c6b33e19b0d330fd0b99399d974fe29dc9e5.webp",
+          "thumbUrl": "/v3/media/98a3408dbf70719e52086c9432a9fd0016e554cd15c221a66ce3841636a3997f.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/64e33f483403c5dcc4403597e76f9c21a127da8adca8e889171bf7168940e325.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/64e33f483403c5dcc4403597e76f9c21a127da8adca8e889171bf7168940e325.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 735
+          },
+          "floor2": {
+            "x": 0,
+            "y": 741,
+            "width": 900,
+            "height": 759
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "mode": "hard",
+      "name": "左-锤子门",
+      "displayName": "左-锤子门",
+      "remarks": "左侧入口，呈现锤子形状墙体结构",
+      "sort": 20,
+      "legacyNames": [
+        "左-锤子门"
+      ],
+      "entrances": [
+        {
+          "id": "2-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/617bc883e1da7f81087057a9ffa97cc449fadac4caa7cb1c943438aa31364d70.webp",
+          "thumbUrl": "/v3/media/3186bb313d9bad4c7cfd528cf8e6111d6ae31d3af210177baad6bd76b0ffb864.webp"
+        },
+        {
+          "id": "2-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/617bc883e1da7f81087057a9ffa97cc449fadac4caa7cb1c943438aa31364d70.webp",
+          "thumbUrl": "/v3/media/3186bb313d9bad4c7cfd528cf8e6111d6ae31d3af210177baad6bd76b0ffb864.webp"
+        },
+        {
+          "id": "2-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/617bc883e1da7f81087057a9ffa97cc449fadac4caa7cb1c943438aa31364d70.webp",
+          "thumbUrl": "/v3/media/3186bb313d9bad4c7cfd528cf8e6111d6ae31d3af210177baad6bd76b0ffb864.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/18785ff4edc38b58953c7094f841372d9c42fb1f6d66a9664248504b1f73bb06.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/18785ff4edc38b58953c7094f841372d9c42fb1f6d66a9664248504b1f73bb06.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 800
+          },
+          "floor2": {
+            "x": 0,
+            "y": 800,
+            "width": 900,
+            "height": 700
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "mode": "hard",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "左侧入口，呈现倒T字形墙体结构",
+      "sort": 30,
+      "legacyNames": [
+        "左-倒T门"
+      ],
+      "entrances": [
+        {
+          "id": "3-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/aa7674c67bc2094d9050c15d6e031656c4ece1ac42559bf686a32d49eadeba35.webp",
+          "thumbUrl": "/v3/media/c8d3e66dacba0a5c73d6078db59f22d5c5ff650275a85dc6d3d75883beb1b5b3.webp"
+        },
+        {
+          "id": "3-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/aa7674c67bc2094d9050c15d6e031656c4ece1ac42559bf686a32d49eadeba35.webp",
+          "thumbUrl": "/v3/media/c8d3e66dacba0a5c73d6078db59f22d5c5ff650275a85dc6d3d75883beb1b5b3.webp"
+        },
+        {
+          "id": "3-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/aa7674c67bc2094d9050c15d6e031656c4ece1ac42559bf686a32d49eadeba35.webp",
+          "thumbUrl": "/v3/media/c8d3e66dacba0a5c73d6078db59f22d5c5ff650275a85dc6d3d75883beb1b5b3.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/b260897ef750fee77385250b026d9e2dab825c72a4a052e37f45800f05e57346.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/b260897ef750fee77385250b026d9e2dab825c72a4a052e37f45800f05e57346.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "mode": "hard",
+      "name": "左-对角门",
+      "displayName": "左-对角门",
+      "remarks": "左侧入口，呈现对角线墙体结构",
+      "sort": 40,
+      "legacyNames": [
+        "左-对角门"
+      ],
+      "entrances": [
+        {
+          "id": "4-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/6c221dd38b25b06b0f420d5fb17bf3898aa74799588b0626c459e202a425e923.webp",
+          "thumbUrl": "/v3/media/ffd17584dafc058d742bdbf979bb636c08168cefbcce55a3c104918e3e155fc5.webp"
+        },
+        {
+          "id": "4-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/6c221dd38b25b06b0f420d5fb17bf3898aa74799588b0626c459e202a425e923.webp",
+          "thumbUrl": "/v3/media/ffd17584dafc058d742bdbf979bb636c08168cefbcce55a3c104918e3e155fc5.webp"
+        },
+        {
+          "id": "4-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/6c221dd38b25b06b0f420d5fb17bf3898aa74799588b0626c459e202a425e923.webp",
+          "thumbUrl": "/v3/media/ffd17584dafc058d742bdbf979bb636c08168cefbcce55a3c104918e3e155fc5.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/9c4e2ec50c7bb07cf9e197023007063c703f2ebe912c945be5759293f0422592.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/9c4e2ec50c7bb07cf9e197023007063c703f2ebe912c945be5759293f0422592.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 745
+          },
+          "floor2": {
+            "x": 0,
+            "y": 745,
+            "width": 900,
+            "height": 755
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "mode": "hard",
+      "name": "左-音叉门",
+      "displayName": "左-音叉门",
+      "remarks": "左侧入口，呈现音叉状对称墙体结构",
+      "sort": 50,
+      "legacyNames": [
+        "左-音叉门"
+      ],
+      "entrances": [
+        {
+          "id": "5-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/b0d66966422d4ca82c00d30a2d5ccccc1f8644a62fb26227f0a4087f5eaf7e66.webp",
+          "thumbUrl": "/v3/media/b2a20c63433cb264b40b04b9d590cf09ff413ba77588790dd94d334da7a5ee7e.webp"
+        },
+        {
+          "id": "5-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/b0d66966422d4ca82c00d30a2d5ccccc1f8644a62fb26227f0a4087f5eaf7e66.webp",
+          "thumbUrl": "/v3/media/b2a20c63433cb264b40b04b9d590cf09ff413ba77588790dd94d334da7a5ee7e.webp"
+        },
+        {
+          "id": "5-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/b0d66966422d4ca82c00d30a2d5ccccc1f8644a62fb26227f0a4087f5eaf7e66.webp",
+          "thumbUrl": "/v3/media/b2a20c63433cb264b40b04b9d590cf09ff413ba77588790dd94d334da7a5ee7e.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/33eda3737e77efe5680ea851862646522c1a75dc6f92fba975fec65920be9dca.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/33eda3737e77efe5680ea851862646522c1a75dc6f92fba975fec65920be9dca.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 719
+          },
+          "floor2": {
+            "x": 0,
+            "y": 713,
+            "width": 900,
+            "height": 787
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "mode": "hard",
+      "name": "左-罐子门",
+      "displayName": "左-罐子门",
+      "remarks": "左侧入口，呈现罐子状墙体结构",
+      "sort": 60,
+      "legacyNames": [
+        "左-罐子门"
+      ],
+      "entrances": [
+        {
+          "id": "6-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/a22fd2f1b8c6a62774d86d14ae6f96d4c45232bfa3131edf1242736726e0d2fb.webp",
+          "thumbUrl": "/v3/media/7f6e6b37f5bc69448e5ad2a084a7017d76974f549d0aa2007361969c6f32157d.webp"
+        },
+        {
+          "id": "6-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/a22fd2f1b8c6a62774d86d14ae6f96d4c45232bfa3131edf1242736726e0d2fb.webp",
+          "thumbUrl": "/v3/media/7f6e6b37f5bc69448e5ad2a084a7017d76974f549d0aa2007361969c6f32157d.webp"
+        },
+        {
+          "id": "6-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/a22fd2f1b8c6a62774d86d14ae6f96d4c45232bfa3131edf1242736726e0d2fb.webp",
+          "thumbUrl": "/v3/media/7f6e6b37f5bc69448e5ad2a084a7017d76974f549d0aa2007361969c6f32157d.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/e36561e518daea23169355d2b50d81dbd9b429fdf8114606e71067277fa9eaf8.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/e36561e518daea23169355d2b50d81dbd9b429fdf8114606e71067277fa9eaf8.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 777
+          },
+          "floor2": {
+            "x": 0,
+            "y": 777,
+            "width": 900,
+            "height": 723
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "mode": "hard",
+      "name": "左-对T门",
+      "displayName": "左-对T门",
+      "remarks": "左侧入口，呈现两个相对的T形墙体结构",
+      "sort": 70,
+      "legacyNames": [
+        "左-对T门"
+      ],
+      "entrances": [
+        {
+          "id": "7-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/62ef6248cd96133f30d3718e5a86d7583a9ebf106d994142ee89a71bbe7782d5.webp",
+          "thumbUrl": "/v3/media/b9f7ca4821de0df6838e14fcbf9e50b9c902fdc908fa7941f8aad912c0c52940.webp"
+        },
+        {
+          "id": "7-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/62ef6248cd96133f30d3718e5a86d7583a9ebf106d994142ee89a71bbe7782d5.webp",
+          "thumbUrl": "/v3/media/b9f7ca4821de0df6838e14fcbf9e50b9c902fdc908fa7941f8aad912c0c52940.webp"
+        },
+        {
+          "id": "7-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/62ef6248cd96133f30d3718e5a86d7583a9ebf106d994142ee89a71bbe7782d5.webp",
+          "thumbUrl": "/v3/media/b9f7ca4821de0df6838e14fcbf9e50b9c902fdc908fa7941f8aad912c0c52940.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/6448e9c720bbe30e7beacf73e3ebfe7412a55d93409cb33485381e0da42c7f97.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/6448e9c720bbe30e7beacf73e3ebfe7412a55d93409cb33485381e0da42c7f97.webp",
+        "imageWidth": 900,
+        "imageHeight": 1700,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 895
+          },
+          "floor2": {
+            "x": 0,
+            "y": 895,
+            "width": 900,
+            "height": 805
+          }
+        }
+      }
+    },
+    {
+      "id": 24,
+      "mode": "hard",
+      "name": "左-Y青蛙房",
+      "displayName": "左-Y青蛙房（新）",
+      "remarks": "左侧入口，Y字形通道变体，邻接青蛙房结构",
+      "sort": 80,
+      "legacyNames": [
+        "左-Y青蛙房",
+        "左-Y青蛙房（新）"
+      ],
+      "entrances": [
+        {
+          "id": "24-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/39ecc8e1516bcda092f93deeabb08a9e8e60713a2f675f8a378c09460982b494.webp",
+          "thumbUrl": "/v3/media/315e6e684d62ad5cac0a571a724f9813e53ccd8449d2585809e018bc824fa023.webp"
+        },
+        {
+          "id": "24-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/39ecc8e1516bcda092f93deeabb08a9e8e60713a2f675f8a378c09460982b494.webp",
+          "thumbUrl": "/v3/media/315e6e684d62ad5cac0a571a724f9813e53ccd8449d2585809e018bc824fa023.webp"
+        },
+        {
+          "id": "24-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/39ecc8e1516bcda092f93deeabb08a9e8e60713a2f675f8a378c09460982b494.webp",
+          "thumbUrl": "/v3/media/315e6e684d62ad5cac0a571a724f9813e53ccd8449d2585809e018bc824fa023.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/80e6eaa97d5a873912e674b3ab538527e8af18c49e6b3f2e40d26072f0e0c10a.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/80e6eaa97d5a873912e674b3ab538527e8af18c49e6b3f2e40d26072f0e0c10a.webp",
+        "imageWidth": 900,
+        "imageHeight": 1600,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 800
+          },
+          "floor2": {
+            "x": 0,
+            "y": 800,
+            "width": 900,
+            "height": 800
+          }
+        }
+      }
+    },
+    {
+      "id": 27,
+      "mode": "hard",
+      "name": "左-锤灯笼门",
+      "displayName": "左-锤灯笼门（新）",
+      "remarks": "左侧入口，锤子形通道与灯笼状墙体组合结构",
+      "sort": 90,
+      "legacyNames": [
+        "左-锤灯笼门",
+        "左-锤灯笼门（新）"
+      ],
+      "entrances": [
+        {
+          "id": "27-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/ea7a76be141021327d353f703dd427cc0fb3abe3baff80e2854c6efdd75b67ad.webp",
+          "thumbUrl": "/v3/media/9f30b845b31e308005e40f59a4a3f1552674ca1327f22bc4ef24f7dc95efaf2b.webp"
+        },
+        {
+          "id": "27-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/ea7a76be141021327d353f703dd427cc0fb3abe3baff80e2854c6efdd75b67ad.webp",
+          "thumbUrl": "/v3/media/9f30b845b31e308005e40f59a4a3f1552674ca1327f22bc4ef24f7dc95efaf2b.webp"
+        },
+        {
+          "id": "27-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/ea7a76be141021327d353f703dd427cc0fb3abe3baff80e2854c6efdd75b67ad.webp",
+          "thumbUrl": "/v3/media/9f30b845b31e308005e40f59a4a3f1552674ca1327f22bc4ef24f7dc95efaf2b.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/42ba933cca1fc666d1bc79d409aed0ab2f9edacfe17ae77c675ef52adf9d7738.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/42ba933cca1fc666d1bc79d409aed0ab2f9edacfe17ae77c675ef52adf9d7738.webp",
+        "imageWidth": 900,
+        "imageHeight": 1600,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 784
+          },
+          "floor2": {
+            "x": 0,
+            "y": 784,
+            "width": 900,
+            "height": 816
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "mode": "hard",
+      "name": "右-左上右下门",
+      "displayName": "右-左上右下门",
+      "remarks": "右侧入口，左上及右下方向的侧门结构",
+      "sort": 100,
+      "legacyNames": [
+        "右-左上右下门"
+      ],
+      "entrances": [
+        {
+          "id": "8-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/c6f9ca1c5fca96fbfefc432049b707eb219ba3650a48092fda1f02b04e72ae7f.webp",
+          "thumbUrl": "/v3/media/6bdfd5f6743c379425f07be200195b8485bf95e88cbdd1979441e9394fd89f98.webp"
+        },
+        {
+          "id": "8-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/c6f9ca1c5fca96fbfefc432049b707eb219ba3650a48092fda1f02b04e72ae7f.webp",
+          "thumbUrl": "/v3/media/6bdfd5f6743c379425f07be200195b8485bf95e88cbdd1979441e9394fd89f98.webp"
+        },
+        {
+          "id": "8-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/c6f9ca1c5fca96fbfefc432049b707eb219ba3650a48092fda1f02b04e72ae7f.webp",
+          "thumbUrl": "/v3/media/6bdfd5f6743c379425f07be200195b8485bf95e88cbdd1979441e9394fd89f98.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/68459dc42b0edab8d9f2f1ef1605275ce4d3c3fbcb75a819db7b05063144cb60.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/68459dc42b0edab8d9f2f1ef1605275ce4d3c3fbcb75a819db7b05063144cb60.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "mode": "hard",
+      "name": "右-双L门",
+      "displayName": "右-双L门",
+      "remarks": "右侧入口，呈现双L型拐角墙体结构",
+      "sort": 110,
+      "legacyNames": [
+        "右-双L门"
+      ],
+      "entrances": [
+        {
+          "id": "9-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/e4896fd199a344875e2e0188b489f4aadf43099a065c12f056f9925282805d73.webp",
+          "thumbUrl": "/v3/media/99938da8690975b874cd155fee6c00df5d32a3647be6fa4ee21cf466db83fb69.webp"
+        },
+        {
+          "id": "9-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e4896fd199a344875e2e0188b489f4aadf43099a065c12f056f9925282805d73.webp",
+          "thumbUrl": "/v3/media/99938da8690975b874cd155fee6c00df5d32a3647be6fa4ee21cf466db83fb69.webp"
+        },
+        {
+          "id": "9-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/e4896fd199a344875e2e0188b489f4aadf43099a065c12f056f9925282805d73.webp",
+          "thumbUrl": "/v3/media/99938da8690975b874cd155fee6c00df5d32a3647be6fa4ee21cf466db83fb69.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/775803ce507ab3a7cdead40383b7fc28d361c3997fefdf9403fd1a3c2772b884.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/775803ce507ab3a7cdead40383b7fc28d361c3997fefdf9403fd1a3c2772b884.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 10,
+      "mode": "hard",
+      "name": "右-锤子门",
+      "displayName": "右-锤子门",
+      "remarks": "右侧入口，呈现锤子形状墙体结构",
+      "sort": 120,
+      "legacyNames": [
+        "右-锤子门"
+      ],
+      "entrances": [
+        {
+          "id": "10-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/72dabbb1e64d3b24ced301c26d7e0b90cbd11f9baa580452ef30ceddf94105d3.webp",
+          "thumbUrl": "/v3/media/32b9d20a462c7a33c68ad928b2ec6475867ebcd984e88ca4e95affe695f93800.webp"
+        },
+        {
+          "id": "10-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/72dabbb1e64d3b24ced301c26d7e0b90cbd11f9baa580452ef30ceddf94105d3.webp",
+          "thumbUrl": "/v3/media/32b9d20a462c7a33c68ad928b2ec6475867ebcd984e88ca4e95affe695f93800.webp"
+        },
+        {
+          "id": "10-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/72dabbb1e64d3b24ced301c26d7e0b90cbd11f9baa580452ef30ceddf94105d3.webp",
+          "thumbUrl": "/v3/media/32b9d20a462c7a33c68ad928b2ec6475867ebcd984e88ca4e95affe695f93800.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/1062a6d1b19f6fc9bc3912157762e8172c0a88fb6ac8ae05886cafef45c316b6.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/1062a6d1b19f6fc9bc3912157762e8172c0a88fb6ac8ae05886cafef45c316b6.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 11,
+      "mode": "hard",
+      "name": "右-骑士门",
+      "displayName": "右-骑士门",
+      "remarks": "右侧入口，墙体轮廓形似骑士棋子",
+      "sort": 130,
+      "legacyNames": [
+        "右-骑士门"
+      ],
+      "entrances": [
+        {
+          "id": "11-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/a5172cd45984d5c30d6b7611ea06b1fcb150d3611c683a31043fdc544b8afe0f.webp",
+          "thumbUrl": "/v3/media/d20e09531c8e8afd9ff257947584745c74358ca67eca2044326ac4e717bfb096.webp"
+        },
+        {
+          "id": "11-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/a5172cd45984d5c30d6b7611ea06b1fcb150d3611c683a31043fdc544b8afe0f.webp",
+          "thumbUrl": "/v3/media/d20e09531c8e8afd9ff257947584745c74358ca67eca2044326ac4e717bfb096.webp"
+        },
+        {
+          "id": "11-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/a5172cd45984d5c30d6b7611ea06b1fcb150d3611c683a31043fdc544b8afe0f.webp",
+          "thumbUrl": "/v3/media/d20e09531c8e8afd9ff257947584745c74358ca67eca2044326ac4e717bfb096.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/73a85e2134d4d64eedfb30049d9b83f8459ceb8ebaf44d8b5f90c78a561b55b6.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/73a85e2134d4d64eedfb30049d9b83f8459ceb8ebaf44d8b5f90c78a561b55b6.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 690
+          },
+          "floor2": {
+            "x": 0,
+            "y": 690,
+            "width": 900,
+            "height": 810
+          }
+        }
+      }
+    },
+    {
+      "id": 12,
+      "mode": "hard",
+      "name": "右-L门",
+      "displayName": "右-L门",
+      "remarks": "右侧入口，呈现L形墙体结构",
+      "sort": 140,
+      "legacyNames": [
+        "右-L门"
+      ],
+      "entrances": [
+        {
+          "id": "12-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/1d97672fcf5e8cffad7d7a41ae0ff3fa0ac19e40148a12545ce0a60a18781c95.webp",
+          "thumbUrl": "/v3/media/7474dc046ea8d0f332920be7d0686ffe9a5e1807521d2ffe3f73ed06c08a285f.webp"
+        },
+        {
+          "id": "12-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/1d97672fcf5e8cffad7d7a41ae0ff3fa0ac19e40148a12545ce0a60a18781c95.webp",
+          "thumbUrl": "/v3/media/7474dc046ea8d0f332920be7d0686ffe9a5e1807521d2ffe3f73ed06c08a285f.webp"
+        },
+        {
+          "id": "12-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/1d97672fcf5e8cffad7d7a41ae0ff3fa0ac19e40148a12545ce0a60a18781c95.webp",
+          "thumbUrl": "/v3/media/7474dc046ea8d0f332920be7d0686ffe9a5e1807521d2ffe3f73ed06c08a285f.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/073a380e028834449ed0051b69ea4cc60625a364d256b4408c18c6bd23601233.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/073a380e028834449ed0051b69ea4cc60625a364d256b4408c18c6bd23601233.webp",
+        "imageWidth": 900,
+        "imageHeight": 1650,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 895
+          },
+          "floor2": {
+            "x": 0,
+            "y": 895,
+            "width": 900,
+            "height": 755
+          }
+        }
+      }
+    },
+    {
+      "id": 26,
+      "mode": "hard",
+      "name": "右-三L门",
+      "displayName": "右-三L门（新）",
+      "remarks": "右侧入口，三个L形拐角墙体结构",
+      "sort": 150,
+      "legacyNames": [
+        "右-三L门",
+        "右-三L门（新）"
+      ],
+      "entrances": [
+        {
+          "id": "26-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/3b81943e5e54c1450494db6b0d9c451786744144f76559831067790fb59c66da.webp",
+          "thumbUrl": "/v3/media/fb8110887f64631d94542ecae619f6dc830e424d7d4f70de6ee5baba117a538d.webp"
+        },
+        {
+          "id": "26-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/3b81943e5e54c1450494db6b0d9c451786744144f76559831067790fb59c66da.webp",
+          "thumbUrl": "/v3/media/fb8110887f64631d94542ecae619f6dc830e424d7d4f70de6ee5baba117a538d.webp"
+        },
+        {
+          "id": "26-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/3b81943e5e54c1450494db6b0d9c451786744144f76559831067790fb59c66da.webp",
+          "thumbUrl": "/v3/media/fb8110887f64631d94542ecae619f6dc830e424d7d4f70de6ee5baba117a538d.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/eade262dddfc7430fbbd7b678129cf0bf60c710ba27eaabc72ce221f162c8182.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/eade262dddfc7430fbbd7b678129cf0bf60c710ba27eaabc72ce221f162c8182.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 752,
+            "width": 900,
+            "height": 748
+          }
+        }
+      }
+    },
+    {
+      "id": 13,
+      "mode": "hard",
+      "name": "南-三缺一门",
+      "displayName": "南-三缺一门",
+      "remarks": "南侧入口，三缺一侧墙体结构",
+      "sort": 160,
+      "legacyNames": [
+        "南-三缺一门"
+      ],
+      "entrances": [
+        {
+          "id": "13-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/846b2c2db22df4d941cbd05a3e26b355a3081845a0e14146f5ac777f8456316b.webp",
+          "thumbUrl": "/v3/media/ddae3dbd7bf3b1168e6f868a8c348aa66dcf4fc20eea15f1b8b091a28f1d3460.webp"
+        },
+        {
+          "id": "13-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/846b2c2db22df4d941cbd05a3e26b355a3081845a0e14146f5ac777f8456316b.webp",
+          "thumbUrl": "/v3/media/ddae3dbd7bf3b1168e6f868a8c348aa66dcf4fc20eea15f1b8b091a28f1d3460.webp"
+        },
+        {
+          "id": "13-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/846b2c2db22df4d941cbd05a3e26b355a3081845a0e14146f5ac777f8456316b.webp",
+          "thumbUrl": "/v3/media/ddae3dbd7bf3b1168e6f868a8c348aa66dcf4fc20eea15f1b8b091a28f1d3460.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/7c4e9323dadb8a5955bad4a3ab79c8e11f8b5bc979c9e3328bc7c25540e641e1.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/7c4e9323dadb8a5955bad4a3ab79c8e11f8b5bc979c9e3328bc7c25540e641e1.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "mode": "hard",
+      "name": "南-十字门",
+      "displayName": "南-十字门",
+      "remarks": "南侧入口，标准十字形门体与墙体",
+      "sort": 170,
+      "legacyNames": [
+        "南-十字门"
+      ],
+      "entrances": [
+        {
+          "id": "14-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/48255ba8c96e550f8ae19350223f6dd77170b0965015c7223386d1e7ebe4c201.webp",
+          "thumbUrl": "/v3/media/6c5c89ed9e340245ff78fb32806d96439bc52fee8fb2b34b4faed0c3d37eaba8.webp"
+        },
+        {
+          "id": "14-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/48255ba8c96e550f8ae19350223f6dd77170b0965015c7223386d1e7ebe4c201.webp",
+          "thumbUrl": "/v3/media/6c5c89ed9e340245ff78fb32806d96439bc52fee8fb2b34b4faed0c3d37eaba8.webp"
+        },
+        {
+          "id": "14-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/48255ba8c96e550f8ae19350223f6dd77170b0965015c7223386d1e7ebe4c201.webp",
+          "thumbUrl": "/v3/media/6c5c89ed9e340245ff78fb32806d96439bc52fee8fb2b34b4faed0c3d37eaba8.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/617193489c12b2bc20207a1a343ef91f59514ce4a4bf8c5d2d917bce317845f6.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/617193489c12b2bc20207a1a343ef91f59514ce4a4bf8c5d2d917bce317845f6.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 15,
+      "mode": "hard",
+      "name": "南-L门",
+      "displayName": "南-L门",
+      "remarks": "南侧入口，L形侧门通道结构",
+      "sort": 180,
+      "legacyNames": [
+        "南-L门"
+      ],
+      "entrances": [
+        {
+          "id": "15-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/61540e39f3dd831a2a268f152c829f6ea8c6957fc782ac1835d872ce8ec99963.webp",
+          "thumbUrl": "/v3/media/07f003b485561c922c686a62b94448a1c54cd76c878c0f72aeb5bb4a2173c99a.webp"
+        },
+        {
+          "id": "15-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/61540e39f3dd831a2a268f152c829f6ea8c6957fc782ac1835d872ce8ec99963.webp",
+          "thumbUrl": "/v3/media/07f003b485561c922c686a62b94448a1c54cd76c878c0f72aeb5bb4a2173c99a.webp"
+        },
+        {
+          "id": "15-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/61540e39f3dd831a2a268f152c829f6ea8c6957fc782ac1835d872ce8ec99963.webp",
+          "thumbUrl": "/v3/media/07f003b485561c922c686a62b94448a1c54cd76c878c0f72aeb5bb4a2173c99a.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/b0927261acef7ff53edd4e208726d6211f123a95dff0a5c6e77ff445f9d5ad28.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/b0927261acef7ff53edd4e208726d6211f123a95dff0a5c6e77ff445f9d5ad28.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 16,
+      "mode": "hard",
+      "name": "南-红门",
+      "displayName": "南-红门",
+      "remarks": "南侧入口，红色标记危险门体",
+      "sort": 190,
+      "legacyNames": [
+        "南-红门"
+      ],
+      "entrances": [
+        {
+          "id": "16-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/eb75c0e9543a469a939e80995bae5bb489033ca1b9a07a96d05d1a9318f7a2dd.webp",
+          "thumbUrl": "/v3/media/550254527789c9dd1ff05b8c4a58c05aab6aea438c0eb04445ea475b866c60e2.webp"
+        },
+        {
+          "id": "16-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/eb75c0e9543a469a939e80995bae5bb489033ca1b9a07a96d05d1a9318f7a2dd.webp",
+          "thumbUrl": "/v3/media/550254527789c9dd1ff05b8c4a58c05aab6aea438c0eb04445ea475b866c60e2.webp"
+        },
+        {
+          "id": "16-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/eb75c0e9543a469a939e80995bae5bb489033ca1b9a07a96d05d1a9318f7a2dd.webp",
+          "thumbUrl": "/v3/media/550254527789c9dd1ff05b8c4a58c05aab6aea438c0eb04445ea475b866c60e2.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/4262756e7732cf2d0e0cb9b493a9c7d0fae8335191dc115900dc2632b8d60e4a.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/4262756e7732cf2d0e0cb9b493a9c7d0fae8335191dc115900dc2632b8d60e4a.webp",
+        "imageWidth": 900,
+        "imageHeight": 1800,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 888
+          },
+          "floor2": {
+            "x": 0,
+            "y": 888,
+            "width": 900,
+            "height": 912
+          }
+        }
+      }
+    },
+    {
+      "id": 25,
+      "mode": "hard",
+      "name": "南-orz门",
+      "displayName": "南-orz门（新）",
+      "remarks": "南侧入口，墙体轮廓形似orz字形",
+      "sort": 200,
+      "legacyNames": [
+        "南-orz门",
+        "南-orz门（新）"
+      ],
+      "entrances": [
+        {
+          "id": "25-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e38b67dadb63509c6ca1d4232fa2bc9f4d302d9b6d5b78b58ce8be52a7e76a9c.webp",
+          "thumbUrl": "/v3/media/c6faecaf88e58641f87139362382b0240ca15d55255b4ec567997628fc3133c4.webp"
+        },
+        {
+          "id": "25-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e38b67dadb63509c6ca1d4232fa2bc9f4d302d9b6d5b78b58ce8be52a7e76a9c.webp",
+          "thumbUrl": "/v3/media/c6faecaf88e58641f87139362382b0240ca15d55255b4ec567997628fc3133c4.webp"
+        },
+        {
+          "id": "25-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e38b67dadb63509c6ca1d4232fa2bc9f4d302d9b6d5b78b58ce8be52a7e76a9c.webp",
+          "thumbUrl": "/v3/media/c6faecaf88e58641f87139362382b0240ca15d55255b4ec567997628fc3133c4.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/05edd21b8888b1d8d0db2a6b2fcd2711b972eb6de5d400a7317e0f24fe2b43c7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/05edd21b8888b1d8d0db2a6b2fcd2711b972eb6de5d400a7317e0f24fe2b43c7.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 752,
+            "width": 900,
+            "height": 748
+          }
+        }
+      }
+    },
+    {
+      "id": 17,
+      "mode": "hard",
+      "name": "北-1门",
+      "displayName": "北-1门",
+      "remarks": "北侧入口，单一侧门通道",
+      "sort": 210,
+      "legacyNames": [
+        "北-1门"
+      ],
+      "entrances": [
+        {
+          "id": "17-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/2bdf250ef0fadf0e5b5d029804807cc4a2f967038deda83f3e084db3dc257a12.webp",
+          "thumbUrl": "/v3/media/f8ca74b00eb447d21d2569c380a092cd6c8dfdb406d14f106661435a54a5ab40.webp"
+        },
+        {
+          "id": "17-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/2bdf250ef0fadf0e5b5d029804807cc4a2f967038deda83f3e084db3dc257a12.webp",
+          "thumbUrl": "/v3/media/f8ca74b00eb447d21d2569c380a092cd6c8dfdb406d14f106661435a54a5ab40.webp"
+        },
+        {
+          "id": "17-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/2bdf250ef0fadf0e5b5d029804807cc4a2f967038deda83f3e084db3dc257a12.webp",
+          "thumbUrl": "/v3/media/f8ca74b00eb447d21d2569c380a092cd6c8dfdb406d14f106661435a54a5ab40.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/8d20fc2c57e6f6d9a42dd4c4d204d0b5de96eb0e312bd2f9253e1433c3f957fb.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/8d20fc2c57e6f6d9a42dd4c4d204d0b5de96eb0e312bd2f9253e1433c3f957fb.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 18,
+      "mode": "hard",
+      "name": "北-4门",
+      "displayName": "北-4门",
+      "remarks": "北侧入口，4扇侧门结构",
+      "sort": 220,
+      "legacyNames": [
+        "北-4门"
+      ],
+      "entrances": [
+        {
+          "id": "18-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/af5cd3bb300189d7361db5be4728efdc6064f4bdb39f60ca249ebff5ab2e08e7.webp",
+          "thumbUrl": "/v3/media/3633dd4eebfbe6db0d08ebfcb3182ab9771a406afd38387b07841df75cf2a077.webp"
+        },
+        {
+          "id": "18-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/af5cd3bb300189d7361db5be4728efdc6064f4bdb39f60ca249ebff5ab2e08e7.webp",
+          "thumbUrl": "/v3/media/3633dd4eebfbe6db0d08ebfcb3182ab9771a406afd38387b07841df75cf2a077.webp"
+        },
+        {
+          "id": "18-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/af5cd3bb300189d7361db5be4728efdc6064f4bdb39f60ca249ebff5ab2e08e7.webp",
+          "thumbUrl": "/v3/media/3633dd4eebfbe6db0d08ebfcb3182ab9771a406afd38387b07841df75cf2a077.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/149d87f9334349ee581600622ebcd7642543759dd9ef8e3eaf846edfa7c761ed.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/149d87f9334349ee581600622ebcd7642543759dd9ef8e3eaf846edfa7c761ed.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 19,
+      "mode": "hard",
+      "name": "北-红门",
+      "displayName": "北-红门",
+      "remarks": "北侧入口，红色标记危险门体",
+      "sort": 230,
+      "legacyNames": [
+        "北-红门"
+      ],
+      "entrances": [
+        {
+          "id": "19-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/8c05a78b8b3e4c48c6ee8880fddd18eecd248d00cc78c01e071c35e6e272de17.webp",
+          "thumbUrl": "/v3/media/bdeba04c7269ed5340ff03a3e044ef4ea8bcf12e6792c2f602f652fffb8d8c9e.webp"
+        },
+        {
+          "id": "19-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/8c05a78b8b3e4c48c6ee8880fddd18eecd248d00cc78c01e071c35e6e272de17.webp",
+          "thumbUrl": "/v3/media/bdeba04c7269ed5340ff03a3e044ef4ea8bcf12e6792c2f602f652fffb8d8c9e.webp"
+        },
+        {
+          "id": "19-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/8c05a78b8b3e4c48c6ee8880fddd18eecd248d00cc78c01e071c35e6e272de17.webp",
+          "thumbUrl": "/v3/media/bdeba04c7269ed5340ff03a3e044ef4ea8bcf12e6792c2f602f652fffb8d8c9e.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/20a9f472b1434631d92c5362c2ec5e6b19d68d78f7c823d620b18f4a6d420cff.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/20a9f472b1434631d92c5362c2ec5e6b19d68d78f7c823d620b18f4a6d420cff.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 20,
+      "mode": "hard",
+      "name": "北-凹门",
+      "displayName": "北-凹门",
+      "remarks": "北侧入口，呈现凹字形墙体包围结构",
+      "sort": 240,
+      "legacyNames": [
+        "北-凹门"
+      ],
+      "entrances": [
+        {
+          "id": "20-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/4e3c34c456ba11b21dbb819fbaa24972a93db077bb3952953beca3a562b8fe1d.webp",
+          "thumbUrl": "/v3/media/d8dcee70a86d73dc128183822c91ce73b5cac815f8f1d04501bfa7610ceec3da.webp"
+        },
+        {
+          "id": "20-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/4e3c34c456ba11b21dbb819fbaa24972a93db077bb3952953beca3a562b8fe1d.webp",
+          "thumbUrl": "/v3/media/d8dcee70a86d73dc128183822c91ce73b5cac815f8f1d04501bfa7610ceec3da.webp"
+        },
+        {
+          "id": "20-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/4e3c34c456ba11b21dbb819fbaa24972a93db077bb3952953beca3a562b8fe1d.webp",
+          "thumbUrl": "/v3/media/d8dcee70a86d73dc128183822c91ce73b5cac815f8f1d04501bfa7610ceec3da.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/585df652be31b869f5f97d5e77c92c2b28072296b879928ec36cf5a6e39082b2.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/585df652be31b869f5f97d5e77c92c2b28072296b879928ec36cf5a6e39082b2.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 21,
+      "mode": "hard",
+      "name": "北-T门",
+      "displayName": "北-T门",
+      "remarks": "北侧入口，呈现T字形墙体接口",
+      "sort": 250,
+      "legacyNames": [
+        "北-T门"
+      ],
+      "entrances": [
+        {
+          "id": "21-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/f4dde24b62b5dd47faffe7e8fecdb99d98e22b2bb2e9f71c12b8f6ee52920fe9.webp",
+          "thumbUrl": "/v3/media/53fe7d0a1d2c347759fbc6bdc983efb6595b7668d5370acca7ea014e543635e5.webp"
+        },
+        {
+          "id": "21-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/f4dde24b62b5dd47faffe7e8fecdb99d98e22b2bb2e9f71c12b8f6ee52920fe9.webp",
+          "thumbUrl": "/v3/media/53fe7d0a1d2c347759fbc6bdc983efb6595b7668d5370acca7ea014e543635e5.webp"
+        },
+        {
+          "id": "21-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/f4dde24b62b5dd47faffe7e8fecdb99d98e22b2bb2e9f71c12b8f6ee52920fe9.webp",
+          "thumbUrl": "/v3/media/53fe7d0a1d2c347759fbc6bdc983efb6595b7668d5370acca7ea014e543635e5.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/5baef4891808560b78901a1328a446da545b88399253c785e9020af878641694.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/5baef4891808560b78901a1328a446da545b88399253c785e9020af878641694.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 22,
+      "mode": "hard",
+      "name": "北-红对角门",
+      "displayName": "北-红对角门",
+      "remarks": "北侧入口，带有红色标识的对角侧门",
+      "sort": 260,
+      "legacyNames": [
+        "北-红对角门"
+      ],
+      "entrances": [
+        {
+          "id": "22-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/5b6161b595e1ce1224856c646cbb421ff4c8a8eb9d198e138ec5695a4720daa1.webp",
+          "thumbUrl": "/v3/media/64147a23c751c8fcafd1c334b9b4089f5e32b92821c2129744c58e2b9ebdd339.webp"
+        },
+        {
+          "id": "22-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/5b6161b595e1ce1224856c646cbb421ff4c8a8eb9d198e138ec5695a4720daa1.webp",
+          "thumbUrl": "/v3/media/64147a23c751c8fcafd1c334b9b4089f5e32b92821c2129744c58e2b9ebdd339.webp"
+        },
+        {
+          "id": "22-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/5b6161b595e1ce1224856c646cbb421ff4c8a8eb9d198e138ec5695a4720daa1.webp",
+          "thumbUrl": "/v3/media/64147a23c751c8fcafd1c334b9b4089f5e32b92821c2129744c58e2b9ebdd339.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/92e71ef82c2849e850ee748da0a42c50227a6da104d9fa18db1b9a5f26481219.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/92e71ef82c2849e850ee748da0a42c50227a6da104d9fa18db1b9a5f26481219.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 23,
+      "mode": "hard",
+      "name": "北-1沙发门",
+      "displayName": "北-1沙发门（新）",
+      "remarks": "北侧入口，单门通道变体，门内带沙发标志物",
+      "sort": 270,
+      "legacyNames": [
+        "北-1沙发门",
+        "北-1沙发门（新）"
+      ],
+      "entrances": [
+        {
+          "id": "23-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/303a22c0a30be4b1973032efff30d9d10aa8ec4ec88edfb8b7289a340fdbd509.webp",
+          "thumbUrl": "/v3/media/0b456328a6d6f7ee77ccc797602ec50c13ad0094ecc842abf9a11825531c0054.webp"
+        },
+        {
+          "id": "23-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/303a22c0a30be4b1973032efff30d9d10aa8ec4ec88edfb8b7289a340fdbd509.webp",
+          "thumbUrl": "/v3/media/0b456328a6d6f7ee77ccc797602ec50c13ad0094ecc842abf9a11825531c0054.webp"
+        },
+        {
+          "id": "23-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/303a22c0a30be4b1973032efff30d9d10aa8ec4ec88edfb8b7289a340fdbd509.webp",
+          "thumbUrl": "/v3/media/0b456328a6d6f7ee77ccc797602ec50c13ad0094ecc842abf9a11825531c0054.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/0f5beec5e31a01e527442f9ca4f085b44706bbe5da1e54557f8ab8fd9641f6fb.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/0f5beec5e31a01e527442f9ca4f085b44706bbe5da1e54557f8ab8fd9641f6fb.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 750
+          },
+          "floor2": {
+            "x": 0,
+            "y": 750,
+            "width": 900,
+            "height": 750
+          }
+        }
+      }
+    },
+    {
+      "id": 28,
+      "mode": "hard",
+      "name": "北-4安全门",
+      "displayName": "北-4安全门（新）",
+      "remarks": "北侧入口，北-4门变体，邻接安全门结构 New",
+      "sort": 280,
+      "legacyNames": [
+        "北-4安全门",
+        "北-4安全门（新）"
+      ],
+      "entrances": [
+        {
+          "id": "28-side",
+          "type": "side",
+          "typeLabel": "侧门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/8c2f0ed4215f3bef8db642a1294c9d4dfd68a0c3f7076a89b8733776a44a8f3d.webp",
+          "thumbUrl": "/v3/media/30ddb3b9301529824597d8a43a822d146913fda8024d8fd4c1a74209dec64e2e.webp"
+        },
+        {
+          "id": "28-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/8c2f0ed4215f3bef8db642a1294c9d4dfd68a0c3f7076a89b8733776a44a8f3d.webp",
+          "thumbUrl": "/v3/media/30ddb3b9301529824597d8a43a822d146913fda8024d8fd4c1a74209dec64e2e.webp"
+        },
+        {
+          "id": "28-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/8c2f0ed4215f3bef8db642a1294c9d4dfd68a0c3f7076a89b8733776a44a8f3d.webp",
+          "thumbUrl": "/v3/media/30ddb3b9301529824597d8a43a822d146913fda8024d8fd4c1a74209dec64e2e.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/bb4d0fc31a97e13ed572efde4252774cc89d4575e8e2f9a59c9276afcf8250cf.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/bb4d0fc31a97e13ed572efde4252774cc89d4575e8e2f9a59c9276afcf8250cf.webp",
+        "imageWidth": 900,
+        "imageHeight": 1500,
+        "regions": {
+          "floor1": {
+            "x": 0,
+            "y": 0,
+            "width": 900,
+            "height": 748
+          },
+          "floor2": {
+            "x": 0,
+            "y": 748,
+            "width": 900,
+            "height": 752
+          }
+        }
+      }
+    },
+    {
+      "id": 41,
+      "mode": "nightmare",
+      "name": "右-长Z门",
+      "displayName": "右-长Z门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 290,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "41-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "both",
+          "passageLabel": "左右门",
+          "imageUrl": "/v3/media/b6332caae4ebd8b811c7ed106aa478a83966351c19a9e1ed63a9641365471609.webp",
+          "thumbUrl": "/v3/media/b6825e7d626c07d8851722285ff0c0d1fd8deb79cdca853f1662f0437a559d03.webp"
+        },
+        {
+          "id": "41-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/f2928108707810f9b55564837e42a725c708efbc0f9a5d0004c985421d7f3974.webp",
+          "thumbUrl": "/v3/media/d1f0c4295ad116171001cb854d41d99dda221bfb710b41a6acb4a9438af3d178.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/8b620e4bb027315c5ca2e67dd58bc085824de72d6cb965cf7658b30b0c23c6d1.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/8b620e4bb027315c5ca2e67dd58bc085824de72d6cb965cf7658b30b0c23c6d1.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2207,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1394,
+            "width": 1000,
+            "height": 587
+          },
+          "floor1": {
+            "x": 0,
+            "y": 740,
+            "width": 1000,
+            "height": 680
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 762
+          }
+        }
+      }
+    },
+    {
+      "id": 40,
+      "mode": "nightmare",
+      "name": "右-短T门",
+      "displayName": "右-短T门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 300,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "40-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperLeft",
+          "passageLabel": "左上门",
+          "imageUrl": "/v3/media/2f1f913cb6bf731c498ceb635208d05ebe86f2b4c1a02fd96bac1816bc44ecd2.webp",
+          "thumbUrl": "/v3/media/cf8326c060abc19f1a70a837374659046d600fac040db9b8f2a53a0a6745dbdc.webp"
+        },
+        {
+          "id": "40-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/1852aeeb8936301c3c3e9ea54078014f534f7ae7d311bd377308a319acb56961.webp",
+          "thumbUrl": "/v3/media/48b073f8f1acf38dcceb8c56cebcbc58e74c42698abecb8c1d8149da5bfbd363.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/1ae441c5a39cafe95b074b665e7e6f4cc66fb41ec835f122f137eb755a866a29.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/1ae441c5a39cafe95b074b665e7e6f4cc66fb41ec835f122f137eb755a866a29.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1670,
+            "width": 1000,
+            "height": 595
+          },
+          "floor1": {
+            "x": 0,
+            "y": 820,
+            "width": 1000,
+            "height": 860
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 820
+          }
+        }
+      }
+    },
+    {
+      "id": 38,
+      "mode": "nightmare",
+      "name": "右-仙人掌门",
+      "displayName": "右-仙人掌门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 310,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "38-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/3fc9ed5d5fe6e1db48164de886ce283d8ea58105571dbc4a82dabc63d35df693.webp",
+          "thumbUrl": "/v3/media/393f6183af60f4fcd1e61feb604736e49c184b9854915cf03b1fd83e6ca8952d.webp"
+        },
+        {
+          "id": "38-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/f68cec90364eec34263208e540cf78f3aaca30b709a90fc629ecd4818e61a840.webp",
+          "thumbUrl": "/v3/media/a94086968147237096fa44ed788ddac82a6e2e9d7e159e6023543896846c3af8.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/a7e3e5342667d3d28cc9ed82e3652362ea766dc90ff90b7b7720e9d9837694eb.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/a7e3e5342667d3d28cc9ed82e3652362ea766dc90ff90b7b7720e9d9837694eb.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1742,
+            "width": 1000,
+            "height": 537
+          },
+          "floor1": {
+            "x": 0,
+            "y": 868,
+            "width": 1000,
+            "height": 894
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 850
+          }
+        }
+      }
+    },
+    {
+      "id": 37,
+      "mode": "nightmare",
+      "name": "右-闪一电门",
+      "displayName": "右-闪一电门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 320,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "37-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/62818415360d0f1d1c2f6173135820a91f01872e9941b7285a56fd194d59f87a.webp",
+          "thumbUrl": "/v3/media/329be78827075313bd7775c63d98e2929d3ae315ff455b2b45106db2e91a851b.webp"
+        },
+        {
+          "id": "37-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/21201f1558152149ef625f1a8fb5b586a0c6d7b1c62036a08e19c479fa8fad51.webp",
+          "thumbUrl": "/v3/media/10f71d2b8d48e246bbb449aab0fae7524d6b6e55fedff276e6731e5a72c7e70c.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/994f7db7e22ec485e6155338115c3379232d78e3ce76fec7454393b611fcd1ec.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/994f7db7e22ec485e6155338115c3379232d78e3ce76fec7454393b611fcd1ec.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1660,
+            "width": 1000,
+            "height": 540
+          },
+          "floor1": {
+            "x": 0,
+            "y": 821,
+            "width": 1000,
+            "height": 856
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 839
+          }
+        }
+      }
+    },
+    {
+      "id": 39,
+      "mode": "nightmare",
+      "name": "右-断C门",
+      "displayName": "右-断C门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 330,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "39-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/47db7020128dd604a2d7c593749add8f8aeb0681c5e3bc6aa01cf7e251001a08.webp",
+          "thumbUrl": "/v3/media/97316a53d8d498a8a0d046ffb4ea1f337cd014509b6e6afd60106bc0d3e1377b.webp"
+        },
+        {
+          "id": "39-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/09b99b6f0706359b898c360f3019f198bf20612b28a14c3c39e848bbe5c3387d.webp",
+          "thumbUrl": "/v3/media/488a17edce409eb0de64fe1d530fddc73f554e78293f1306031b071149e664d5.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/3690827808663830801a9aabb6dcf6d42356f4e038d4d24f2b468783d0327662.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/3690827808663830801a9aabb6dcf6d42356f4e038d4d24f2b468783d0327662.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1627,
+            "width": 1000,
+            "height": 554
+          },
+          "floor1": {
+            "x": 0,
+            "y": 794,
+            "width": 1000,
+            "height": 841
+          },
+          "floor2": {
+            "x": 0,
+            "y": 22,
+            "width": 1000,
+            "height": 785
+          }
+        }
+      }
+    },
+    {
+      "id": 36,
+      "mode": "nightmare",
+      "name": "右-C门",
+      "displayName": "右-C门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 340,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "36-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/0fd86aa3e5ce7545b5e186574a54896aafd86a9bdfe3fc53fca0ec5362684f04.webp",
+          "thumbUrl": "/v3/media/66ecea204bc8a0e3ac798a00edaefd14793b96acd27c277ba03ab3fa83628e5e.webp"
+        },
+        {
+          "id": "36-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "right",
+          "directionLabel": "右",
+          "imageUrl": "/v3/media/d9d0724143b863cb1a0b4799fffe87c6ca17dbad671f65984a2ef78033cddddb.webp",
+          "thumbUrl": "/v3/media/3329d1626a8547e2aabb718873d9de5aeb0cbcaa69a9e79a0a08c9331f9eea2a.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/a33a12caeea53cec986af470289669a42c4f665ffeb9a6ace55b81e75204a0e3.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/a33a12caeea53cec986af470289669a42c4f665ffeb9a6ace55b81e75204a0e3.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2926,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1956,
+            "width": 1000,
+            "height": 721
+          },
+          "floor1": {
+            "x": 0,
+            "y": 900,
+            "width": 1000,
+            "height": 1070
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 900
+          }
+        }
+      }
+    },
+    {
+      "id": 35,
+      "mode": "nightmare",
+      "name": "南-H门",
+      "displayName": "南-H门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 350,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "35-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperLeft",
+          "passageLabel": "左上门",
+          "imageUrl": "/v3/media/7c1ba4b7a7986df4d7dcf5a53bf77645e10e130e757a1dd3867071d8cff96787.webp",
+          "thumbUrl": "/v3/media/dd2b638d298006e83469426cca53390aff871597e8ebf04ebd0743f9b8ef37f5.webp"
+        },
+        {
+          "id": "35-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/fa622d0c29c32cd514025d9874b4c7d180188bdf23586fff77636590ce00e8d6.webp",
+          "thumbUrl": "/v3/media/a2234066ca3fce0de4a8d8e2958f483c1dc412ffe1d1e10ef10a474134d7dbf3.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/06ab68fe78cf8def19c04a39d9c808008a50f260e9fbbac57a65086559128fa2.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/06ab68fe78cf8def19c04a39d9c808008a50f260e9fbbac57a65086559128fa2.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1480,
+            "width": 1000,
+            "height": 720
+          },
+          "floor1": {
+            "x": 0,
+            "y": 653,
+            "width": 1000,
+            "height": 839
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 666
+          }
+        }
+      }
+    },
+    {
+      "id": 34,
+      "mode": "nightmare",
+      "name": "南-3红门",
+      "displayName": "南-3红门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 360,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "34-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "both",
+          "passageLabel": "左右门",
+          "imageUrl": "/v3/media/951f222cceede4dd961d46cced73c48d5c09ecdba8eb2e41ab343f7a80f532b6.webp",
+          "thumbUrl": "/v3/media/1056e341a9b90c3cd266885f298257ca0120c053649358647bc8652868153fcc.webp"
+        },
+        {
+          "id": "34-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/92ea31bc2832c7cbb00fcc1729fd5a897f4585412ba8bddf210aea31b87f994d.webp",
+          "thumbUrl": "/v3/media/80b9b965c29a56415c80667853db9b8abe5507ae5d06951d79672f66d6097204.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/74c765c62c6df7130af5af6544a576e1587677608bc4c9c7dd033e6ae6c0c773.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/74c765c62c6df7130af5af6544a576e1587677608bc4c9c7dd033e6ae6c0c773.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2655,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1797,
+            "width": 1000,
+            "height": 628
+          },
+          "floor1": {
+            "x": 0,
+            "y": 850,
+            "width": 1000,
+            "height": 930
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 939
+          }
+        }
+      }
+    },
+    {
+      "id": 30,
+      "mode": "nightmare",
+      "name": "北-b门",
+      "displayName": "北-b门",
+      "remarks": "进入正门后，仅有左边和上边两个通道",
+      "sort": 370,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "30-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperLeft",
+          "passageLabel": "左上门",
+          "imageUrl": "/v3/media/d76d9ba7ccf815c3cff2da57964f5c6c324fb32a5d6e5fa9e9bf8aa96fcdd809.webp",
+          "thumbUrl": "/v3/media/ec7f09ee1a8587a07cc184170d3c04bc17a5de739b1e6068b0d19da1636dce15.webp"
+        },
+        {
+          "id": "30-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/1ac9544176c385575dbe7f07650c97f8460a4f57f2b623a038705d21e9a0b350.webp",
+          "thumbUrl": "/v3/media/09ef1aaf1acc1df281d3a47eb76298afe54fe86aa44ab2e5bfd0ca81ca64a9bf.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/f7b5e169c887ef6da750b41b26413abac4eaf8d0e2d1378947f3a0554327896f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/f7b5e169c887ef6da750b41b26413abac4eaf8d0e2d1378947f3a0554327896f.webp",
+        "imageWidth": 1000,
+        "imageHeight": 3000,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1921,
+            "width": 1000,
+            "height": 755
+          },
+          "floor1": {
+            "x": 0,
+            "y": 933,
+            "width": 1000,
+            "height": 1006
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 965
+          }
+        }
+      }
+    },
+    {
+      "id": 31,
+      "mode": "nightmare",
+      "name": "北-仙人掌门",
+      "displayName": "北-仙人掌门",
+      "remarks": "进入正门后，仅有左右两个通道",
+      "sort": 380,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "31-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "both",
+          "passageLabel": "左右门",
+          "imageUrl": "/v3/media/8e642ae1a86d01c639a5fe08c225ca7b67be0ca1f7ed7fa62c3ffb5971a752f5.webp",
+          "thumbUrl": "/v3/media/779112e8eae0686092ec58e0945651437d4185614273e3fabad499620d358901.webp"
+        },
+        {
+          "id": "31-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/558499bb6ed34e0e7e6abcea7047d07960f4e6c66cf9bdd7f50310fb46bcd798.webp",
+          "thumbUrl": "/v3/media/6a16b35ffd078ddf8f65a06716e57a3f3a9bccc84ebf2363a0448b613f606e6b.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/67a7b87421fa4fc8293bd262119d95728e1c40d8058a7edfa1c9696149b4b7ac.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/67a7b87421fa4fc8293bd262119d95728e1c40d8058a7edfa1c9696149b4b7ac.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1510,
+            "width": 1000,
+            "height": 690
+          },
+          "floor1": {
+            "x": 0,
+            "y": 640,
+            "width": 1000,
+            "height": 870
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 640
+          }
+        }
+      }
+    },
+    {
+      "id": 32,
+      "mode": "nightmare",
+      "name": "北-回门",
+      "displayName": "北-回门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 390,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "32-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/1d664c813dced6cd1009bc73fe89df10161a8f7c136d234ccd5c05c51b212aea.webp",
+          "thumbUrl": "/v3/media/441d6126cdc83fffc66f3daa5bcbf52847b984677855742ca4c545b4b009bcf7.webp"
+        },
+        {
+          "id": "32-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/e4b3ec29c4f4a55a87e8b8b7a1ecf800e79823aa693db1258f3b7a6c25fcf108.webp",
+          "thumbUrl": "/v3/media/42aa2a634590f7a3a324198cfee7d7c76e85606f4d9f1e57cd60fcb1b1965c65.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/fe9ada023ca1e586af02db080e01d01fb1a1599027fb7e55f7984dc58a393220.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/fe9ada023ca1e586af02db080e01d01fb1a1599027fb7e55f7984dc58a393220.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1572,
+            "width": 1000,
+            "height": 604
+          },
+          "floor1": {
+            "x": 0,
+            "y": 777,
+            "width": 1000,
+            "height": 821
+          },
+          "floor2": {
+            "x": 0,
+            "y": 24,
+            "width": 1000,
+            "height": 777
+          }
+        }
+      }
+    },
+    {
+      "id": 29,
+      "mode": "nightmare",
+      "name": "北-Z1门",
+      "displayName": "北-Z1门",
+      "remarks": "进入正门后，三方均有通道",
+      "sort": 400,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "29-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/10fb8363464b26680e7347c7adb23d215155c61c13ce41f134b29123e7577a05.webp",
+          "thumbUrl": "/v3/media/497ee1a506439409904143b0506c30e570bb2c0e545c588da2769830aa3e03f7.webp"
+        },
+        {
+          "id": "29-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/c6e7ae39d5ce8badf0fbc4a7e06fe15c9d800ec7ce2a35dc94557681afa8724d.webp",
+          "thumbUrl": "/v3/media/e0154746c3bf9f4b3a5c1d8c1a64619b7a0d030019a3768f36c3c806ccfb9460.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/4aa0c59066195b734159c5cba67cc948c25c243a5dbfabf124fbc420ddfac173.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/4aa0c59066195b734159c5cba67cc948c25c243a5dbfabf124fbc420ddfac173.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1660,
+            "width": 1000,
+            "height": 540
+          },
+          "floor1": {
+            "x": 0,
+            "y": 866,
+            "width": 1000,
+            "height": 807
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 840
+          }
+        }
+      }
+    },
+    {
+      "id": 33,
+      "mode": "nightmare",
+      "name": "北-骑士门",
+      "displayName": "北-骑士门",
+      "remarks": "进入正门后，仅有右边和上边两个通道",
+      "sort": 410,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "33-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/f497e090880a1d1cb3555a811ed6b11331a8e98665ccc9904afc1e3924f2ec31.webp",
+          "thumbUrl": "/v3/media/108a01216f4684006af49939ffdffc384dd87e56a5c70615b482f143869c9ba8.webp"
+        },
+        {
+          "id": "33-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "north",
+          "directionLabel": "北",
+          "imageUrl": "/v3/media/8cf2e380f7b725d12e90de7a06590fb19956d7bff52a62e6547613b666a40029.webp",
+          "thumbUrl": "/v3/media/1dd2cb16c2d7ed84b9bc29da3b67b9a3df242e24781907c30edf1583b386038a.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/7833a3a83450847a6a2a972bae6aa3613b9e652965cb35b0e78d0a10d39dc55f.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/7833a3a83450847a6a2a972bae6aa3613b9e652965cb35b0e78d0a10d39dc55f.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1500,
+            "width": 1000,
+            "height": 700
+          },
+          "floor1": {
+            "x": 0,
+            "y": 751,
+            "width": 1000,
+            "height": 785
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 740
+          }
+        }
+      }
+    },
+    {
+      "id": 43,
+      "mode": "nightmare",
+      "name": "左-竖1图书走廊门",
+      "displayName": "左-竖1图书走廊门",
+      "remarks": "",
+      "sort": 420,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "43-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperLeft",
+          "passageLabel": "左上门",
+          "imageUrl": "/v3/media/a143fda00d0960925d821c8694fa0ceca89f359270a128aaef2aef859fc80357.webp",
+          "thumbUrl": "/v3/media/fd5e5ddb3aad5138fc00d31fcfb785fb88c11803323e8b9652ce5f42b75f0ea2.webp"
+        },
+        {
+          "id": "43-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/8cc825cd44c33b8e1629897522c50df94bcb87f0ab8d0ea421bbb2cca49ad50c.webp",
+          "thumbUrl": "/v3/media/60b8916d5b3d516e52675fd5a985874c24f2a9731d6ead2e119f6915c0d81876.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/5e241d0b2a855870ba0b5d0f02fb284a51e9be77209753977ce028e88adbf608.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/5e241d0b2a855870ba0b5d0f02fb284a51e9be77209753977ce028e88adbf608.webp",
+        "imageWidth": 829,
+        "imageHeight": 1560,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1011,
+            "width": 829,
+            "height": 543
+          },
+          "floor1": {
+            "x": 0,
+            "y": 537,
+            "width": 829,
+            "height": 496
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 519
+          }
+        }
+      }
+    },
+    {
+      "id": 46,
+      "mode": "nightmare",
+      "name": "左-竖L门",
+      "displayName": "左-竖L门",
+      "remarks": "",
+      "sort": 430,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "46-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "both",
+          "passageLabel": "左右门",
+          "imageUrl": "/v3/media/b1a66d9606f5de398a652a473bc5f5699e4c6ba6a3067a8233e43b430a84b681.webp",
+          "thumbUrl": "/v3/media/80e1218236d491a1c4537c33c3a8f65e4dca36487d2e05da2a0d4257518dc64d.webp"
+        },
+        {
+          "id": "46-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/544d6b8a6971caac4b335227c0dd024f8c755587e7cd2bc8fefdb03c9ec7f59a.webp",
+          "thumbUrl": "/v3/media/a28aa71c0a828a372ff8ad0accb69376387874d5ef8ebb32cfaee4446f4e4f67.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/92f7b763a7eb8cc12925ef6e5fe4c90ca685f15933fd1746197a9a64bcb38cfe.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/92f7b763a7eb8cc12925ef6e5fe4c90ca685f15933fd1746197a9a64bcb38cfe.webp",
+        "imageWidth": 829,
+        "imageHeight": 1827,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1055,
+            "width": 829,
+            "height": 536
+          },
+          "floor1": {
+            "x": 0,
+            "y": 486,
+            "width": 829,
+            "height": 559
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 620
+          }
+        }
+      }
+    },
+    {
+      "id": 44,
+      "mode": "nightmare",
+      "name": "左-竖1图书门",
+      "displayName": "左-竖1图书门",
+      "remarks": "",
+      "sort": 440,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "44-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "both",
+          "passageLabel": "左右门",
+          "imageUrl": "/v3/media/9d1b0ab4634eb5859bf213d8d957ad0d50dedd5fefae21d948514e795e2b4de7.webp",
+          "thumbUrl": "/v3/media/d269b1c0c851d331c7be8acd370dc3bfede045da99351cf1571b6c4c10948e31.webp"
+        },
+        {
+          "id": "44-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/a90125a5811951a167568663edbe6544c190e4cd997121e5fa6e8d398f919815.webp",
+          "thumbUrl": "/v3/media/bf8444fa562f29d3d34c4fb3b089d9d6242647694db643991b05f10e83a5891a.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/045131c0a46753a7d7a08f7b26267d2698070ea218ae7e5550c372636b62048c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/045131c0a46753a7d7a08f7b26267d2698070ea218ae7e5550c372636b62048c.webp",
+        "imageWidth": 829,
+        "imageHeight": 1827,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1066,
+            "width": 829,
+            "height": 537
+          },
+          "floor1": {
+            "x": 0,
+            "y": 510,
+            "width": 829,
+            "height": 562
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 829,
+            "height": 571
+          }
+        }
+      }
+    },
+    {
+      "id": 45,
+      "mode": "nightmare",
+      "name": "左-倒T门",
+      "displayName": "左-倒T门",
+      "remarks": "",
+      "sort": 450,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "45-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/9e424bfa846d65a30badffeb862e82af7ebf8624bcc1f3adbec89ef9e32a076f.webp",
+          "thumbUrl": "/v3/media/2a4f3facb7b21945d2c7e6a99c16f3465ced7a76ce10ba696d35bec0c432cecd.webp"
+        },
+        {
+          "id": "45-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/b8cf66ebece393ae47957f7417dfd0a4145cd9d2251a6e936365bdd281b0988f.webp",
+          "thumbUrl": "/v3/media/07a24d7b1d6b4739a468ca15c54d17e32936dff68c8bedd1baea7bcbb32cfc02.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/37e079ae8b0dcaaa72804b449e06fc9f6cd9050b87e57c0d6a1a2a513fa8fdde.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/37e079ae8b0dcaaa72804b449e06fc9f6cd9050b87e57c0d6a1a2a513fa8fdde.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2489,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1457,
+            "width": 1000,
+            "height": 696
+          },
+          "floor1": {
+            "x": 0,
+            "y": 772,
+            "width": 1000,
+            "height": 714
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 801
+          }
+        }
+      }
+    },
+    {
+      "id": 47,
+      "mode": "nightmare",
+      "name": "南-悬空桌门",
+      "displayName": "南-悬空桌门",
+      "remarks": "",
+      "sort": 460,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "47-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/104437e0d1f9c62473f3bcb21ed0568e2b9e48eae9adb395c26f4a496d357b35.webp",
+          "thumbUrl": "/v3/media/42f1eff21d7c5a45830ac92486bf252c6e8db8290db1599b189d3c94311d54bd.webp"
+        },
+        {
+          "id": "47-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/bfef3d4cc57581867e3cb757bde55149bf1439f36551e4d54b5e8233f399c16b.webp",
+          "thumbUrl": "/v3/media/d26f06345ee94782495056e0decc5ac23af2f5d3e13e50a2e93ab24a795a33dd.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/f8f84ce25f41ca066488cbd49dcb0a5152edded0e967df56fedb73fc09dddc9d.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/f8f84ce25f41ca066488cbd49dcb0a5152edded0e967df56fedb73fc09dddc9d.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1524,
+            "width": 1000,
+            "height": 645
+          },
+          "floor1": {
+            "x": 0,
+            "y": 753,
+            "width": 1000,
+            "height": 792
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 804
+          }
+        }
+      }
+    },
+    {
+      "id": 48,
+      "mode": "nightmare",
+      "name": "左 - 11图",
+      "displayName": "左 - 11图",
+      "remarks": "左 - 11图（09.17更新）",
+      "sort": 470,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "48-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperLeft",
+          "passageLabel": "左上门",
+          "imageUrl": "/v3/media/3d1581b08e054d2763aa91cbfaa38c090ed68fcd807b9fd81ba2bf5a5cfc6175.webp",
+          "thumbUrl": "/v3/media/968b4f1b5edc5475cb7c6c35a067d228fec554968460b1dd92c6807da23b3057.webp"
+        },
+        {
+          "id": "48-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/3a6b0ad7fd1a05d464502a6eb40c1ac293ffd7c8e46e10608ec6ad40086df181.webp",
+          "thumbUrl": "/v3/media/24bc6b0d75b68711bf48a9e4fac2717cc9723fd3b9ac9035a8163297e140d843.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/22b59bae375a87ca940fae40eae24cf02ed2ef946d8eb874c4c892df6475432b.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/22b59bae375a87ca940fae40eae24cf02ed2ef946d8eb874c4c892df6475432b.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1490,
+            "width": 1000,
+            "height": 701
+          },
+          "floor1": {
+            "x": 0,
+            "y": 750,
+            "width": 1000,
+            "height": 762
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 770
+          }
+        }
+      }
+    },
+    {
+      "id": 49,
+      "mode": "nightmare",
+      "name": "左 - 竖5床房",
+      "displayName": "左 - 竖5床房",
+      "remarks": "左 - 竖5床房（09.17更新）",
+      "sort": 480,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "49-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/b1d7b39e484732755369b32770b7362346383e827acd1ce0ba0a08a6edf47346.webp",
+          "thumbUrl": "/v3/media/c3e6eedcd8f167f87f2ebc2e5a5c68a575006349d9b93746df7b30d77db5853f.webp"
+        },
+        {
+          "id": "49-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/48b89dab93e877550db9b33d7900de29c61792e5f459689a548574468c48e2b5.webp",
+          "thumbUrl": "/v3/media/5aba06add7bf0d50ac0bba796bf36eec110e114f4ff535440fcd9cade1041525.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/1cabb3a55289c2e97036bf2b1ff76cbb9a56cdbf3d374e420b7f9e6250173a9b.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/1cabb3a55289c2e97036bf2b1ff76cbb9a56cdbf3d374e420b7f9e6250173a9b.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2156,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1533,
+            "width": 1000,
+            "height": 623
+          },
+          "floor1": {
+            "x": 0,
+            "y": 763,
+            "width": 1000,
+            "height": 762
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 812
+          }
+        }
+      }
+    },
+    {
+      "id": 50,
+      "mode": "nightmare",
+      "name": "左 - 竖拐角楼梯门",
+      "displayName": "左 - 竖拐角楼梯门",
+      "remarks": "左 - 竖拐角楼梯门（09.17更新）",
+      "sort": 490,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "50-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "upperRight",
+          "passageLabel": "右上门",
+          "imageUrl": "/v3/media/eaa8e6b7dd917af7eddb1a014c6e18ea8fbca7a01dab91c508324aeef089cff8.webp",
+          "thumbUrl": "/v3/media/a7a3b1b014b434d810b8ec010834681680a760c643ea8d1afac463b3077f53e1.webp"
+        },
+        {
+          "id": "50-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/4ae3a1b6e79d09f4d9d27f79540532394f23489a2e7228e8a822aee6a6d2e2f2.webp",
+          "thumbUrl": "/v3/media/8bb1681eb70736f16d9262ccbbfbd154a05ce8998df79c5b8ff443f48dd84e41.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/3af6e39269eb0cf9d35ba82fbfbc0583a832e9152894e1ab6d37b122d15347ed.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/3af6e39269eb0cf9d35ba82fbfbc0583a832e9152894e1ab6d37b122d15347ed.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1469,
+            "width": 1000,
+            "height": 790
+          },
+          "floor1": {
+            "x": 0,
+            "y": 724,
+            "width": 1000,
+            "height": 811
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 828
+          }
+        }
+      }
+    },
+    {
+      "id": 57,
+      "mode": "nightmare",
+      "name": "左-骑士门",
+      "displayName": "左-骑士门",
+      "remarks": "",
+      "sort": 520,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "57-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/5113ac9270247aba36301f01c9d7079a8df5e6a93da659560994d7e409996cc6.webp",
+          "thumbUrl": "/v3/media/a794a8a4bb4d5122295ece2aa8f3b1e36e3384e6609fc3d1aae42e3c01fba829.webp"
+        },
+        {
+          "id": "57-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/6c7a1c8dec75238bc6852b8b60bc3edfe73b59b3353ba18b163fdf765f4b2e95.webp",
+          "thumbUrl": "/v3/media/9ac7ae8f86d67ffb48fbda189d92bd52dce6a3f2d66d65088944913e7ecebb73.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/6bc997142f916797366983b7d73eda631ade21c773d8aaaea8a8324aff1a0c9a.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/6bc997142f916797366983b7d73eda631ade21c773d8aaaea8a8324aff1a0c9a.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1512,
+            "width": 1000,
+            "height": 733
+          },
+          "floor1": {
+            "x": 0,
+            "y": 784,
+            "width": 1000,
+            "height": 752
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 803
+          }
+        }
+      }
+    },
+    {
+      "id": 52,
+      "mode": "nightmare",
+      "name": "左 - 1竖图书走廊门",
+      "displayName": "左 - 1竖图书走廊门",
+      "remarks": "",
+      "sort": 530,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "52-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/2ecf2a32b66062e2a31d715f8d58c8aee75afd8c1639cf513aa26e30eb7bcd57.webp",
+          "thumbUrl": "/v3/media/80e88b57d622f0052c2c8355b37ca7e7f0f7b255cb1aa660dbda4d9844b83682.webp"
+        },
+        {
+          "id": "52-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/3ce5defea6db70c65e747c83421212a08a5c27f82867ef12f3ebb1e428e625ac.webp",
+          "thumbUrl": "/v3/media/dbc2f9aec31f4f6df02805ecfdb33e746a6794f38eb4621e6b372488c234774d.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/435dd6f0f5e4a2abae97dea017277efd95cabd1e8cdc58e7b3155302b7ee0c3a.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/435dd6f0f5e4a2abae97dea017277efd95cabd1e8cdc58e7b3155302b7ee0c3a.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 38,
+            "y": 1574,
+            "width": 962,
+            "height": 654
+          },
+          "floor1": {
+            "x": 0,
+            "y": 761,
+            "width": 1000,
+            "height": 848
+          },
+          "floor2": {
+            "x": 0,
+            "y": 41,
+            "width": 1000,
+            "height": 739
+          }
+        }
+      }
+    },
+    {
+      "id": 53,
+      "mode": "nightmare",
+      "name": "南 - n门",
+      "displayName": "南 - n门",
+      "remarks": "",
+      "sort": 540,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "53-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/ae630da924afc4af1c2950e477c6f47158d490d2863d18539d155f57ceab4e30.webp",
+          "thumbUrl": "/v3/media/b018e97e3351de54e7b964555d5669137b05bfe4383c6c8208c6c2e5f61f79f5.webp"
+        },
+        {
+          "id": "53-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "south",
+          "directionLabel": "南",
+          "imageUrl": "/v3/media/e1f51bcf3fed8ad0184ec4ecabf2054d9c5a389f69cb48b2896d0eeb708c7946.webp",
+          "thumbUrl": "/v3/media/c27ad834e18df95eeb7ee3419976f94a2f8ca7e42198c2f8c488c86db90e3469.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/4735754d917e3b31f59d351cfa5f8ff7c514f216b1b9960506dffb38bf9c237c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/4735754d917e3b31f59d351cfa5f8ff7c514f216b1b9960506dffb38bf9c237c.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2500,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1530,
+            "width": 1000,
+            "height": 648
+          },
+          "floor1": {
+            "x": 0,
+            "y": 786,
+            "width": 1000,
+            "height": 761
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 803
+          }
+        }
+      }
+    },
+    {
+      "id": 54,
+      "mode": "nightmare",
+      "name": "左 - 骑士1门",
+      "displayName": "左 - 骑士1门",
+      "remarks": "",
+      "sort": 550,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "54-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/c58897029b01ac475574fa0f4e7dd0302c284c203a107362e432d0fddebe9490.webp",
+          "thumbUrl": "/v3/media/726e8fb0e1d6ac09710f92a94c298c532e83376299ba8ace1dd5b5af4d4314b8.webp"
+        },
+        {
+          "id": "54-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/5bc33173b093f9d4b47920bfe3f9e1608a4313ef3ed52b3a7fcffc38ca5ecc5e.webp",
+          "thumbUrl": "/v3/media/a11c47321bc28412540db2c06279c2465cabdd2934b7a3e7b6212df4513ac2f3.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/d3c3a1f7a24eec5578f1c9f80cc5e8978c8be56aaf33aa592cfe1730be72f300.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/d3c3a1f7a24eec5578f1c9f80cc5e8978c8be56aaf33aa592cfe1730be72f300.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2213,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1581,
+            "width": 1000,
+            "height": 630
+          },
+          "floor1": {
+            "x": 0,
+            "y": 748,
+            "width": 1000,
+            "height": 851
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 757
+          }
+        }
+      }
+    },
+    {
+      "id": 55,
+      "mode": "nightmare",
+      "name": "左-十字门",
+      "displayName": "左-十字门",
+      "remarks": "",
+      "sort": 560,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "55-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/ea0238d7630a6edb8efe16ec244f208632e59a5672c6f0869e1bd5882efe7b30.webp",
+          "thumbUrl": "/v3/media/49378a6b6e779a14392ad5cde0e2a8ac1845ee8541ad1ef5551f5de9e3eaee46.webp"
+        },
+        {
+          "id": "55-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/911b4e4eabc469b4b7957f8526ec4a4fb843077307819903de4a7411599264e1.webp",
+          "thumbUrl": "/v3/media/8c587cdb11a90ccca5bfda2a63b04d034477139f4e7ad27de1456454ad495e7c.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/9be6737f2f0228973abe9d78bb007c0ae18970cda1d4ae75f2f7253a932b7a44.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/9be6737f2f0228973abe9d78bb007c0ae18970cda1d4ae75f2f7253a932b7a44.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2220,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1526,
+            "width": 1000,
+            "height": 678
+          },
+          "floor1": {
+            "x": 0,
+            "y": 726,
+            "width": 1000,
+            "height": 820
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 738
+          }
+        }
+      }
+    },
+    {
+      "id": 56,
+      "mode": "nightmare",
+      "name": "左-z门",
+      "displayName": "左-z门",
+      "remarks": "",
+      "sort": 570,
+      "legacyNames": [],
+      "entrances": [
+        {
+          "id": "56-front",
+          "type": "front",
+          "typeLabel": "正门",
+          "direction": "south",
+          "directionLabel": "南",
+          "passage": "triple",
+          "passageLabel": "三门",
+          "imageUrl": "/v3/media/6ec5e69999aaa50231f84848f1fe598584f65a6e02d7b66f0deba938b2fb85ef.webp",
+          "thumbUrl": "/v3/media/c81ab563bbc6248202c818f6581ef38e63ff2d55b452e0771cd660c47995cfa8.webp"
+        },
+        {
+          "id": "56-upstairs",
+          "type": "upstairs",
+          "typeLabel": "二楼门",
+          "direction": "left",
+          "directionLabel": "左",
+          "imageUrl": "/v3/media/b5e971bb7ae785d76e401e0cc2f31799daee3d2f0e411893d0e4e60342c5ce08.webp",
+          "thumbUrl": "/v3/media/615ab39c7dd4079de42397868fe1a7a42be289c2720b986876d6578569d676c5.webp"
+        }
+      ],
+      "gameMapId": "lady-of-doom",
+      "floorImages": {
+        "full": {
+          "url": "/v3/media/5e2cd65f2a498dfb38c8c558ad6a180bc3f95cc8ce7aebb206f23b8e1c5263a7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/v3/media/5e2cd65f2a498dfb38c8c558ad6a180bc3f95cc8ce7aebb206f23b8e1c5263a7.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2209,
+        "regions": {
+          "basement": {
+            "x": 0,
+            "y": 1539,
+            "width": 1000,
+            "height": 670
+          },
+          "floor2": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 797
+          },
+          "floor1": {
+            "x": 0,
+            "y": 789,
+            "width": 1000,
+            "height": 765
+          }
+        }
+      }
+    }
+  ]
+}

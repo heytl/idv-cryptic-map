@@ -1,90 +1,72 @@
-# 第五人格加页手记 | 侧门入口解密攻略手册 🧭
+# 加页手记 · 静态手册与历史版本
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fheytl%2Fidv-cryptic-map)
+`main` 专门保存 Vercel 静态发布文件和发布工具。功能开发继续使用 `dev` → `production`，本分支不维护另一套前端源码。
 
-这是一个针对《第五人格》“加页手记”新模式开发的网页版互动地图攻略手册。玩家在局内可以根据侧门入口的墙体排布，快速筛选确认当前的地图布局，并查看一楼、二楼的高清攻略大图，支持无缝缩放、平移及楼层切换。
+| 地址 | 内容 |
+|---|---|
+| https://jysj.321666.xyz/ | 最新正式 UI 和地图的静态发布版 |
+| https://jysj.321666.xyz/v1/ | 最初的纯 HTML 手册，原始页面、配置和图片完整保留 |
+| https://jysj.321666.xyz/v3/ | V3 的完整静态快照，发布后不覆盖 |
+| https://jysj.321666.xyz/versions/ | 历史版本目录 |
 
----
+所有新版地图均从同站点读取本地文件，运行时不依赖正式地图 API。后台修改地图不会自动改变本静态站，需执行静态发布。页面 UI 来自锁定提交的 `production`，发布时仅适配静态资源地址、版本入口和离线缓存，不改动原有地图组件、样式或手势实现。
 
-## 🎨 视觉与交互特色
+## 更新最新静态站
 
-* **庄园暗黑哥特风**：美术设计深度参考第五人格视觉规范。使用复古羊皮纸纹理卡片、缝线饰边、金属感推拉拉杆、以及纽扣造型按钮，提灯微光背景氛围感十足。
-* **极速过滤筛选**：支持“左、右、南、北”四个方向的侧门极速动态切换。
-* **三档地图模式**：支持一楼、二楼、全图（一二楼上下合一的原图）三档平滑切换，默认加载全图。
-* **高精度地图缩放拖拽**：
-  - **电脑端**：支持鼠标左键拖拽平移、滚轮以指针为中心缩放。
-  - **移动端/iPad**：支持单指拖拽平移、双指捏合无级缩放。
-  - **悬浮工具栏**：支持一键放大、缩小、**高度铺满**（使图片上下刚好与视口贴合）及一键重置居中。
-* **离线免部署可用**：无任何外部框架依赖，支持直接双击 `site/index.html` 本地访问（无需启动本地服务器）。
+需要 Git、Node.js 24、pnpm 11。完整克隆仓库并安装 pnpm 后：
 
----
+```powershell
+git fetch origin main production
+node scripts/static/release.mjs --source-ref origin/production
+node scripts/static/verify.mjs
+node --test scripts/static/lib.test.mjs
+```
 
-## 📂 项目目录结构
+工具会锁定源码提交、下载公开配置和全部图片、构建页面、验证配置与图片，再替换 `site/`。任何下载、配置验证或构建失败都会终止，不以缺图版本替换原站。前一份 `site/` 留在 `.tmp/static-*/previous-site/`。
+
+如果已有安装好依赖且与目标提交一致的正式源码目录，可追加 `--source-dir <目录>` 复用依赖。程序会逐文件比对构建输入，忽略 Windows CRLF 差异和仅开发环境配置的注释差异。
+
+检查文件差异和浏览器验收通过后，提交 `site/` 到 `main`。现有 Vercel Git 集成继续从 `main` 发布；Vercel 使用 `site/`，无需构建命令或地图 API 环境变量。
+
+## 保存新的大版本
+
+例如正式 V4 上线后：
+
+```powershell
+node scripts/static/release.mjs --source-ref origin/production --archive v4
+```
+
+这会更新首页、创建 `/v4/` 并更新版本目录；已有 `/v1/`、`/v3/` 保持逐字节不变。已存在的版本号拒绝覆盖。小版本内容更新只更新首页；需要额外快照时可以使用 `v4.1`、`v4.1.0`。
+
+也可以在 GitHub Actions 手动运行 **Prepare static handbook**：选择 `main`，指定正式源码分支、标签或提交，新大版本填写 `archive`，日常更新留空。工作流完成下载、构建和浏览器验收后提供 `verified-static-site` 发布包和截图报告，不会自动推送或部署。审核后用发布包替换 `site/` 并提交 `main`。
+
+## 本地浏览器验收
+
+```powershell
+node scripts/static/serve.mjs
+# 另开终端；构建记录中的 source 是已安装依赖的源码目录
+$env:STATIC_SOURCE_DIR = (Get-Content .tmp/static-build.json | ConvertFrom-Json).source
+node scripts/static/browser-verify.mjs
+```
+
+默认使用本机 Chrome；CI 可设置 `STATIC_BROWSER_CHANNEL=chromium`。验收包括地图图片解码、全部布局/入口/楼层、桌面与手机布局、筛选、深链刷新、经典版、版本跳转、离线下载/重载/切层，以及不同版本的缓存隔离。截图和机器报告存于 `.tmp/static-verification/`。
+
+`source-maps-v4.json` 保存导出时的原始公开配置，`media-index.json` 记录图片来源与 SHA-256，`integrity.json` 记录版本内每个文件的校验值，`release.json` 记录 UI 提交、地图数据版本与保存时间。原始配置用于审计，实际页面只读取本地 `maps-v4.json`。
+
+## 目录
 
 ```text
-idv-cryptic-map/
-├── maps/                   # 原始图片素材（仅作裁剪源，不参与部署）
-├── site/                   # 部署根目录（Vercel / Cloudflare Pages 均指向这里）
-│   ├── public/             # 静态图片资源目录
-│   │   ├── entry/          # 裁剪好的 22 张侧门入口图
-│   │   ├── floor1/         # 裁剪好的 22 张一楼地图
-│   │   ├── floor2/         # 裁剪好的 22 张二楼地图
-│   │   ├── full/           # 22 张原始完整双层地图
-│   │   └── icons/          # 图例图标
-│   ├── index.html          # 网页主框架 HTML
-│   ├── style.css           # 哥特风格样式表
-│   ├── script.js           # 地图数据与交互逻辑核心 JS
-│   ├── maps.json           # 地图元数据 JSON（供其他系统或接口引用）
-│   └── _headers            # Cloudflare Pages 缓存响应头配置
-├── crop_images.py          # 图片自动裁剪处理 Python 脚本（须在仓库根目录运行）
-├── vercel.json             # Vercel 部署配置（outputDirectory 指向 site/）
-├── README.md               # 项目自述文档
-└── .gitignore              # Git 忽略配置文件
+site/                   Vercel 直接发布的完整站点
+  assets/               当前 UI、字体与图标
+  media/                当前地图图片，按完整 SHA-256 命名
+  v1/                   原版 site/ 的完整归档
+  v3/                   V3 独立页面、配置、图片及 PWA
+  versions/             版本目录
+scripts/static/         发布、完整性验证、浏览器验收和本地预览
+docs/                   本次改造验收记录
+maps/                   历史原素材，不参与发布
 ```
 
-> **为什么拆分 `site/` 目录？** `maps/` 中的原始素材（含一张 48MB 的一图流大图）仅用于本地裁图，不应参与部署——Cloudflare Pages 有单文件 25MiB 的硬限制。将部署文件收进 `site/`，源素材与部署产物彻底分离，两个平台均以 `site/` 为部署根。地图更新流程：新原图放入 `maps/` → 在**仓库根目录**运行 `python crop_images.py` → 生成的 `site/public/` 一并提交。
+历史版本保存的是当时的攻略，可能不适用于当前游戏。各版本 PWA 使用独立作用域和离线缓存；根目录的 worker 不处理历史版本路径。经典版仍保留原有 Google Fonts 引用，避免改动其原始页面。
 
----
-
-## 🚀 托管与一键部署到 Vercel / Cloudflare Pages
-
-本项目采用了**原生 Vanilla HTML/CSS/JS 架构**，对静态托管极其友好，具有**零构建、零配置、极速载入**的优势。部署根目录为 `site/`。
-
-### 方式一：一键部署到 Vercel (推荐)
-1. 将本项目上传至您的 GitHub 仓库。
-2. 登录 [Vercel 官网](https://vercel.com/)，点击 **Add New** ➔ **Project**。
-3. 导入您的项目 GitHub 仓库，框架预设选择 **Other**（或由 Vercel 自动识别），无需修改任何构建命令（输出目录已由仓库内 `vercel.json` 指定为 `site`）。
-4. 点击 **Deploy**，几秒钟内即可生成您的在线访问链接！
-
-### 方式二：部署到 Cloudflare Pages
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 **Workers & Pages** ➔ **Create** ➔ **Pages** ➔ **Connect to Git**。
-2. 选择您的项目 GitHub 仓库，生产分支选择 `main`。
-3. 构建设置：Framework preset 选 **None**，Build command **留空**，Build output directory 填 `site`。
-4. 点击 **Save and Deploy**，即可获得 `https://<项目名>.pages.dev` 在线访问链接（免费且不限带宽）。
-
-### 方式三：部署到 GitHub Pages
-1. 在项目 GitHub 仓库中，进入 **Settings** ➔ **Pages**。
-2. 在 **Build and deployment** 下的 Source 选择 **Deploy from a branch**。
-3. 选择 `main` 分支及 `/ (root)` 根目录，点击 **Save**。
-4. 稍等 1-2 分钟，即可通过 `https://<用户名>.github.io/<仓库名>/site/` 在线访问（注意路径需带 `site/`）。
-
----
-
-## 💻 本地运行与调试
-
-### 1. 双击直接运行
-因为所有地图元数据已直接内嵌在 `script.js` 中作为默认兜底数据，所以您可以直接双击 `site/index.html`，即可直接在 Chrome/Edge 等浏览器中运行，无需开启任何服务器，非常适合离线跑图。
-
-### 2. 通过 Python 内置服务运行（推荐调试方式）
-如果需要以网络服务器形式进行调试（Hash 路由等行为与线上完全一致），在 `site/` 目录下打开终端，执行：
-```bash
-cd site
-python -m http.server 8000
-```
-然后在浏览器中访问 [http://localhost:8000](http://localhost:8000)。
-
----
-
-## 声明与致谢
-* 本项目所用地图原素材源自《第五人格》玩家社区攻略博主 [**凉哈皮**](https://space.bilibili.com/8618005) 的公开一图流攻略。
-* 地图版权归《第五人格》官方游戏所有。
+素材来自社区作者[凉哈皮](https://space.bilibili.com/8618005)。游戏及地图版权归《第五人格》官方所有。本项目免费开放使用。
