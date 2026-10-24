@@ -1,6 +1,6 @@
 # Docker 服务器部署
 
-基于 `origin/production` 的独立部署方案。Node.js 24 单进程提供玩家端、后台与现有 API，SQLite WAL 保存配置、图片、备份及访问统计，无需 Cloudflare 账户、Redis 或额外数据库。复用 Worker 路由与业务校验，Cloudflare 原部署方式继续可用。
+统一 `production` 源码提供的可选部署方案。Node.js 24 单进程提供玩家端、后台与现有 API，SQLite WAL 保存配置、图片、备份及访问统计，无需 Cloudflare 账户、Redis 或额外数据库。复用 Worker 路由与业务校验，Cloudflare 原部署方式继续可用。
 
 ## 启动
 
@@ -82,3 +82,29 @@ docker compose build
 已有部署切勿直接更换挂载后启动空目录。先停机，将原卷 `/data` 下全部文件（含可能存在的 WAL/SHM）备份并复制到 `/opt/idv-map/data`，设置 UID/GID 1000 可写，再重新创建容器。校验数据库完整性和配置、图片、统计后再清理临时文件。原卷和迁移备份保留用于回退。
 
 服务器部署配置和源码放 `/opt/idv-map`，备份放 `/opt/backups/idv-map`；上传包、构建中转文件使用 `mktemp -d /tmp/idv-map-deploy.XXXXXX` 创建的临时目录，结束后仅清理该次创建的目录。
+
+## GitHub 镜像发布与服务器手动更新
+
+GitHub Actions → **Release** → **Run workflow**，分支选择 `production`，目标选择 `docker`（仅镜像）、`cloudflare`（仅备用 Worker）或 `both`。普通 push / PR 不发布正式站。工作流锁定启动时的完整提交 SHA，重新验证业务、CF 打包及两种架构的容器后发布；各目标独立报告结果，部分失败不会显示为整体成功。
+
+Docker 产物包含 `linux/amd64` 和 `linux/arm64`，标签为 `ghcr.io/heytl/idv-cryptic-map:<完整提交SHA>`，运行摘要提供 `sha256:...`。优先按摘要部署，避免同一标签被重新发布后漂移。首次发布若 GHCR 包为私有，服务器使用仅有 `read:packages` 的凭据登录；不要将凭据写入 `.env` 或仓库。
+
+```sh
+# 仅私有包需要：交互输入具有 read:packages 权限的凭据
+# docker login ghcr.io -u heytl
+# 先按本文“备份、恢复与升级”备份数据库并复制到服务器外。
+# 编辑 /opt/idv-map/.env，把 APP_IMAGE 设置为 Release 输出的镜像：
+# APP_IMAGE=ghcr.io/heytl/idv-cryptic-map@sha256:<摘要>
+cd /opt/idv-map
+docker compose pull app
+docker compose up -d --no-build --pull never app
+docker compose ps
+# 使用 .env 中实际配置的 PORT，默认 8080
+curl -f http://127.0.0.1:8080/healthz
+```
+
+再检查公开配置、图片、后台登录和统计。工作流不连接服务器，不自动执行升级。保留升级前镜像摘要和数据库备份；回滚时将 `APP_IMAGE` 改回旧摘要，再拉取并启动。若升级改变数据库结构，同时按恢复流程还原升级前数据库。不要只回滚代码后继续使用不兼容的数据文件。
+
+源码构建继续可用：将 `APP_IMAGE` 设为默认 `idv-cryptic-map:local`，执行 `docker compose up -d --build`。已有数据挂载、容器名及端口默认值保持不变。部署配置须使用包含此镜像选项的统一版本。
+
+PR 和分支 CI 在原生 AMD64 / ARM64 runner 上构建并检查容器健康、Bearer 管理接口、站内登录和容器重建后的 SQLite 会话持久化；业务集成测试额外覆盖图片、配置、备份和冲突检测。
