@@ -3,7 +3,8 @@
 面向《第五人格》“加页手记”玩家的互动地图攻略工具，提供 Web 与微信小程序。按地图、困难 / 噩梦模式、入口、方向或正门通道类型查找布局，再查看全图与分层攻略。
 
 - 项目站点：[idv-map.321666.xyz](https://idv-map.321666.xyz/)
-- 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（需要 Cloudflare Access 授权）
+- Cloudflare 备用入口：[idvmap.321666.xyz](https://idvmap.321666.xyz/)（主域名已切换 Oracle Docker，备用站内容尚未自动同步）
+- 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（Docker 管理密钥登录；CF 备用后台继续由 Access 保护）
 - 源码与反馈：[GitHub](https://github.com/heytl/idv-cryptic-map) · [Issues](https://github.com/heytl/idv-cryptic-map/issues)
 
 **版本状态：**V3 已于 2026-10-22 发布到正式站，公开数据使用 V4 协议，正式内容版本为 41。Web 与新版小程序共用正式统计接口，后台区分来源。发布、备份与验收见 [正式上线记录](docs/releases/V3-PRODUCTION-2026-10-22.md)，历史基线见 [V2.1.0 归档](docs/releases/V2.1.0.md)。
