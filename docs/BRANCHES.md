@@ -11,9 +11,11 @@
 
 ## 开发与正式发布
 
-功能分支 → `dev` → `production`。修复和功能只开发一次；正式分支只接收已验收提交。环境差异通过运行入口、存储适配和环境变量表达，不再按部署平台维护业务分支。AMD1 后续沿用 `dev`，本轮不部署测试站。
+功能分支 → `dev` → `production`。修复和功能只开发一次；正式分支只接收已验收提交。环境差异通过运行入口、存储适配和环境变量表达，不再按部署平台维护业务分支。AMD1 已手动部署 dev 测试站，入口和更新方式见 [测试环境](TEST-ENVIRONMENT.md)。
 
 PR、`dev`、`production` 共用业务测试、类型检查、前后台及小程序构建、PWA 升级、CF 打包和 AMD64 / ARM64 Docker 验证。`dev` 的 CF 预览发布等待全部验证通过，沿用独立 KV / R2 / D1 和 `V3_PREVIEW_D1_ID`；普通 PR 不部署 Worker。
+
+`idv-map-dev.321666.xyz` 现指向 AMD1 Docker 测试站，不随 push 自动更新；CF 自动预览继续使用 `idv-cryptic-map-v2-preview.heytl.workers.dev`，两份测试数据也相互独立。
 
 GitHub Actions → **Release** → **Run workflow**：必须选择 `production`，再选择 `docker`、`cloudflare` 或 `both`。工作流拒绝其他分支，锁定本次提交并重新验证；之后 Docker 镜像发布和 CF 发布可独立执行，各自报告状态，部分失败时整个发布失败。`production` push 不执行正式 D1 迁移或 Worker 部署。
 
