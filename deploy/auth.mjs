@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 const hash = value => createHash('sha256').update(value).digest();
 const cookieName = 'idv_admin_session';
 const lifetime = 8 * 60 * 60 * 1000;
+const rememberedLifetime = 30 * 24 * 60 * 60 * 1000;
 const windowMs = 15 * 60 * 1000;
 
 export function createAuth(db, key) {
@@ -31,14 +32,18 @@ export function createAuth(db, key) {
     const local = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host);
     return `${cookieName}=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${seconds}${local ? '' : '; Secure'}`;
   }
+  function loginPage(res, status = 200, error = '', remember = false, headers = {}, head = false) {
+    const nonce = randomBytes(18).toString('base64');
+    const escaped = error.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    res.writeHead(status, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Frame-Options': 'DENY', 'Referrer-Policy': 'same-origin', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'`, ...headers });
+    res.end(head ? undefined : html.replaceAll('__NONCE__', nonce).replace('__ERROR__', escaped).replace('__REMEMBER__', remember ? 'checked' : ''));
+  }
   async function handle(req, res, url, sameHost) {
     const path = url.pathname;
     if (path === '/admin/login') {
       if (req.method !== 'GET' && req.method !== 'HEAD') { json(res, 405, { error: '请求方式不支持' }); return true; }
       if (session(req)) { res.writeHead(303, { Location: '/admin/', 'Cache-Control': 'no-store' }); res.end(); return true; }
-      const nonce = randomBytes(18).toString('base64');
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Frame-Options': 'DENY', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'` });
-      res.end(req.method === 'HEAD' ? undefined : html.replaceAll('__NONCE__', nonce));
+      loginPage(res, 200, '', false, {}, req.method === 'HEAD');
       return true;
     }
     if (!['/auth/login', '/auth/logout', '/auth/session'].includes(path)) return false;
@@ -51,28 +56,35 @@ export function createAuth(db, key) {
       json(res, 200, { ok: true }, { 'Set-Cookie': cookie(req.headers.host, '', 0) });
       return true;
     }
+    const formLogin = req.headers['content-type']?.startsWith('application/x-www-form-urlencoded');
+    let remember = false;
+    const fail = (status, message, headers = {}) => formLogin ? loginPage(res, status, message, remember, headers) : json(res, status, { error: message }, headers);
     const now = Date.now();
     for (const [ip, bucket] of attempts) if (bucket.until <= now) attempts.delete(ip);
     const ip = req.socket.remoteAddress || 'unknown';
     const bucket = attempts.get(ip) || { count: 0, until: now + windowMs };
-    if (bucket.count >= 10) { json(res, 429, { error: '尝试次数过多，请稍后再试' }, { 'Retry-After': String(Math.ceil((bucket.until - now) / 1000)) }); return true; }
+    if (bucket.count >= 10) { fail(429, '尝试次数过多，请稍后再试', { 'Retry-After': String(Math.ceil((bucket.until - now) / 1000)) }); return true; }
     bucket.count++; attempts.set(ip, bucket);
-    if (!req.headers['content-type']?.startsWith('application/json')) { json(res, 415, { error: '请求格式不支持' }); return true; }
-    if (Number(req.headers['content-length']) > 2048) { json(res, 413, { error: '请求内容过长' }); return true; }
+    if (!formLogin && !req.headers['content-type']?.startsWith('application/json')) { fail(415, '请求格式不支持'); return true; }
+    if (Number(req.headers['content-length']) > 2048) { fail(413, '请求内容过长'); return true; }
     let body = '', value;
     for await (const chunk of req) {
       body += chunk.toString();
-      if (Buffer.byteLength(body) > 2048) { json(res, 413, { error: '请求内容过长' }); return true; }
+      if (Buffer.byteLength(body) > 2048) { fail(413, '请求内容过长'); return true; }
     }
-    try { value = JSON.parse(body); } catch { json(res, 400, { error: '请求格式错误' }); return true; }
-    if (!validKey(value?.key)) { json(res, 401, { error: '密钥不正确，请检查后重试' }); return true; }
+    try { value = formLogin ? Object.fromEntries(new URLSearchParams(body)) : JSON.parse(body); } catch { fail(400, '请求格式错误'); return true; }
+    remember = formLogin ? value.remember === 'on' : value?.remember === true;
+    if (!validKey(value?.password ?? value?.key)) { fail(401, '密钥不正确，请检查后重试'); return true; }
     attempts.delete(ip);
     db.prepare('DELETE FROM admin_sessions WHERE expires<=?').run(now);
     // Bound stored sessions even when the same key is used by automation.
     db.exec('DELETE FROM admin_sessions WHERE token_hash IN (SELECT token_hash FROM admin_sessions ORDER BY expires DESC LIMIT -1 OFFSET 99)');
     const token = randomBytes(32).toString('base64url');
-    db.prepare('INSERT INTO admin_sessions VALUES (?,?,?)').run(hash(token).toString('hex'), now + lifetime, keyHash);
-    json(res, 200, { ok: true }, { 'Set-Cookie': cookie(req.headers.host, token, lifetime / 1000) });
+    const duration = remember ? rememberedLifetime : lifetime;
+    db.prepare('INSERT INTO admin_sessions VALUES (?,?,?)').run(hash(token).toString('hex'), now + duration, keyHash);
+    const sessionCookie = cookie(req.headers.host, token, duration / 1000);
+    if (formLogin) { res.writeHead(303, { Location: '/admin/', 'Cache-Control': 'no-store', 'Set-Cookie': sessionCookie }); res.end(); }
+    else json(res, 200, { ok: true }, { 'Set-Cookie': sessionCookie });
     return true;
   }
   return { handle, authenticated };
