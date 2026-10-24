@@ -10,6 +10,10 @@ createServer(async (req, res) => {
   try {
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); res.end(); return; }
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+    // Match Vercel cleanUrls, including the redirect encountered during PWA precaching.
+    if (pathname.endsWith('/index.html')) {
+      res.writeHead(308, { Location: pathname.slice(0, -'index.html'.length) }); res.end(); return;
+    }
     let file = inside(root, '.' + (pathname === '/' ? '/index.html' : pathname));
     if ((await stat(file)).isDirectory()) {
       if (!pathname.endsWith('/')) { res.writeHead(308, { Location: pathname + '/' }); res.end(); return; }

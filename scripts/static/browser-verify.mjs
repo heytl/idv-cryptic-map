@@ -120,8 +120,7 @@ try {
   const page2 = await context2.newPage();
   for (const prefix of offlinePrefixes) {
     await page2.goto(base + prefix, { waitUntil: 'networkidle' });
-    await page2.waitForFunction(async () => (await navigator.serviceWorker.getRegistrations()).some(registration => registration.active), { timeout: 20000 });
-    await page2.reload();
+    await page2.waitForFunction(async prefix => (await navigator.serviceWorker.getRegistrations()).some(registration => new URL(registration.scope).pathname === prefix && registration.active), prefix, { timeout: 20000 });
     await page2.getByRole('button', { name: '下载地图离线包', exact: true }).click();
     await page2.getByRole('button', { name: '✓ 已可离线使用 · 复查', exact: true }).waitFor({ timeout: 120000 });
     await page2.locator('.map-card-item').first().click(); await imageLoaded(page2);
@@ -134,7 +133,7 @@ try {
   await page2.goto(base + '/v1/'); await page2.locator('.map-card-item').first().waitFor();
   await page2.goto(base + '/versions/'); await page2.getByRole('heading', { name: '历史版本', exact: true }).waitFor();
   assert((await page2.getByRole('link', { name: 'v1 · 经典旧版', exact: true }).getAttribute('href')) === '/v1/');
-  reports.push({ offlineReloadAndFloorSwitch: offlinePrefixes, isolatedWorkerScopes: scopes, oldVersionAfterNewWorker: true, versionDirectory: true });
+  reports.push({ offlineReloadAndFloorSwitch: offlinePrefixes, firstVisitPackageWithoutOnlineReload: true, isolatedWorkerScopes: scopes, oldVersionAfterNewWorker: true, versionDirectory: true });
   await context2.close();
   await writeFile(resolve(shots, 'report.json'), JSON.stringify({ target: base, verifiedAt: new Date().toISOString(), reports }, null, 2));
   console.log(JSON.stringify(reports, null, 2));

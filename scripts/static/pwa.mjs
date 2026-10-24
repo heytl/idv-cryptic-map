@@ -40,7 +40,11 @@ async function networkFirst(request, cacheName, fallback) {
     return response;
   } catch (error) {
     const saved = await cache.match(request) || (fallback && await cache.match(fallback));
-    if (saved) return saved;
+    // Vercel cleanUrls redirects index.html. A cached redirected response cannot
+    // satisfy a navigation whose redirect mode is manual (notably an offline reload).
+    if (saved) return saved.redirected ? new Response(saved.body, {
+      status: saved.status, statusText: saved.statusText, headers: saved.headers,
+    }) : saved;
     throw error;
   }
 }

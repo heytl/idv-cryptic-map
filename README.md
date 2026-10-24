@@ -51,6 +51,8 @@ node scripts/static/browser-verify.mjs
 
 默认使用本机 Chrome；CI 可设置 `STATIC_BROWSER_CHANNEL=chromium`。验收包括地图图片解码、全部布局/入口/楼层、桌面与手机布局、筛选、深链刷新、经典版、版本跳转、离线下载/重载/切层，以及不同版本的缓存隔离。截图和机器报告存于 `.tmp/static-verification/`。
 
+本地静态预览模拟 Vercel 的 `cleanUrls` 跳转，离线验收覆盖首次访问下载离线包后立即断网刷新，无需先在线刷新页面。
+
 `source-maps-v4.json` 保存导出时的原始公开配置，`media-index.json` 记录图片来源与 SHA-256，`integrity.json` 记录版本内每个文件的校验值，`release.json` 记录 UI 提交、地图数据版本与保存时间。原始配置用于审计，实际页面只读取本地 `maps-v4.json`。
 
 ## 目录
