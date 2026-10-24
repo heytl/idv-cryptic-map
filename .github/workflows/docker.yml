@@ -1,0 +1,32 @@
+name: Docker verification
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  container:
+    name: Docker (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: idv-map:test
+          cache-from: type=gha,scope=verify-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=verify-${{ matrix.arch }}
+      - name: Verify health, authentication and restart persistence
+        run: node scripts/verify-docker.mjs idv-map:test

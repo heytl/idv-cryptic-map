@@ -16,6 +16,7 @@
     "verify:e2e": "node apps/web/scripts/verify-e2e.mjs",
     "verify:regions": "node apps/web/scripts/verify-regions.mjs",
     "verify:pwa": "node apps/web/scripts/verify-pwa.mjs",
+    "verify:pwa:update": "node apps/web/scripts/verify-pwa-update.mjs",
     "dev:miniprogram": "pnpm --filter miniprogram dev:mp-weixin",
     "build:miniprogram": "pnpm --filter miniprogram typecheck && pnpm --filter miniprogram build:mp-weixin",
     "build:miniprogram:preview": "pnpm --filter miniprogram typecheck && pnpm --filter miniprogram build:preview"

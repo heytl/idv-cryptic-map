@@ -1,0 +1,15 @@
+.git
+node_modules
+**/node_modules
+**/dist
+.pnpm-store
+.tmp
+.wrangler
+.kilo
+.agents
+.codex
+.aws
+maps
+data
+**/.env*
+*.log

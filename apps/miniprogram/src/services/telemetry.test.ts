@@ -1,0 +1,27 @@
+import { afterEach, expect, it, vi } from "vitest";
+vi.mock("./content", () => ({ apiOrigin: "https://primary.test" }));
+import { createMiniProgramVisitTracker } from "./telemetry";
+afterEach(() => vi.unstubAllGlobals());
+it("posts one valid event per detail visit, not on floor changes or foreground return", () => {
+  const request = vi.fn();
+  vi.stubGlobal("uni", { request });
+  const tracker = createMiniProgramVisitTracker();
+  const layout = { gameMapId: "lady-of-doom", layoutId: 1, entranceId: "1-side" };
+  tracker.navigate(layout, false, true);
+  expect(request).not.toHaveBeenCalled();
+  tracker.navigate(layout, true, true);
+  tracker.navigate({ ...layout, entranceId: "1-front" }, true, true);
+  tracker.navigate(layout, false, true);
+  tracker.navigate(layout, true, true);
+  expect(request).toHaveBeenCalledTimes(1);
+  const call = request.mock.calls[0]![0];
+  expect(call.url).toBe("https://primary.test/telemetry/events");
+  expect(call.data).toMatchObject({layoutId: 1, entranceId: "1-side"});
+  expect(call.data.eventId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  expect(call.header.Origin).toBeUndefined();
+  expect(() => call.fail()).not.toThrow();
+  tracker.navigate(null, true, true);
+  tracker.navigate(layout, true, true);
+  expect(request).toHaveBeenCalledTimes(2);
+  expect(request.mock.calls[1]![0].data.eventId).not.toBe(call.data.eventId);
+});

@@ -1,0 +1,120 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target (Docker publishes an image only)
+        type: choice
+        required: true
+        options: [docker, cloudflare, both]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+
+jobs:
+  revision:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.lock.outputs.sha }}
+    steps:
+      - name: Require production and lock this run's commit
+        id: lock
+        env:
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+        run: |
+          test "$REF" = refs/heads/production
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Release commit: $SHA" >> "$GITHUB_STEP_SUMMARY"
+  verify:
+    needs: revision
+    uses: ./.github/workflows/verify.yml
+  docker:
+    needs: [revision, verify]
+    if: inputs.target == 'docker' || inputs.target == 'both'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.image.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.revision.outputs.sha }}
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish both architectures from the verified commit
+        id: image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/heytl/idv-cryptic-map:${{ needs.revision.outputs.sha }}
+          labels: org.opencontainers.image.revision=${{ needs.revision.outputs.sha }}
+          cache-from: type=gha,scope=release
+          cache-to: type=gha,mode=max,scope=release
+  cloudflare:
+    needs: [revision, verify]
+    if: inputs.target == 'cloudflare' || inputs.target == 'both'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.revision.outputs.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web build && pnpm --filter admin build
+      - name: Migrate Cloudflare statistics database
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 migrations apply STATS --remote
+      - name: Deploy Cloudflare backup site
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+  summary:
+    if: always()
+    needs: [revision, verify, docker, cloudflare]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report each target independently
+        env:
+          SHA: ${{ needs.revision.outputs.sha }}
+          TARGET: ${{ inputs.target }}
+          VERIFIED: ${{ needs.verify.result }}
+          DOCKER: ${{ needs.docker.result }}
+          CLOUDFLARE: ${{ needs.cloudflare.result }}
+          DIGEST: ${{ needs.docker.outputs.digest }}
+        run: |
+          {
+            echo "Commit: $SHA"
+            echo "Target: $TARGET; verification: $VERIFIED"
+            echo "Docker image: $DOCKER; Cloudflare: $CLOUDFLARE"
+            if [ "$DOCKER" = success ]; then
+              echo "Image: ghcr.io/heytl/idv-cryptic-map:$SHA"
+              echo "Digest: $DIGEST"
+              echo "The Docker server has NOT been updated. Pull this image explicitly."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          test "$VERIFIED" = success
+          if [ "$TARGET" = docker ] || [ "$TARGET" = both ]; then test "$DOCKER" = success; fi
+          if [ "$TARGET" = cloudflare ] || [ "$TARGET" = both ]; then test "$CLOUDFLARE" = success; fi

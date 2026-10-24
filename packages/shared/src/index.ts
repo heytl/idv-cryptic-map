@@ -7,3 +7,4 @@ export * from "./map-client";
 export * from "./viewport";
 export * from "./project-info";
 export * from "./changelog";
+export { createVisitTracker } from "./visit-tracker";

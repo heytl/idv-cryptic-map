@@ -22,6 +22,7 @@ import {
 } from "./cloudflare";
 import { handleR2 } from "./media";
 import { runSnapshot } from "./snapshot";
+import { telemetryClient } from "./telemetry-source";
 import { jsonError, jsonResponse, type Env } from "./types";
 
 const RETIRED = new Set([
@@ -132,11 +133,11 @@ export async function handleRequest(
     if (!["GET", "HEAD"].includes(request.method))
       return jsonError(405, "method_not_allowed");
     const config = await repo.read();
-    const etag = `"maps-v4-${config.version}"`;
+    const etag = `"maps-v4-${config.version}${env.RELATIVE_MEDIA_URLS === '1' ? '-relative' : ''}"`;
     const responseHeaders = { ...headers, ETag: etag };
     if (request.headers.get("If-None-Match") === etag)
       return new Response(null, { status: 304, headers: responseHeaders });
-    const base = new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
+    const base = env.RELATIVE_MEDIA_URLS === '1' ? '/r2' : new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
     const output = toPublicMapConfigV4(config, base);
     return request.method === "HEAD"
       ? new Response(null, { headers: responseHeaders })
@@ -144,11 +145,8 @@ export async function handleRequest(
   }
   if (path === "/telemetry/events") {
     if (request.method !== "POST") return jsonError(405, "method_not_allowed");
-    if (
-      !env.TELEMETRY_ORIGIN ||
-      url.origin !== env.TELEMETRY_ORIGIN ||
-      request.headers.get("Origin") !== env.TELEMETRY_ORIGIN
-    )
+    const client = telemetryClient(request, env);
+    if (!client)
       return jsonError(403, "origin_not_allowed");
     if (!env.STATS || !env.TELEMETRY_LIMITER)
       return jsonError(503, "statistics_not_configured");
@@ -159,6 +157,7 @@ export async function handleRequest(
     });
     if (!limited.success) return jsonError(429, "rate_limited");
     const event = makeVisit(await body(request, 2048), await repo.read());
+    event.client = client;
     await new D1Statistics(env.STATS).record(event);
     return new Response(null, {
       status: 204,

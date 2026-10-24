@@ -1,0 +1,125 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { once } from 'node:events';
+import { request as httpRequest } from 'node:http';
+import { DatabaseSync } from 'node:sqlite';
+
+test('server authentication, SQLite migrations, media, backups, conflicts and restart persistence', async () => {
+  const data = mkdtempSync(join(tmpdir(), 'idv-docker-'));
+  const base = 'http://localhost:18767';
+  const key = 'integration-test-random-key-with-32-characters';
+  const auth = { Authorization: `Bearer ${key}` };
+  let child;
+  const start = async (loginKey = key) => {
+    child = spawn(process.execPath, ['deploy/server.mjs'], { env: { ...process.env, DATA_DIR: data, PORT: '18767', ADMIN_KEY: loginKey }, stdio: ['ignore', 'pipe', 'pipe'] });
+    await Promise.race([once(child.stdout, 'data'), once(child, 'exit').then(() => { throw new Error('Server exited before startup'); })]);
+  };
+  const stop = async () => { child.kill(); await once(child, 'exit'); };
+  const call = async (path, options = {}) => {
+    if (!options.headers?.Host) return fetch(base + path, { ...options, headers: { ...auth, ...options.headers } });
+    // fetch reserves Host; use HTTP directly to emulate a proxy preserving it.
+    const prepared = new Request(base + path, { ...options, headers: { ...auth, ...options.headers } });
+    const body = options.body ? Buffer.from(await prepared.arrayBuffer()) : undefined;
+    return new Promise((resolve, reject) => {
+      const req = httpRequest(base + path, { method: prepared.method, headers: Object.fromEntries(prepared.headers) }, res => {
+        const chunks = []; res.on('data', c => chunks.push(c));
+        res.on('end', () => resolve(new Response(Buffer.concat(chunks), { status: res.statusCode, headers: res.headers })));
+      });
+      req.on('error', reject); req.end(body);
+    });
+  };
+  try {
+    await start();
+    assert.equal((await fetch(base + '/api/admin/v3/maps')).status, 401);
+    assert.equal((await fetch(base + '/admin/', { redirect: 'manual' })).status, 303);
+    assert.match(await (await fetch(base + '/admin/')).text(), /登录工作台/);
+    const login = body => fetch(base + '/auth/login', { method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    assert.equal((await login({ key: 'wrong' })).status, 401);
+    assert.equal((await fetch(base + '/api/admin/stats')).headers.get('WWW-Authenticate'), null);
+    assert.equal((await fetch(base + '/auth/login', { method: 'POST', headers: { Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) })).status, 403);
+    const signedIn = await login({ key });
+    assert.equal(signedIn.status, 200);
+    const setCookie = signedIn.headers.get('set-cookie');
+    assert.match(setCookie, /HttpOnly/); assert.match(setCookie, /SameSite=Strict/);
+    const Cookie = setCookie.split(';')[0];
+    const formLogin = (password, remember = false) => fetch(base + '/auth/login', { method: 'POST', redirect: 'manual', headers: { Origin: base }, body: new URLSearchParams({ username: 'admin', password, ...(remember ? { remember: 'on' } : {}) }) });
+    const rejectedForm = await formLogin('incorrect', true);
+    assert.equal(rejectedForm.status, 401);
+    const rejectedHtml = await rejectedForm.text();
+    assert.match(rejectedHtml, /密钥不正确/);
+    assert.doesNotMatch(rejectedHtml, /value="incorrect"/);
+    assert.match(rejectedHtml, /type="checkbox" checked/);
+    const ordinaryForm = await formLogin(key);
+    assert.equal(ordinaryForm.status, 303); assert.equal(ordinaryForm.headers.get('location'), '/admin/');
+    assert.match(ordinaryForm.headers.get('set-cookie'), /Max-Age=28800/);
+    const rememberedForm = await formLogin(key, true);
+    assert.equal(rememberedForm.status, 303);
+    assert.match(rememberedForm.headers.get('set-cookie'), /Max-Age=2592000/);
+    const RememberCookie = rememberedForm.headers.get('set-cookie').split(';')[0];
+    assert.equal((await fetch(base + '/api/admin/stats', { headers: { Authorization: 'Basic '+Buffer.from('admin:'+key).toString('base64') } })).status, 401);
+    assert.equal((await fetch(base + '/api/admin/stats', { headers: { Cookie } })).status, 200);
+    assert.equal((await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers: { Cookie, 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
+    assert.equal((await call('/healthz')).status, 200);
+    const httpsLogin = await call('/auth/login', { method: 'POST', headers: { Host: 'maps.example', Origin: 'https://maps.example', 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
+    assert.equal(httpsLogin.status, 200);
+    assert.match(httpsLogin.headers.get('set-cookie'), /; Secure/);
+    assert.match(httpsLogin.headers.get('set-cookie'), /Max-Age=28800/);
+    assert.equal(httpsLogin.headers.get('set-cookie').includes(key), false);
+    assert.equal((await call('/api/admin/stats')).status, 200);
+    const config = await (await call('/api/admin/v3/maps')).json();
+    const save = () => call('/api/admin/v3/maps', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config, baseVersion: 0 }) });
+    assert.equal((await save()).status, 200);
+    assert.equal((await save()).status, 409);
+    assert.equal((await (await call('/api/admin/v3/backups')).json()).backups.length, 1);
+    const form = new FormData(); form.set('kind', 'full'); form.set('file', new Blob(['RIFF0000WEBPtest'], { type: 'image/webp' }), 'test.webp');
+    const uploaded = await call('/api/admin/v3/images', { method: 'POST', body: form });
+    assert.equal(uploaded.status, 200);
+    const { asset, url } = await uploaded.json();
+    assert.equal(url, '/r2/' + asset.key);
+    for (const domain of ['first.example', 'second.example']) {
+      const headers = { Host: domain, Origin: `https://${domain}` };
+      const form = new FormData(); form.set('kind', 'full'); form.set('file', new Blob(['RIFF0000WEBPtest']), 'test.webp');
+      const r = await call('/api/admin/v3/images', { method: 'POST', headers, body: form });
+      assert.equal(r.status, 200);
+      assert.equal((await r.json()).url, '/r2/' + asset.key);
+      assert.equal((await call('/telemetry/events', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{}' })).status, 400);
+      assert.equal((await call('/telemetry/events', { method: 'POST', headers: { ...headers, Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
+      const publicResponse = await call('/maps-v4.json', { headers });
+      assert.match(publicResponse.headers.get('ETag'), /-relative/);
+    }
+    assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
+    assert.equal((await fetch(base + '/r2/backups-v3/snapshot-v0.json')).status, 404);
+    assert.equal((await call('/api/admin/v3/maps', { method: 'PUT', headers: { Origin: 'https://evil.example' } })).status, 403);
+    await stop(); await start();
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: RememberCookie } })).status, 200);
+    assert.equal((await fetch(base + '/auth/logout', { method: 'POST', headers: { Cookie: RememberCookie, Origin: base } })).status, 200);
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: RememberCookie } })).status, 401);
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie } })).status, 200);
+    assert.equal((await (await call('/api/admin/v3/maps')).json()).version, 1);
+    assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
+    assert.equal((await call('/api/admin/stats/export')).status, 200);
+    assert.equal((await fetch(base + '/auth/logout', { method: 'POST', headers: { Cookie, Origin: base } })).status, 200);
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie } })).status, 401);
+    const expiredLogin = await login({ key });
+    const expiredCookie = expiredLogin.headers.get('set-cookie').split(';')[0];
+    const db = new DatabaseSync(join(data, 'app.sqlite'));
+    const row = db.prepare('SELECT token_hash FROM admin_sessions').get();
+    assert.ok(row); assert.notEqual(row.token_hash, expiredCookie.split('=')[1]);
+    db.exec('UPDATE admin_sessions SET expires=0'); db.close();
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: expiredCookie } })).status, 401);
+    const beforeRotation = await login({ key });
+    const rotationCookie = beforeRotation.headers.get('set-cookie').split(';')[0];
+    const rotationRemember = (await formLogin(key, true)).headers.get('set-cookie').split(';')[0];
+    await stop(); await start('a-different-key-that-is-longer-than-32-characters');
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: rotationCookie } })).status, 401);
+    assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: rotationRemember } })).status, 401);
+    await stop(); await start();
+    for (let i = 0; i < 10; i++) assert.equal((await login({ key: 'wrong' })).status, 401);
+    const limited = await login({ key });
+    assert.equal(limited.status, 429); assert.ok(Number(limited.headers.get('retry-after')) > 0);
+  } finally { if (child && child.exitCode === null) await stop(); rmSync(data, { recursive: true, force: true }); }
+});

@@ -41,6 +41,7 @@ kv-seed.json
 
 # Local verification artifacts
 .tmp/
+/data/
 
 # WeChat developer-specific project settings
 project.private.config.json

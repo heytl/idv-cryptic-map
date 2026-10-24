@@ -17,6 +17,7 @@ beforeEach(() => {
       "utf8",
     ),
   );
+  db.exec(readFileSync(new URL("./migrations/0002_visit_client.sql", import.meta.url), "utf8"));
   function prepare(sql: string) {
     let values: unknown[] = [];
     return {
@@ -108,6 +109,16 @@ describe("D1 statistics with real SQLite", () => {
     expect(r.total).toBe(0);
     expect(r.daily.map((d) => d.count)).toEqual([0, 0]);
     expect(r.gameMaps).toEqual([]);
+  });
+  it("keeps Web and WeChat in the same totals with separate source counts and exports", async () => {
+    await stats.record(event("web", "2026-09-22T00:00:00.000Z"));
+    const wechat = { ...event("wechat", "2026-09-22T01:00:00.000Z"), client: "wechat" as const };
+    await stats.record(wechat);
+    await stats.record(wechat);
+    const report = await stats.report({ from: "2026-09-22", to: "2026-09-22" });
+    expect(report.total).toBe(2);
+    expect(report.clients).toEqual([{ key: "web", count: 1, share: 0.5 }, { key: "wechat", count: 1, share: 0.5 }]);
+    expect((await stats.export(report.query)).map(e => e.client)).toEqual(["web", "wechat"]);
   });
   it("bounds queries to 90 calendar days", () => {
     const now = new Date("2026-09-22T16:00:00Z");

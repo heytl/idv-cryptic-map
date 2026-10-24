@@ -43,6 +43,17 @@ const viewFromHash = () => {
 const view = ref(viewFromHash());
 const narrow = useIsNarrow();
 const message = useMessage();
+const keyLogin = ref(false);
+const sessionExpired = ref(false);
+function onSessionExpired(): void { keyLogin.value = true; sessionExpired.value = true; }
+async function logout(): Promise<void> {
+  if (storeV2.dirty && !window.confirm('有未保存的修改，确定退出登录吗？')) return;
+  try {
+    const response = await fetch('/auth/logout', { method: 'POST' });
+    if (!response.ok) throw new Error('退出失败');
+    window.location.replace('/admin/login');
+  } catch { message.error('退出登录失败，请稍后重试'); }
+}
 const dataStatus = computed(() =>
   storeV2.fatal
     ? "读取失败"
@@ -92,10 +103,15 @@ async function save(): Promise<void> {
 }
 
 onMounted(() => {
+  void fetch('/auth/session').then(r => { if (r.ok) keyLogin.value = true; }).catch(() => {});
+  window.addEventListener('admin-session-expired', onSessionExpired);
   if (!storeV2.loaded && !storeV2.loading) void loadV2();
   window.addEventListener("beforeunload", onBeforeUnload);
 });
-onBeforeUnmount(() => window.removeEventListener("beforeunload", onBeforeUnload));
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeunload", onBeforeUnload);
+  window.removeEventListener('admin-session-expired', onSessionExpired);
+});
 </script>
 
 <template>
@@ -128,6 +144,7 @@ onBeforeUnmount(() => window.removeEventListener("beforeunload", onBeforeUnload)
           <p>{{ description }}</p>
         </div>
         <n-space class="topbar-actions" align="center" :size="12">
+          <n-button v-if="keyLogin" quaternary @click="logout">退出登录</n-button>
           <div class="save-state" role="status" aria-live="polite">
             <span class="status-light" :class="{ dirty: storeV2.dirty }" aria-hidden="true"></span>
             <span>{{ storeV2.saving ? "正在保存" : storeV2.dirty ? "有未保存修改" : "已保存" }}</span>
@@ -149,6 +166,9 @@ onBeforeUnmount(() => window.removeEventListener("beforeunload", onBeforeUnload)
 
       <n-layout-content class="admin-content" :native-scrollbar="false">
         <div class="content-inner">
+          <n-alert v-if="sessionExpired" type="warning" style="margin-bottom: 16px">
+            登录已过期，当前草稿仍保留。<a href="/admin/login" target="_blank" rel="noopener">在新标签页重新登录</a>后可继续操作。
+          </n-alert>
           <p class="updated-meta">最后更新：{{ formatUpdatedAt(storeV2.updatedAt) }}</p>
           <n-spin :show="storeV2.loading" class="config-loading">
             <template v-if="storeV2.loaded">

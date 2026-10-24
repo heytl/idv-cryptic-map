@@ -1,4 +1,4 @@
-import { isPublicMapConfigV4, type GameMap, type GameMode, type PublicLayoutV4 } from "@idv-map/shared";
+import { isPublicMapConfigV4, resolvePublicMediaUrls, type GameMap, type GameMode, type PublicLayoutV4 } from "@idv-map/shared";
 export { isGameMode, isEntranceType, enabledEntranceTypesV2, isEnabledEntranceV2, defaultEntranceV2, catalogFilterValuesV2, isCatalogFilterV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2, availableFloors, type CatalogFilterV2 } from "@idv-map/shared";
 import { reactive, ref } from "vue";
 
@@ -30,7 +30,7 @@ export async function ensureMapsV2(): Promise<boolean> {
             ? "地图尚未准备好"
             : `HTTP ${response.status}`,
         );
-      const data: unknown = await response.json();
+      const data = resolvePublicMediaUrls(await response.json(), new URL(publicEndpoint(), window.location.href).href);
       if (!isPublicMapConfigV4(data)) throw new Error("地图协议不合法");
       mapsV2.splice(0, mapsV2.length, ...data.layouts);
       gameMaps.splice(0, gameMaps.length, ...data.gameMaps);
