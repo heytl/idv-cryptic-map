@@ -9,12 +9,14 @@ export const projectInfo = {
   website: "https://idv-map.321666.xyz/",
   websiteLabel: "idv-map.321666.xyz",
   repository: "https://github.com/heytl/idv-cryptic-map",
+  feedbackUrl: "https://github.com/heytl/idv-cryptic-map/issues",
   authorName: "凉哈皮",
   authorUrl: "https://space.bilibili.com/8618005",
   miniProgram: {
     name: BASE_TITLE,
-    released: false,
-    // Use a public HTTPS image URL for both platforms after release.
-    qrImageUrl: "",
+    released: true,
+    // Both platforms package the same original code at this static path.
+    qrImageUrl: "/static/miniprogram-code.png",
+    accessNote: "暂时只能扫码使用，不支持微信搜索小程序。",
   },
 };

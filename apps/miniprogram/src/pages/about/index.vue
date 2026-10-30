@@ -87,10 +87,11 @@ function openChangelog() { uni.navigateTo({ url: "/pages/changelog/index" }); }
             <view v-else class="qr-placeholder"><UiIcon name="scan" :size="44" /><text>小程序码待补充</text></view>
             <view class="qr-corner top-left" /><view class="qr-corner top-right" /><view class="qr-corner bottom-left" /><view class="qr-corner bottom-right" />
           </view>
+          <text class="access-note">{{ projectInfo.miniProgram.accessNote }}</text>
         </view>
         <view class="feedback-section">
           <view class="feedback-heading"><UiIcon name="message" :size="18" /><text class="section-title" role="heading" aria-level="2">问题反馈</text></view>
-          <button class="feedback-button" disabled>反馈入口暂未开放</button>
+          <button class="feedback-button" hover-class="copy-pressed" @tap="copyExternalLink(projectInfo.feedbackUrl, 'GitHub Issues')">GitHub Issues<UiIcon name="arrow-up-right" :size="16" /></button>
         </view>
       </view>
     </view>
@@ -167,7 +168,7 @@ page { background: #0a0b0d; background-image: radial-gradient(circle at 50% 10%,
 .bottom-right { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
 .feedback-section { padding: 22px 24px; border: 1px solid var(--about-border); border-radius: 4px; }
 .feedback-heading { display: flex; align-items: center; gap: 10px; }
-.feedback-button[disabled] { width: 100%; min-height: 44px; margin-top: 18px; padding: 10px 12px; color: var(--about-muted); font-size: 13px; border: 1px dashed #4b4639; border-radius: 3px; background: #16191b; }
+.feedback-button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 18px; padding: 10px 12px; color: var(--gold); font-size: 13px; border: 1px solid var(--gold-dark); border-radius: 3px; background: #16191b; }
 .credits-section { margin-top: 28px; padding: 24px 0 0; border-top: 1px solid var(--about-border); }
 .credits-section.open-source-info { margin-top: 24px; padding-top: 0; border-top: 0; }
 .credits-title { display: block; font-size: 16px; font-weight: 500; }

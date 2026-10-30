@@ -135,6 +135,8 @@ async function copyWebsite() {
               :src="projectInfo.miniProgram.qrImageUrl"
               :alt="`${projectInfo.miniProgram.name}微信小程序码`"
               class="mini-qr"
+              width="430"
+              height="430"
             />
             <div v-else class="qr-placeholder">
               <HandbookIcon name="scan" /><span>小程序码待补充</span>
@@ -143,6 +145,7 @@ async function copyWebsite() {
             ><i class="qr-corner bottom-left"></i
             ><i class="qr-corner bottom-right"></i>
           </div>
+          <p class="access-note">{{ projectInfo.miniProgram.accessNote }}</p>
         </section>
 
         <section class="feedback-section" aria-labelledby="feedback-title">
@@ -150,7 +153,13 @@ async function copyWebsite() {
             <HandbookIcon name="message" />
             <h2 id="feedback-title">问题反馈</h2>
           </div>
-          <button class="feedback-button" disabled>反馈入口暂未开放</button>
+          <a
+            class="feedback-button"
+            :href="projectInfo.feedbackUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub Issues<HandbookIcon name="arrow-up-right" /></a
+          >
         </section>
       </aside>
     </div>
@@ -617,17 +626,30 @@ async function copyWebsite() {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 100%;
   min-height: 44px;
   margin: 18px 0 0;
   padding: 10px 12px;
-  color: var(--about-muted);
+  color: var(--gold);
   font: inherit;
   font-size: 13px;
-  border: 1px dashed #4b4639;
+  border: 1px solid var(--gold-dark);
   border-radius: 3px;
   background: var(--about-surface);
-  cursor: not-allowed;
+  text-decoration: none;
+}
+.feedback-button:hover {
+  color: var(--gold-hover);
+  background: #242724;
+}
+.feedback-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.feedback-button svg {
+  width: 16px;
+  height: 16px;
 }
 .credits-section {
   display: flex;
