@@ -80,6 +80,8 @@ pnpm dev:admin  # 后台地址以终端输出为准，路径 /admin/
 
 需要联调本地 Worker 时，前后台 API 代理到 `127.0.0.1:8787`。在 `apps/web/.env.development.local` 中设置 `VITE_MAP_API_BASE_URL=`，再执行 `pnpm exec wrangler d1 migrations apply STATS --local --env dev`、运行 `pnpm exec wrangler dev --env dev --local` 并导入本地内容；不要与隔离服务占用同一端口。
 
+后台也可通过 `apps/admin/.env.development.local` 设置 `ADMIN_PROXY_TARGET=https://<dev-host>`，重启 `pnpm dev:admin` 后访问本地 `/admin/login` 登录。API、图片和认证均经本地代理访问该环境，保存操作会写入目标环境；删除该配置可恢复本地 Worker 代理。
+
 直接运行 `pnpm dev` 时，玩家端默认从隔离测试环境 `idv-map-dev.321666.xyz` 读取最新地图配置与图片；此设置只用于 Vite 开发，不影响生产构建。需要改用本地 Worker 时，在 `apps/web/.env.development.local` 中设置 `VITE_MAP_API_BASE_URL=` 覆盖默认值。
 
 ```powershell

@@ -50,6 +50,7 @@ for (const entrance of draft.entrances) {
   if (entrance.type === "front") entrance.direction = "south";
 }
 const busy = ref("");
+const previewFloor = ref<FloorType | null>(null);
 const regionJob = ref<{ source: string; candidate?: Blob; initialId?: string; items: RegionItem[]; required: string[] } | null>(null);
 function closeRegions() {
   if (regionJob.value?.candidate) URL.revokeObjectURL(regionJob.value.source);
@@ -340,7 +341,7 @@ function apply(): void {
     <div class="img-slots">
       <div v-for="floor in floorSlots" :key="floor" class="img-slot" :class="{ missing: !draft.floorImages[floor] && !floorRect(floor) }">
         <div class="frame">
-          <RegionPreview v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" />
+          <button v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" class="region-preview-button" :aria-label="`预览${FLOOR_LABELS[floor]}`" @click="previewFloor = floor"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" /></button>
           <n-image v-else-if="draft.floorImages[floor]" :src="mediaUrl(draft.floorImages[floor]!.key)" object-fit="contain" lazy />
           <span v-else class="muted">尚未设置</span>
         </div>
@@ -447,6 +448,9 @@ function apply(): void {
       >
     </div>
 
+    <n-modal :show="!!previewFloor" preset="card" :title="previewFloor ? FLOOR_LABELS[previewFloor] : ''" style="width: min(90vw, 900px)" @update:show="previewFloor = null">
+      <div v-if="previewFloor && floorRect(previewFloor) && draft.floorRegions && draft.floorImages.full" class="region-preview-large"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(previewFloor)!" :label="FLOOR_LABELS[previewFloor]" /></div>
+    </n-modal>
     <RegionEditor v-if="regionJob" :source="regionJob.source" :items="regionJob.items" :initial-id="regionJob.initialId" :required-confirmation="regionJob.required" :pending-source="!!regionJob.candidate" :busy="!!busy" @done="applyRegions" @cancel="closeRegions" />
     <CropSingle
       v-if="recrop"

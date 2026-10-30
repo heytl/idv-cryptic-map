@@ -198,6 +198,9 @@ button, [role="button"] { cursor: pointer; }
 .img-slot { padding: 9px; border: 1px solid var(--border); border-radius: 11px; background: #141e2d; text-align: center; }
 .img-slot .frame { display: flex; width: 100%; aspect-ratio: 1; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; background: var(--bg); }
 .img-slot .frame .n-image, .img-slot .frame img { width: 100%; height: 100%; object-fit: contain; }
+.region-preview-button { width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+.region-preview-button:focus-visible { outline: 2px solid #8ca9ff; outline-offset: -2px; }
+.region-preview-large { height: min(70vh, 700px); background: var(--bg); }
 .img-slot .k { min-height: 34px; margin: 7px 0 8px; color: var(--text-dim); font-size: 11px; }
 .img-slot.missing { border-color: #8e6640; }
 .whole-crop-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 10px 0 14px; padding: 12px; border: 1px solid var(--border); border-radius: 11px; background: #141e2d; }
