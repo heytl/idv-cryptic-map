@@ -21,6 +21,7 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+apps/miniprogram/.env.production
 
 # Gemini/Agentic systems
 .gemini/
