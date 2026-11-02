@@ -90,6 +90,9 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
       assert.equal((await call('/telemetry/events', { method: 'POST', headers: { ...headers, Origin: 'https://evil.example', 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
       const publicResponse = await call('/maps-v4.json', { headers });
       assert.match(publicResponse.headers.get('ETag'), /-relative/);
+      const modernResponse = await call('/maps-v5.json', { headers });
+      assert.equal((await modernResponse.json()).schemaVersion, 5);
+      assert.match(modernResponse.headers.get('ETag'), /maps-v5-.*-relative/);
     }
     assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
     assert.equal((await fetch(base + '/r2/backups-v3/snapshot-v0.json')).status, 404);

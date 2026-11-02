@@ -1,5 +1,5 @@
 import { DEFAULT_FLOOR, FLOOR_ORDER, GAME_MODES, ENTRANCE_TYPES, DIRECTIONS_V2, PASSAGES_V2, type FloorType } from "./map-v2";
-import { validPixelRect, type PublicMapConfigV4, type PublicLayoutV4, type PixelRect } from "./map-v3";
+import { validPixelRect, type PublicMapConfigV4, type PublicMapConfigV5, type PublicLayoutV4, type PixelRect } from "./map-v3";
 
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v: unknown): v is string => typeof v === "string";
@@ -65,6 +65,20 @@ export function isPublicMapConfigV4(value: unknown): value is PublicMapConfigV4 
     }
   }
   return true;
+}
+
+export function isPublicMapConfigV5(value: unknown): value is PublicMapConfigV5 {
+  if (!object(value) || value.schemaVersion !== 5 || !isPublicMapConfigV4({ ...value, schemaVersion: 4 })) return false;
+  const config = value as unknown as PublicMapConfigV5;
+  const maps = new Map(config.gameMaps.map(map => [map.id, map]));
+  for (const map of config.gameMaps) {
+    if (!object(map.enabledEntrances) || !GAME_MODES.every(mode => {
+      const types = map.enabledEntrances[mode];
+      return Array.isArray(types) && new Set(types).size === types.length && types.every(type => ENTRANCE_TYPES.includes(type));
+    }) || !GAME_MODES.some(mode => map.enabledEntrances[mode].length)) return false;
+  }
+  return config.layouts.every(layout => layout.entrances.length > 0 && new Set(layout.entrances.map(e => e.type)).size === layout.entrances.length &&
+    layout.entrances.every(e => maps.get(layout.gameMapId)!.enabledEntrances[layout.mode].includes(e.type)));
 }
 
 export interface FloorSource {

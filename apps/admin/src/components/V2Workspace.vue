@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   ENTRANCE_LABELS,
-  REQUIRED_ENTRANCES,
+  configuredEntranceTypes,
   MODE_LABELS,
   layoutPublicationIssues,
   type EntranceType,
@@ -52,6 +52,7 @@ const mapLayouts = computed(() =>
   activeMapsV2.value.filter((m) => m.gameMapId === gameMapId.value),
 );
 const activeMode = ref<GameMode>("hard");
+const selectedGameMap = computed(() => storeV2.gameMaps.find(m => m.id === gameMapId.value));
 const modeCounts = computed(() => ({
   hard: mapLayouts.value.filter((map) => map.mode === "hard").length,
   nightmare: mapLayouts.value.filter((map) => map.mode === "nightmare").length,
@@ -105,6 +106,7 @@ function reorderVisibleMaps(oldIndex: number, newIndex: number): void {
   storeV2.maps.splice(from, 1);
   const to = storeV2.maps.indexOf(target) + (newIndex > oldIndex ? 1 : 0);
   storeV2.maps.splice(to, 0, moved);
+  visibleMaps.value.forEach((layout, index) => { layout.sort = (index + 1) * 10; });
   markDirtyV2();
   void nextTick(initSortable);
 }
@@ -117,7 +119,7 @@ function moveMap(index: number, offset: -1 | 1): void {
 
 function togglePublish(map: Layout, value: boolean): void {
   if (value) {
-    const issues = layoutPublicationIssues(map);
+    const issues = layoutPublicationIssues(map, selectedGameMap.value);
     if (issues.length > 0) {
       message.warning(
         `「${map.displayName}」还不能发布：${issues.join("；")}`,
@@ -144,7 +146,7 @@ function removeMap(map: Layout): void {
 }
 
 function entrancesFor(mode: Layout["mode"], id: number): Layout["entrances"] {
-  const types: readonly EntranceType[] = REQUIRED_ENTRANCES[mode];
+  const types: readonly EntranceType[] = configuredEntranceTypes(selectedGameMap.value, mode);
   return types.map((type) => ({
     id: `${id}-${type}`,
     type,
@@ -289,10 +291,10 @@ function closeEditor(): void {
             }}
           </div>
           <div
-            v-if="layoutPublicationIssues(map).length"
+            v-if="layoutPublicationIssues(map, selectedGameMap).length"
             class="sub v2-problem"
           >
-            发布前还差：{{ layoutPublicationIssues(map).join("；") }}
+            发布前还差：{{ layoutPublicationIssues(map, selectedGameMap).join("；") }}
           </div>
         </div>
         <div class="row-actions v2-map-actions">

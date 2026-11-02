@@ -23,7 +23,7 @@ const server = createServer(async (req, res) => {
     if (path === "/admin/") {
       res.setHeader("Content-Type", "text/html");res.end('<input id="draft" value=""><p>admin</p>');return;
     }
-    if (/^\/(maps-v4.json|r2\/|telemetry\/)/.test(path)) {
+    if (/^\/(maps-v[45]\.json|r2\/|telemetry\/)/.test(path)) {
       const r = await fetch(`http://127.0.0.1:8787${req.url}`, { method: req.method, ...(req.method === "POST" ? { body: "{}", headers: {"Content-Type":"application/json"} } : {}) });
       res.writeHead(r.status, Object.fromEntries(r.headers));res.end(Buffer.from(await r.arrayBuffer()));return;
     }

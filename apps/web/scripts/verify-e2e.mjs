@@ -69,14 +69,58 @@ try {
   await page.setViewportSize({ width: 1365, height: 900 });
   await page.goto(`${base}/admin/`);
   await page.getByText("地图管理", { exact: true }).click();
-  await page.getByPlaceholder("例如：遗忘之境").fill("验收新地图");
-  await page.getByPlaceholder("new-map", { exact: true }).fill(`e2e-map-${Date.now()}`);
+  const initialConfig = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+  const sideUsage = page.getByRole("combobox", { name: "厄运之女困难侧门使用方式", exact: true });
+  await sideUsage.click();
+  await page.locator('.n-base-select-option').filter({ hasText: /^不使用$/ }).click();
+  assert.match(await sideUsage.innerText(), /开放/);
+  await page.getByRole("switch", { name: "厄运之女困难前台显示", exact: true }).click();
+  let savedResponse = page.waitForResponse(r => r.url().includes('/api/admin/v3/maps') && r.request().method() === 'PUT');
+  await page.getByRole("button", { name: "保存修改", exact: true }).click();
+  assert.equal((await savedResponse).status(), 200);
+  const hiddenConfig = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+  assert.deepEqual(hiddenConfig.layouts, initialConfig.layouts);
+  assert.deepEqual(hiddenConfig.gameMaps.find(m => m.id === 'lady-of-doom').entranceRules,
+    initialConfig.gameMaps.find(m => m.id === 'lady-of-doom').entranceRules);
+  await page.goto(`${base}/#/maps/lady-of-doom/hard/side`);
+  await page.waitForURL(/lady-of-doom\/nightmare\/front$/);
+  await page.locator('.condition-summary').click();
+  assert.equal(await page.getByRole('dialog').getByRole('button', { name: /^困难/ }).count(), 0);
+  await page.goto(`${base}/admin/#maps`);
+  await page.getByRole("switch", { name: "厄运之女困难前台显示", exact: true }).click();
+  savedResponse = page.waitForResponse(r => r.url().includes('/api/admin/v3/maps') && r.request().method() === 'PUT');
+  await page.getByRole("button", { name: "保存修改", exact: true }).click();
+  assert.equal((await savedResponse).status(), 200);
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert(await page.getByRole('combobox', { name: '选择地图', exact: true }).isVisible());
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+  await page.screenshot({ path: resolve(shots, 'map-settings-mobile.png'), animations: 'disabled' });
+  await page.setViewportSize({ width: 1365, height: 1000 });
+  await page.screenshot({ path: resolve(shots, 'map-settings-desktop.png'), animations: 'disabled' });
   await page.getByRole("button", { name: "新增地图", exact: true }).click();
+  await page.getByPlaceholder("例如：遗忘之境").fill("验收新地图");
+  assert(await page.getByRole("textbox", { name: "新地图标识", exact: true }).isVisible());
+  await page.getByPlaceholder("new-map", { exact: true }).fill(`e2e-map-${Date.now()}`);
+  await page.getByRole("button", { name: "创建地图", exact: true }).click();
   const save = page.getByRole("button", { name: "保存修改", exact: true });
   await save.click();
   await page.getByText("已保存", { exact: true }).first().waitFor();
   const config = await (await fetch(`${base}/api/admin/v3/maps`)).json();
   assert(config.gameMaps.some((m) => m.name === "验收新地图" && !m.published));
+  assert.deepEqual(config.gameMaps.find(m => m.name === "验收新地图").modeVisibility, { hard: false, nightmare: false });
+  await page.getByText("布局管理", { exact: true }).click();
+  const beforeReorder = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+  const ownLayouts = beforeReorder.layouts.filter(l => l.gameMapId === 'lady-of-doom' && l.mode === 'hard' && !l.deletedAt);
+  const otherLayouts = beforeReorder.layouts.filter(l => l.gameMapId !== 'lady-of-doom' || l.mode !== 'hard');
+  await page.locator('.v2-map-card').first().getByRole('button', { name: '下移', exact: true }).click();
+  savedResponse = page.waitForResponse(r => r.url().includes('/api/admin/v3/maps') && r.request().method() === 'PUT');
+  await page.getByRole('button', { name: '保存修改', exact: true }).click();
+  assert.equal((await savedResponse).status(), 200);
+  const afterReorder = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+  assert.deepEqual(afterReorder.layouts.filter(l => l.gameMapId !== 'lady-of-doom' || l.mode !== 'hard'), otherLayouts);
+  const expectedOrder = ownLayouts.map(l => l.id);
+  [expectedOrder[0], expectedOrder[1]] = [expectedOrder[1], expectedOrder[0]];
+  assert.deepEqual(afterReorder.layouts.filter(l => l.gameMapId === 'lady-of-doom' && l.mode === 'hard' && !l.deletedAt).sort((a,b) => a.sort - b.sort).map(l => l.id), expectedOrder);
   await page.getByText("访问统计", { exact: true }).click();
   await page.getByRole("heading", { name: "访问趋势", exact: true }).waitFor();
   await page.screenshot({ path: resolve(shots, "statistics.png") });
@@ -87,7 +131,7 @@ try {
     .waitFor();
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: map choice, V2 links, V1 retirement, detail visits, floor changes, refresh, re-entry, second-map isolation, mobile overflow, admin save, statistics, backups, browser errors",
+    "PASS: map choice, legacy links, detail visits, map isolation, difficulty hide/restore, retained records, entry removal guard, responsive map settings, map creation, scoped layout ordering, statistics, backups, browser errors",
   );
 } finally {
   await browser.close();

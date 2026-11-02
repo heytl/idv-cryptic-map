@@ -15,6 +15,7 @@ V3 已于 2026-10-22 正式上线，实际部署与统计验证见 [正式上线
 | [MINIPROGRAM.md](MINIPROGRAM.md) | 微信小程序当前架构、开发 / 构建、手势、预览缓存与联调排查 |
 | [releases/MINIPROGRAM-0.1.0.md](releases/MINIPROGRAM-0.1.0.md) | 微信小程序初版范围、自动验证、平台证据与功能验收清单 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | V3 分层、数据流与兼容边界 |
+| [ENTRANCE-CONFIG.md](ENTRANCE-CONFIG.md) | 按地图和难度配置入口、旧数据迁移、V5 协议与本地验收（开发中） |
 | [V3-UPGRADE.md](V3-UPGRADE.md) | 数据迁移、D1、部署、统计、备份和回滚 |
 | [releases/V3.md](releases/V3.md) | 本轮版本变化、验证记录、发布前清单 |
 

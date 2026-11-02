@@ -69,7 +69,8 @@ function navigate(
 }
 
 function applyConditions(nextMapId: string, nextMode: GameMode, nextEntrance: EntranceType) {
-  const filter = isCatalogFilterV2(nextEntrance, activeFilter.value) ? activeFilter.value : "all";
+  const unchanged = nextMapId === gameMapId.value && nextMode === mode.value && nextEntrance === entranceType.value;
+  const filter = unchanged && isCatalogFilterV2(nextEntrance, activeFilter.value) ? activeFilter.value : "all";
   router.replace(`/maps/${nextMapId}/${nextMode}/${nextEntrance}${filter === "all" ? "" : `/${filter}`}`);
 }
 </script>

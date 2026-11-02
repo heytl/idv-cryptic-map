@@ -26,6 +26,9 @@
 /maps-v4.json
   Cache-Control: no-cache, must-revalidate
 
+/maps-v5.json
+  Cache-Control: no-cache, must-revalidate
+
 # 后台管理（构建产物在 dist/admin/，assets 同样哈希命名）
 /admin/
   Cache-Control: no-cache, must-revalidate

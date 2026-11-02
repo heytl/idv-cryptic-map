@@ -1,6 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from "vitest";
 import {
   assetKeys,
+  legacyEntranceRules,
   migrateV2ToV3,
   type MapConfigV2,
   type MapConfigV3,
@@ -39,6 +40,13 @@ beforeEach(() => {
   };
 });
 describe("portable content service", () => {
+  it("rejects an outdated admin writer without discarding entrance rules", async () => {
+    const candidate = structuredClone(current);
+    delete candidate.entranceRulesVersion;
+    for (const map of candidate.gameMaps) delete map.entranceRules;
+    await expect(saveContent(repo, storage, candidate, current.version)).rejects.toMatchObject({ code: "admin_upgrade_required" });
+    expect(repo.save).not.toHaveBeenCalled();
+  });
   it("exports complete resources and restores content into an isolated repository", async () => {
     const bundle = await exportContent(repo, storage);
     expect(bundle.assets.map((a) => a.key)).toEqual(assetKeys(current));
@@ -98,6 +106,8 @@ describe("portable content service", () => {
       name: "其他",
       sort: 2,
       published: true,
+      entranceRules: legacyEntranceRules(),
+      modeVisibility: { hard: true, nightmare: true },
     });
     moved.layouts[0]!.gameMapId = "other";
     await expect(

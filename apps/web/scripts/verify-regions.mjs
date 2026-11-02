@@ -34,6 +34,19 @@ async function saveLayout() {
 }
 await mkdir('.tmp/screenshots', { recursive: true });
 try {
+  // The current snapshot may already use regions; start this migration test
+  // from independent floor images and restore the original config in finally.
+  const fixture = structuredClone(original);
+  const legacy = fixture.layouts.find(l => l.gameMapId === 'lady-of-doom' && l.mode === 'hard' && !l.deletedAt);
+  const sample = await (await fetch(`${base}/r2/${legacy.floorImages.full.key}`)).blob();
+  for (const kind of ['floor1', 'floor2']) {
+    const form = new FormData(); form.set('kind', kind); form.set('file', sample, 'sample.webp');
+    const uploaded = await fetch(`${base}/api/admin/v3/images`, { method: 'POST', body: form });
+    assert(uploaded.ok); legacy.floorImages[kind] = (await uploaded.json()).asset;
+  }
+  delete legacy.floorRegions;
+  const prepared = await fetch(`${base}/api/admin/v3/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: original.version, config: fixture }) });
+  assert(prepared.ok);
   await openLayout();
   const title = await page.locator('.editor-modal .n-card-header__main').innerText();
   const id = Number(title.match(/#(\d+)/)[1]);
@@ -114,11 +127,12 @@ try {
   await page.goto(`${base}/#/maps/${item.gameMapId}/${item.mode}/side/layout/${id}`);
   await page.waitForFunction(() => document.querySelector('#main-map-img')?.naturalWidth > 0);
   const image = await page.locator('#main-map-img').elementHandle();
-  const initialUrl = await image.getAttribute('src'); const mediaCount = media.length;
+  const initialUrl = await image.getAttribute('src'); const mediaCount = media.filter(url => url === initialUrl).length;
   await page.getByRole('button', { name: '一楼', exact: true }).click();
+  await page.waitForURL(/floor1$/);
   assert.equal(await page.locator('#main-map-img').getAttribute('src'), initialUrl);
   assert(await image.evaluate(node => node === document.querySelector('#main-map-img')));
-  assert.equal(media.length, mediaCount);
+  assert.equal(media.filter(url => url === initialUrl).length, mediaCount);
   for (let rotation = 0; rotation < 4; rotation++) {
     await page.getByRole('button', { name: '顺时针旋转 90°' }).click();
     assert.equal(await page.locator('#map-wrapper').evaluate(el => getComputedStyle(el).overflow), 'hidden');
@@ -130,6 +144,7 @@ try {
   await page.screenshot({ path: '.tmp/screenshots/region-frontend.png' });
   await page.getByTitle('退出全屏').click();
   await page.getByRole('button', { name: '二楼', exact: true }).click();
+  await page.waitForURL(/floor2$/);
   assert.notEqual(await page.locator('#main-map-img').getAttribute('src'), initialUrl);
   // Unsaved adjustment cancellation preserves the existing rectangle.
   await openLayout();

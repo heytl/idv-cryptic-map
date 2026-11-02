@@ -1,5 +1,7 @@
 # 架构总览（V3）
 
+开发分支已加入按地图与难度配置入口：内部仍使用 V3 并增加入口能力标记，新版客户端使用公开 V5，V4 保留旧客户端降级投影。下文保留原发布基线说明；新增行为及上线顺序见 [入口配置说明](ENTRANCE-CONFIG.md)。
+
 前端为 Vue 3 + TypeScript，Web 与后台分别构建，由同一个 Node.js Docker 服务或 Cloudflare Worker 提供；微信小程序由 uni-app 独立编译，读取同一公开 V4 API。详见 [V3 升级与运维](V3-UPGRADE.md) 和 [小程序指南](MINIPROGRAM.md)。
 
 | 层 | 职责 |

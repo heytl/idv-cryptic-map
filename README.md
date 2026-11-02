@@ -121,6 +121,7 @@ Docker 启动、镜像升级和恢复见 [Docker 部署指南](docs/DOCKER.md)�
 
 - [文档索引](docs/README.md)
 - [当前架构](docs/ARCHITECTURE.md)
+- [按地图与难度配置入口（开发中）](docs/ENTRANCE-CONFIG.md)
 - [微信小程序开发指南](docs/MINIPROGRAM.md)
 - [微信小程序初版记录与验收清单](docs/releases/MINIPROGRAM-0.1.0.md)
 - [V3 升级、部署、统计与恢复](docs/V3-UPGRADE.md)

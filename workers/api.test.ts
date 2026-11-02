@@ -12,6 +12,18 @@ const env = () =>
     TELEMETRY_LIMITER: { limit: async () => ({ success: true }) },
   }) as unknown as Env;
 describe("HTTP boundaries", () => {
+  it("publishes V5 rules without admin-only fields and uses a distinct ETag", async () => {
+    const response = await worker.fetch(new Request("https://primary.test/maps-v5.json"), env());
+    expect(response.status).toBe(200);
+    const data = await response.json() as any;
+    expect(data.schemaVersion).toBe(5);
+    expect(data.gameMaps[0].enabledEntrances.hard).toEqual(["side"]);
+    expect(data.gameMaps[0].entranceRules).toBeUndefined();
+    expect(data.layouts.filter((l: any) => l.mode === "hard").every((l: any) => l.entrances.every((e: any) => e.type === "side"))).toBe(true);
+    const etag = response.headers.get("ETag")!;
+    expect(etag).toContain("maps-v5-");
+    expect((await worker.fetch(new Request("https://primary.test/maps-v5.json", { headers: { "If-None-Match": etag } }), env())).status).toBe(304);
+  });
   it.each(["/maps.json", "/maps-v2.json", "/maps-v3.json", "/api/public/v2/maps", "/api/maps", "/api/restore", "/api/admin/v2/maps"])(
     "%s is retired without SPA fallback",
     async (path) => {

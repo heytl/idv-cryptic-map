@@ -80,9 +80,9 @@ export default defineConfig({
           {
             // 地图配置：在线永远走网络拿最新；离线回落到最近一次成功拉取的版本
             // 首次离线且无缓存时展示加载失败状态，不内嵌旧版静态地图兜底。
-            urlPattern: /\/maps-v4\.json$/,
+            urlPattern: /\/maps-v5\.json$/,
             handler: "NetworkFirst",
-            options: { cacheName: "maps-config-v4", networkTimeoutSeconds: 3 },
+            options: { cacheName: "maps-config-v5", networkTimeoutSeconds: 3 },
           },
         ],
       },
@@ -95,6 +95,7 @@ export default defineConfig({
     proxy: {
       "/api": "http://127.0.0.1:8787",
       "/maps-v4.json": "http://127.0.0.1:8787",
+      "/maps-v5.json": "http://127.0.0.1:8787",
       "/telemetry": "http://127.0.0.1:8787",
       "/maps-v2.json": "http://127.0.0.1:8787",
       "/r2": "http://127.0.0.1:8787",

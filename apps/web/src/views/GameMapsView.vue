@@ -20,7 +20,7 @@ async function retry() {
             v-for="map in gameMaps"
             :key="map.id"
             class="gothic-btn game-map-choice"
-            @click="router.push(`/maps/${map.id}/hard/side`)"
+            @click="router.push(preferredCatalogPath([map]) || '/maps')"
           >
             <strong>{{ map.name }}</strong
             ><span
