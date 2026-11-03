@@ -1,7 +1,8 @@
 import { test } from 'node:test';
+import { randomBytes } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
@@ -125,4 +126,86 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     const limited = await login({ key });
     assert.equal(limited.status, 429); assert.ok(Number(limited.headers.get('retry-after')) > 0);
   } finally { if (child && child.exitCode === null) await stop(); rmSync(data, { recursive: true, force: true }); }
+});
+
+test('upgrade a populated V4 SQLite database without changing content until an explicit V5 save', async () => {
+  const data = mkdtempSync(join(tmpdir(), 'idv-upgrade-'));
+  const base = 'http://localhost:18768';
+  const key = randomBytes(32).toString('hex');
+  const headers = { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' };
+  const legacy = JSON.parse(readFileSync('apps/web/src/data/maps-v3.snapshot.json', 'utf8'));
+  const baseline = JSON.stringify(legacy);
+  const media = readFileSync('scripts/fixtures/layout.webp');
+  const keys = new Set();
+  const collect = value => {
+    if (!value || typeof value !== 'object') return;
+    if (typeof value.key === 'string') keys.add(value.key);
+    Object.values(value).forEach(collect);
+  };
+  collect(legacy);
+  const seed = new DatabaseSync(join(data, 'app.sqlite'));
+  seed.exec('CREATE TABLE kv (key TEXT PRIMARY KEY,value TEXT NOT NULL); CREATE TABLE objects (key TEXT PRIMARY KEY,bytes BLOB NOT NULL,metadata TEXT NOT NULL,uploaded TEXT NOT NULL); CREATE TABLE migrations (name TEXT PRIMARY KEY)');
+  for (const name of ['0001_statistics.sql', '0002_visit_client.sql']) {
+    seed.exec(readFileSync(`workers/migrations/${name}`, 'utf8'));
+    seed.prepare('INSERT INTO migrations VALUES (?)').run(name);
+  }
+  seed.prepare('INSERT INTO kv VALUES (?,?)').run('config:v3:current', baseline);
+  for (const asset of keys) seed.prepare('INSERT INTO objects VALUES (?,?,?,?)').run(asset, media, '{"contentType":"image/webp"}', legacy.updatedAt);
+  seed.prepare('INSERT INTO visits VALUES (?,?,?,?,?,?,?,?,?)').run('upgrade-baseline', 1, '1-side', 'side', legacy.gameMaps[0].id, 'hard', legacy.updatedAt, legacy.updatedAt.slice(0, 10), 'web');
+  seed.close();
+  let child;
+  const start = async () => {
+    child = spawn(process.execPath, ['deploy/server.mjs'], { env: { ...process.env, DATA_DIR: data, PORT: '18768', ADMIN_KEY: key }, stdio: ['ignore', 'pipe', 'pipe'] });
+    await Promise.race([once(child.stdout, 'data'), once(child, 'exit').then(() => { throw new Error('Upgrade server exited before startup'); })]);
+  };
+  const stop = async () => { child.kill(); await once(child, 'exit'); };
+  const get = async path => {
+    const response = await fetch(base + path, { headers });
+    assert.equal(response.status, 200, path);
+    return response.json();
+  };
+  try {
+    await start();
+    const v4 = await get('/maps-v4.json');
+    const v5 = await get('/maps-v5.json');
+    assert.equal(v4.schemaVersion, 4);
+    assert.equal(v5.schemaVersion, 5);
+    assert.equal(v5.dataVersion, legacy.version);
+    assert.deepEqual(v5.layouts.map(l => l.id), v4.layouts.map(l => l.id));
+    assert.ok(v5.layouts.length > 0);
+    const config = await get('/api/admin/v3/maps');
+    assert.equal(config.entranceRulesVersion, 2);
+    assert.deepEqual(config.layouts, legacy.layouts);
+    const disk = new DatabaseSync(join(data, 'app.sqlite'), { readOnly: true });
+    try {
+      assert.equal(disk.prepare('SELECT value FROM kv WHERE key=?').get('config:v3:current').value, baseline);
+      assert.equal(disk.prepare('SELECT count(*) AS n FROM migrations').get().n, 2);
+    } finally { disk.close(); }
+    const stale = await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers, body: JSON.stringify({ config: legacy, baseVersion: legacy.version }) });
+    assert.equal(stale.status, 409);
+    assert.equal((await stale.json()).error, 'admin_upgrade_required');
+    assert.equal((await get('/api/admin/v3/maps')).version, legacy.version);
+    config.gameMaps[0].modeVisibility.hard = false;
+    const saved = await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers, body: JSON.stringify({ config, baseVersion: legacy.version }) });
+    assert.equal(saved.status, 200, await saved.text());
+    await stop();
+    await start();
+    const persisted = await get('/api/admin/v3/maps');
+    assert.equal(persisted.version, legacy.version + 1);
+    assert.equal(persisted.gameMaps[0].modeVisibility.hard, false);
+    assert.deepEqual(persisted.layouts, legacy.layouts);
+    for (const endpoint of ['/maps-v4.json', '/maps-v5.json']) {
+      const visible = await get(endpoint);
+      assert.ok(visible.layouts.length > 0);
+      assert.ok(visible.layouts.every(l => l.mode !== 'hard'));
+    }
+    assert.ok((await get('/api/admin/v3/backups')).backups.some(b => b.key === `backups-v3/snapshot-v${legacy.version}.json`));
+    assert.equal((await fetch(base + '/r2/' + [...keys][0])).status, 200);
+    const diskAfter = new DatabaseSync(join(data, 'app.sqlite'), { readOnly: true });
+    try { assert.equal(diskAfter.prepare('SELECT count(*) AS n FROM visits WHERE event_id=?').get('upgrade-baseline').n, 1); }
+    finally { diskAfter.close(); }
+  } finally {
+    if (child && child.exitCode === null) await stop();
+    rmSync(data, { recursive: true, force: true });
+  }
 });
