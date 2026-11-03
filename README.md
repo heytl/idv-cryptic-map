@@ -7,7 +7,7 @@
 - 地图后台：[后台管理](https://idv-map.321666.xyz/admin/)（Docker 管理密钥登录；CF 备用后台继续由 Access 保护）
 - 源码与反馈：[GitHub](https://github.com/heytl/idv-cryptic-map) · [Issues](https://github.com/heytl/idv-cryptic-map/issues)
 
-**版本状态：**V3 已于 2026-10-22 发布到正式站。本次 V3.1.0 正在准备 Docker 更新，新客户端使用公开 V5 协议，V4 保留兼容；升级顺序、备份、回滚与验收见 [V3.1.0 升级清单](docs/releases/V3.1.0.md)。CF 上线基线内容版本为 41，Docker 与 CF 的内容版本独立递增。Web 与新版小程序共用正式统计接口，后台区分来源。历史发布见 [V3 正式上线记录](docs/releases/V3-PRODUCTION-2026-10-22.md) 与 [V2.1.0 归档](docs/releases/V2.1.0.md)。
+**版本状态：**V3.1.0 已于 2026-11-03 更新到正式 Docker 站，新客户端使用公开 V5 协议，V4 保留兼容；升级、备份、回滚与验收见 [V3.1.0 发布记录](docs/releases/V3.1.0.md)。Cloudflare 备用站与小程序需分别更新；Docker 与 CF 的内容版本独立递增。Web 与新版小程序共用正式统计接口，后台区分来源。历史发布见 [V3 正式上线记录](docs/releases/V3-PRODUCTION-2026-10-22.md) 与 [V2.1.0 归档](docs/releases/V2.1.0.md)。
 
 微信小程序 `0.1.0` 初版已获用户初步功能验收通过。本轮已生成指向正式 API、包含访问统计的新版产物；微信平台上传、审核与发布需单独执行，旧包不会自动接入统计。支持目录筛选、分层地图、WXS 手势和楼层图片预览缓存；开发入口见 [小程序指南](docs/MINIPROGRAM.md)，交付范围及验收反馈见 [初版记录](docs/releases/MINIPROGRAM-0.1.0.md)。
 
