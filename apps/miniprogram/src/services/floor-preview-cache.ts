@@ -7,7 +7,7 @@ export function floorPreviewKey(source: FloorSource): string {
     r && [r.x, r.y, r.width, r.height]]);
 }
 
-export function floorPreviewSources(config: PublicMapConfigV4): FloorSource[] {
+export function floorPreviewSources(config: Pick<PublicMapConfigV4, "layouts">): FloorSource[] {
   return config.layouts.flatMap(layout => availableFloors(layout)
     .map(floor => resolveFloorSource(layout, floor)!).filter(source => source.region));
 }

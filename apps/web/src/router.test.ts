@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
-import { toPublicMapConfigV4, type MapConfigV3 } from "@idv-map/shared";
+import { toPublicMapConfigV5, type MapConfigV3 } from "@idv-map/shared";
 import snapshot from "./data/maps-v3.snapshot.json";
 import { gameMaps, mapsV2 } from "./data/maps-v2";
 import { normalizeV2Route, routes } from "./routes";
@@ -10,7 +10,7 @@ function router() {
   return r;
 }
 beforeEach(() => {
-  const c = toPublicMapConfigV4(snapshot as MapConfigV3, "https://media.test");
+  const c = toPublicMapConfigV5(snapshot as MapConfigV3, "https://media.test");
   gameMaps.splice(0, gameMaps.length, ...c.gameMaps, {
     id: "second",
     name: "第二地图",
@@ -20,6 +20,20 @@ beforeEach(() => {
   mapsV2.splice(0, mapsV2.length, ...c.layouts);
 });
 describe("multi-map routes", () => {
+  it("uses map-specific defaults and drops obsolete filters", async () => {
+    gameMaps.find(m => m.id === "second")!.enabledEntrances = { hard: ["upstairs", "front"], nightmare: [] };
+    const r = router();
+    await r.push("/maps/second/nightmare/side/left");
+    expect(r.currentRoute.value.path).toBe("/maps/second/hard/upstairs");
+    await r.push("/maps/second/hard/front/triple");
+    expect(r.currentRoute.value.path).toBe("/maps/second/hard/front/triple");
+  });
+  it("leaves fully closed maps without redirect loops", async () => {
+    gameMaps.find(m => m.id === "second")!.enabledEntrances = { hard: [], nightmare: [] };
+    const r = router();
+    await r.push("/maps/second/hard/side");
+    expect(r.currentRoute.value.path).toBe("/maps/lady-of-doom/hard/side");
+  });
   it.each(["/about", "/changelog"])(
     "%s opens independently of map data",
     async (path) => {

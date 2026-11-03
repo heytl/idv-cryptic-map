@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch, onBeforeUnmount } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
-import { GAME_MODES, MODE_LABELS, ENTRANCE_LABELS, projectInfo, enabledEntranceTypesV2, isCatalogFilterV2,
+import { availableModes, MODE_LABELS, ENTRANCE_LABELS, projectInfo, enabledEntranceTypes, isCatalogFilterV2,
   catalogFilterValuesV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2,
-  type GameMode, type EntranceType, type CatalogFilterV2, type PublicMapConfigV4 } from "@idv-map/shared";
+  type GameMode, type EntranceType, type CatalogFilterV2, type PublicMapConfigV5 } from "@idv-map/shared";
 import { content } from "../../services/content";
 import { catalogPreferences } from "../../services/catalog-preferences";
 import UiIcon from "../../components/UiIcon.vue";
 import { createPullRefresh } from "../../services/pull-refresh";
 
-const config = shallowRef<PublicMapConfigV4>();
+const config = shallowRef<PublicMapConfigV5>();
 const gameMapId = ref("");
 const mode = ref<GameMode>("hard");
 const entrance = ref<EntranceType>("side");
@@ -33,7 +33,10 @@ const cards = computed(() => (config.value?.layouts ?? [])
   })
   .sort((a, b) => a.layout.sort - b.layout.sort || a.layout.id - b.layout.id));
 const filters = computed(() => catalogFilterValuesV2(entrance.value).map(value => ({ value, label: catalogFilterLabelV2(entrance.value, value) })));
-const entrances = computed(() => enabledEntranceTypesV2(draftMode.value));
+const draftGameMap = computed(() => config.value?.gameMaps.find(m => m.id === draftMap.value));
+const modes = computed(() => availableModes(draftGameMap.value));
+const entrances = computed(() => enabledEntranceTypes(draftGameMap.value, draftMode.value));
+watch(modes, value => { if (!value.includes(draftMode.value) && value[0]) draftMode.value = value[0]; });
 
 async function load(refresh = false) {
   if (loading.value) return;
@@ -46,8 +49,14 @@ async function load(refresh = false) {
       const preferred = catalogPreferences.read(data.gameMaps);
       if (preferred) { gameMapId.value = preferred.gameMapId; mode.value = preferred.mode; entrance.value = preferred.entrance; }
       initialized = true;
-    } else if (!data.gameMaps.some(m => m.id === gameMapId.value)) {
-      gameMapId.value = data.gameMaps[0]?.id ?? "";
+    } else {
+      const current = data.gameMaps.find(m => m.id === gameMapId.value);
+      if (!current || !availableModes(current).includes(mode.value) || !enabledEntranceTypes(current, mode.value).includes(entrance.value)) {
+        const preferred = catalogPreferences.read(data.gameMaps);
+        gameMapId.value = preferred?.gameMapId ?? "";
+        if (preferred) { mode.value = preferred.mode; entrance.value = preferred.entrance; }
+        filter.value = "";
+      }
     }
   } catch (cause) { if (!disposed) error.value = cause instanceof Error ? cause.message : "加载失败"; }
   finally { if (!disposed) loading.value = false; }
@@ -57,7 +66,7 @@ function openConditions() {
 }
 function applyConditions(next: EntranceType) {
   gameMapId.value = draftMap.value; mode.value = draftMode.value; entrance.value = next;
-  if (filter.value && !isCatalogFilterV2(next, filter.value)) filter.value = "";
+  filter.value = "";
   conditionsOpen.value = false;
   catalogPreferences.remember({ gameMapId: gameMapId.value, mode: mode.value, entrance: entrance.value });
 }
@@ -138,7 +147,7 @@ onBeforeUnmount(dispose);
           <text v-if="config.gameMaps.length === 1" class="single-map">{{ config.gameMaps[0]?.name }}</text>
           <view v-else class="condition-options"><button v-for="map in config.gameMaps" :key="map.id" :class="{ selected: draftMap === map.id }" :aria-pressed="draftMap === map.id" @tap="draftMap = map.id">{{ map.name }}</button></view>
         </view>
-        <view class="condition-field"><text class="field-label">模式</text><view class="condition-options"><button v-for="item in GAME_MODES" :key="item" :class="{ selected: draftMode === item }" :aria-pressed="draftMode === item" @tap="draftMode = item">{{ MODE_LABELS[item] }}<text v-if="draftMode === item" class="check">✓</text></button></view></view>
+        <view class="condition-field"><text class="field-label">模式</text><text v-if="modes.length === 1" class="single-map">{{ MODE_LABELS[modes[0]!] }}</text><view v-else class="condition-options"><button v-for="item in modes" :key="item" :class="{ selected: draftMode === item }" :aria-pressed="draftMode === item" @tap="draftMode = item">{{ MODE_LABELS[item] }}<text v-if="draftMode === item" class="check">✓</text></button></view></view>
         <view class="condition-field"><text class="field-label">入口</text><view class="condition-options"><button v-for="item in entrances" :key="item" @tap="applyConditions(item)">{{ ENTRANCE_LABELS[item] }}</button></view></view>
       </scroll-view>
     </view>

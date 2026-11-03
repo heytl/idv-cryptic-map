@@ -9,6 +9,7 @@ import type { Env } from "./types";
 
 const config: MapConfigV3 = {
   schemaVersion: 3,
+  entranceRulesVersion: 2,
   version: 23,
   updatedAt: "2026-08-23",
   gameMaps: [],

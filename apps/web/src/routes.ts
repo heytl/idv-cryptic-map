@@ -3,20 +3,18 @@ import type {
   RouteLocationGeneric,
   RouteRecordRaw,
 } from "vue-router";
-import { DEFAULT_GAME_MAP_ID } from "@idv-map/shared";
+import { DEFAULT_GAME_MAP_ID, availableModes, enabledEntranceTypes, defaultEntrance } from "@idv-map/shared";
 import CatalogV2View from "./views/CatalogV2View.vue";
 import StrategyV2View from "./views/StrategyV2View.vue";
 import { preferredCatalogPath } from "./catalogPreferences";
 import GameMapsView from "./views/GameMapsView.vue";
 import {
   availableFloors,
-  defaultEntranceV2,
   ensureMapsV2,
   findEntranceV2,
   findMapV2,
   gameMaps,
   isCatalogFilterV2,
-  isEnabledEntranceV2,
   isEntranceType,
   isGameMode,
 } from "./data/maps-v2";
@@ -30,22 +28,24 @@ export async function normalizeV2Route(to: RouteLocationNormalized) {
     return path ? { path, replace: true } : true;
   }
   const gameMapId = String(to.params.gameMapId);
-  if (!gameMaps.some((m) => m.id === gameMapId))
+  const gameMap = gameMaps.find(m => m.id === gameMapId);
+  if (!gameMap)
     return { path: "/maps", replace: true };
-  const mode = to.params.mode;
-  if (!isGameMode(mode))
-    return { path: `/maps/${gameMapId}/hard/side`, replace: true };
+  const modes = availableModes(gameMap);
+  const mode = isGameMode(to.params.mode) && modes.includes(to.params.mode) ? to.params.mode : modes[0];
+  if (!mode) return { path: "/maps", replace: true };
   const requested = to.params.entrance;
   const entrance =
-    isEntranceType(requested) && isEnabledEntranceV2(mode, requested)
+    isEntranceType(requested) && enabledEntranceTypes(gameMap, mode).includes(requested)
       ? requested
-      : defaultEntranceV2(mode);
+      : defaultEntrance(gameMap, mode);
+  if (!entrance) return { path: "/maps", replace: true };
   const base = `/maps/${gameMapId}/${mode}/${entrance}`;
   if (to.name === "catalog-v2") {
     const filter = to.params.filter;
     const path =
       base +
-      (filter && isCatalogFilterV2(entrance, filter) ? `/${filter}` : "");
+      (requested === entrance && to.params.mode === mode && filter && isCatalogFilterV2(entrance, filter) ? `/${filter}` : "");
     return to.path === path ? true : { path, replace: true };
   }
   const layout = findMapV2(Number(to.params.layoutId), mode, gameMapId);

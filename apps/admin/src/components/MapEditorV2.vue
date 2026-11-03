@@ -3,7 +3,8 @@ import {
   DIRECTIONS_V2,
   DIRECTION_LABELS,
   ENTRANCE_LABELS,
-  REQUIRED_ENTRANCES,
+  allowedEntranceTypes,
+  configuredEntranceTypes,
   REQUIRED_LAYOUTS,
   FLOOR_LABELS,
   FLOOR_ORDER,
@@ -37,6 +38,7 @@ import { fileToWebp, makeThumb } from "../imageTools";
 import CropSingle from "./CropSingle.vue";
 import RegionEditor, { type RegionItem, type RegionResult } from "./RegionEditor.vue";
 import RegionPreview from "./RegionPreview.vue";
+import { storeV2 } from "../store-v2";
 
 const props = defineProps<{ map: Layout; isNew?: boolean }>();
 const emit = defineEmits<{ apply: [map: Layout]; cancel: [] }>();
@@ -50,6 +52,7 @@ for (const entrance of draft.entrances) {
   if (entrance.type === "front") entrance.direction = "south";
 }
 const busy = ref("");
+const previewFloor = ref<FloorType | null>(null);
 const regionJob = ref<{ source: string; candidate?: Blob; initialId?: string; items: RegionItem[]; required: string[] } | null>(null);
 function closeRegions() {
   if (regionJob.value?.candidate) URL.revokeObjectURL(regionJob.value.source);
@@ -83,9 +86,15 @@ const floorSlots = computed(() =>
     );
   }),
 );
-const issues = computed(() => layoutPublicationIssues(draft));
+const gameMap = computed(() => storeV2.gameMaps.find(m => m.id === draft.gameMapId));
+const issues = computed(() => {
+  const result = layoutPublicationIssues(draft, gameMap.value, !props.map.published || draft.mode !== props.map.mode);
+  for (const e of draft.entrances) if (!allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))
+    result.push(`${ENTRANCE_LABELS[e.type]}不允许录入，请移除或调整难度`);
+  return result;
+});
 const missingEntranceTypes = computed(() => {
-  const expected: readonly EntranceType[] = REQUIRED_ENTRANCES[draft.mode];
+  const expected = allowedEntranceTypes(gameMap.value, draft.mode);
   return expected.filter(
     (type) => !draft.entrances.some((entrance) => entrance.type === type),
   );
@@ -246,24 +255,26 @@ function changeMode(mode: GameMode): void {
   draft.mode = mode;
   if (!props.isNew) return;
 
-  const expected: readonly EntranceType[] = REQUIRED_ENTRANCES[mode];
+  const expected = configuredEntranceTypes(gameMap.value, mode);
   const existing = new Map(
     draft.entrances.map((entrance) => [entrance.type, entrance]),
   );
-  draft.entrances = expected.map((type) => {
+  draft.entrances = [...existing.values()];
+  for (const type of expected) if (!existing.has(type)) {
     const entrance: EntranceV2 = existing.get(type) ?? {
       id: `${draft.id}-${type}`,
       type,
     };
     if (type === "front") entrance.direction = "south";
-    return entrance;
-  });
+    draft.entrances.push(entrance);
+  }
 
 }
 
 function setPublished(value: boolean): void {
-  if (value && issues.value.length > 0) {
-    message.warning(`还不能发布：${issues.value.join("；")}`, {
+  const publicationIssues = [...new Set([...issues.value, ...layoutPublicationIssues(draft, gameMap.value)])];
+  if (value && publicationIssues.length > 0) {
+    message.warning(`还不能发布：${publicationIssues.join("；")}`, {
       duration: 8000,
       closable: true,
     });
@@ -275,6 +286,10 @@ function setPublished(value: boolean): void {
 function apply(): void {
   if (!draft.name.trim() || !draft.displayName.trim()) {
     message.warning("逻辑名和展示名都要填写");
+    return;
+  }
+  if (draft.entrances.some(e => !allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))) {
+    message.warning("存在当前难度不允许的入口，请移除或调整难度");
     return;
   }
   if (draft.published && issues.value.length > 0) {
@@ -340,7 +355,7 @@ function apply(): void {
     <div class="img-slots">
       <div v-for="floor in floorSlots" :key="floor" class="img-slot" :class="{ missing: !draft.floorImages[floor] && !floorRect(floor) }">
         <div class="frame">
-          <RegionPreview v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" />
+          <button v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" class="region-preview-button" :aria-label="`预览${FLOOR_LABELS[floor]}`" @click="previewFloor = floor"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" /></button>
           <n-image v-else-if="draft.floorImages[floor]" :src="mediaUrl(draft.floorImages[floor]!.key)" object-fit="contain" lazy />
           <span v-else class="muted">尚未设置</span>
         </div>
@@ -447,6 +462,9 @@ function apply(): void {
       >
     </div>
 
+    <n-modal :show="!!previewFloor" preset="card" :title="previewFloor ? FLOOR_LABELS[previewFloor] : ''" style="width: min(90vw, 900px)" @update:show="previewFloor = null">
+      <div v-if="previewFloor && floorRect(previewFloor) && draft.floorRegions && draft.floorImages.full" class="region-preview-large"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(previewFloor)!" :label="FLOOR_LABELS[previewFloor]" /></div>
+    </n-modal>
     <RegionEditor v-if="regionJob" :source="regionJob.source" :items="regionJob.items" :initial-id="regionJob.initialId" :required-confirmation="regionJob.required" :pending-source="!!regionJob.candidate" :busy="!!busy" @done="applyRegions" @cancel="closeRegions" />
     <CropSingle
       v-if="recrop"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { ENTRANCE_LABELS, MODE_LABELS, type EntranceType, type GameMode } from "@idv-map/shared";
-import { gameMaps, enabledEntranceTypesV2 } from "../data/maps-v2";
+import { ENTRANCE_LABELS, MODE_LABELS, availableModes, enabledEntranceTypes, type EntranceType, type GameMode } from "@idv-map/shared";
+import { gameMaps } from "../data/maps-v2";
 
 const props = defineProps<{ gameMapId: string; mode: GameMode; entrance: EntranceType }>();
 const emit = defineEmits<{ apply: [gameMapId: string, mode: GameMode, entrance: EntranceType] }>();
@@ -11,7 +11,10 @@ const expanded = ref(false);
 const draftMap = ref(props.gameMapId);
 const draftMode = ref(props.mode);
 const mapName = computed(() => gameMaps.find(m => m.id === props.gameMapId)?.name);
-const allowedEntrances = computed(() => enabledEntranceTypesV2(draftMode.value));
+const selectedMap = computed(() => gameMaps.find(m => m.id === draftMap.value));
+const modes = computed(() => availableModes(selectedMap.value));
+const allowedEntrances = computed(() => enabledEntranceTypes(selectedMap.value, draftMode.value));
+watch(modes, value => { if (!value.includes(draftMode.value) && value[0]) draftMode.value = value[0]; });
 
 function open() {
   draftMap.value = props.gameMapId;
@@ -78,8 +81,9 @@ function onBackdrop(event: MouseEvent) {
         </div>
         <div class="condition-field" role="group" aria-label="模式">
           <span class="condition-label">模式</span>
-          <div class="condition-options">
-            <button v-for="item in ['hard', 'nightmare'] as const" :key="item" type="button" class="tab-btn" :class="{ active: draftMode === item }" :aria-pressed="draftMode === item" @click="selectMode(item)">{{ MODE_LABELS[item] }}</button>
+          <p v-if="modes.length === 1" class="condition-map-name">{{ MODE_LABELS[modes[0]!] }}</p>
+          <div v-else class="condition-options">
+            <button v-for="item in modes" :key="item" type="button" class="tab-btn" :class="{ active: draftMode === item }" :aria-pressed="draftMode === item" @click="selectMode(item)">{{ MODE_LABELS[item] }}</button>
           </div>
         </div>
         <div class="condition-field" role="group" aria-label="入口">

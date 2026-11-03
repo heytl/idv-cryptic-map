@@ -1,5 +1,8 @@
 import {
   validateMapConfigV3,
+  normalizeEntranceRules,
+  entranceAvailabilityIssues,
+  ENTRANCE_RULES_VERSION,
   type GameMap,
   type Layout,
   type MapConfigV3,
@@ -18,11 +21,13 @@ export const storeV2 = reactive({
   saving: false,
 });
 let editRevision = 0;
+let loadedConfig: MapConfigV3 | undefined;
 export async function loadV2() {
   storeV2.loading = true;
   storeV2.fatal = "";
   try {
-    const c = await fetchConfigV2();
+    const c = normalizeEntranceRules(await fetchConfigV2());
+    loadedConfig = JSON.parse(JSON.stringify(c));
     storeV2.version = c.version;
     storeV2.updatedAt = c.updatedAt;
     storeV2.maps = c.layouts;
@@ -44,20 +49,24 @@ export async function saveV2(): Promise<string | null> {
   const c: MapConfigV3 = JSON.parse(
     JSON.stringify({
       schemaVersion: 3,
+      entranceRulesVersion: ENTRANCE_RULES_VERSION,
       version: storeV2.version,
       updatedAt: storeV2.updatedAt,
       gameMaps: storeV2.gameMaps,
-      layouts: storeV2.maps.map((l, i) => ({ ...l, sort: (i + 1) * 10 })),
+      layouts: storeV2.maps,
     }),
   );
   const check = validateMapConfigV3(c);
   if (!check.valid) return check.errors.join("；");
+  const readiness = loadedConfig ? entranceAvailabilityIssues(c, loadedConfig) : [];
+  if (readiness.length) return readiness.join("；");
   storeV2.saving = true;
   const savingRevision = editRevision;
   try {
     const next = await saveConfigV2(storeV2.version, c);
     storeV2.version = next.version;
     storeV2.updatedAt = next.updatedAt;
+    loadedConfig = JSON.parse(JSON.stringify(next));
     storeV2.dirty = editRevision !== savingRevision;
     return null;
   } catch (e) {

@@ -2,7 +2,7 @@
 import { computed, ref, shallowRef, nextTick, onBeforeUnmount } from "vue";
 import { onHide, onLoad, onResize, onShow } from "@dcloudio/uni-app";
 import { DEFAULT_FLOOR, FLOOR_LABELS, availableFloors, resolveFloorSource,
-  enabledEntranceTypesV2, type FloorType, type PublicLayoutV4 } from "@idv-map/shared";
+  enabledEntranceTypes, type FloorType, type PublicLayoutV4 } from "@idv-map/shared";
 import MapViewport from "../../components/MapViewport.vue";
 import FloorPreview from "../../components/FloorPreview.vue";
 import { adjacentFloor } from "../../services/map-gestures";
@@ -49,8 +49,9 @@ async function load() {
     if (disposed) return;
     const selected = data.layouts.find(l => l.id === Number(params.layoutId) && l.gameMapId === params.gameMapId);
     if (!selected) throw new Error("地图不存在或已下架，请返回目录刷新");
-    const allowed = selected.entrances.filter(e => enabledEntranceTypesV2(selected.mode).includes(e.type));
+    const allowed = selected.entrances.filter(e => enabledEntranceTypes(data.gameMaps.find(m => m.id === selected.gameMapId), selected.mode).includes(e.type));
     if (!allowed.length) throw new Error("此地图暂无可用入口");
+    params.entrance = allowed.find(e => e.type === params.entrance)?.type ?? allowed[0]!.type;
     layout.value = selected;
     trackVisit();
     uni.setNavigationBarTitle({ title: selected.displayName });

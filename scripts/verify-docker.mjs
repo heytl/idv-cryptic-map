@@ -29,6 +29,9 @@ try {
   await ready();
   assert.equal((await fetch(`${base}/`)).status, 200);
   assert.equal((await fetch(`${base}/maps-v4.json`)).status, 200);
+  const modern = await fetch(`${base}/maps-v5.json`);
+  assert.equal(modern.status, 200);
+  assert.equal((await modern.json()).schemaVersion, 5);
   assert.equal((await fetch(`${base}/api/admin/v3/maps`)).status, 401);
   assert.equal((await fetch(`${base}/admin/`, { redirect: 'manual' })).status, 303);
   assert.equal((await fetch(`${base}/admin/login`)).status, 200);
@@ -50,6 +53,7 @@ try {
     '--security-opt=no-new-privileges:true', '--mount', `type=volume,src=${volume},dst=/data`,
     '-p', `127.0.0.1:${port}:8080`, '-e', `ADMIN_KEY=${key}`, image);
   await ready();
+  assert.equal((await (await fetch(`${base}/maps-v5.json`)).json()).schemaVersion, 5);
   assert.equal((await fetch(`${base}/auth/session`, { headers })).status, 200);
   assert.equal((await fetch(`${base}/auth/logout`, { method: 'POST', headers: { ...headers, Origin: base } })).status, 200);
   assert.equal((await fetch(`${base}/auth/session`, { headers })).status, 401);

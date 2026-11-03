@@ -3,6 +3,7 @@ import {
   DEFAULT_FLOOR,
   resolveFloorSource,
   ENTRANCE_LABELS,
+  enabledEntranceTypes,
   type EntranceType,
   type FloorType,
   type GameMode,
@@ -14,7 +15,7 @@ import LegendBox from "../components/LegendBox.vue";
 import MapViewport from "../components/MapViewport.vue";
 import {
   availableFloors,
-  enabledEntranceTypesV2,
+  gameMaps,
   entranceFilterLabelV2,
   findEntranceV2,
   findMapV2,
@@ -60,7 +61,7 @@ const entrance = computed(() =>
   map.value ? findEntranceV2(map.value, entranceType.value) : undefined,
 );
 const enabledEntrances = computed(() => {
-  const enabled = enabledEntranceTypesV2(mode.value);
+  const enabled = enabledEntranceTypes(gameMaps.find(m => m.id === route.params.gameMapId), mode.value);
   return (
     map.value?.entrances.filter((item) => enabled.includes(item.type)) ?? []
   );

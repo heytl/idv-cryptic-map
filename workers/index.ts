@@ -3,6 +3,7 @@ import {
   beijingDay,
   dayOffset,
   toPublicMapConfigV4,
+  toPublicMapConfigV5,
   validateStatsQuery,
   type StatsQuery,
 } from "../packages/shared/src/index";
@@ -119,7 +120,7 @@ export async function handleRequest(
   if (path.startsWith("/r2/")) return handleR2(request, env);
   if (path.startsWith("/_vercel/")) return new Response(null, { status: 404 });
   if (
-    path === "/maps-v4.json"
+    path === "/maps-v4.json" || path === "/maps-v5.json"
   ) {
     const headers = {
       "Access-Control-Allow-Origin": "*",
@@ -133,12 +134,13 @@ export async function handleRequest(
     if (!["GET", "HEAD"].includes(request.method))
       return jsonError(405, "method_not_allowed");
     const config = await repo.read();
-    const etag = `"maps-v4-${config.version}${env.RELATIVE_MEDIA_URLS === '1' ? '-relative' : ''}"`;
+    const protocol = path === "/maps-v5.json" ? 5 : 4;
+    const etag = `"maps-v${protocol}-${config.version}${env.RELATIVE_MEDIA_URLS === '1' ? '-relative' : ''}"`;
     const responseHeaders = { ...headers, ETag: etag };
     if (request.headers.get("If-None-Match") === etag)
       return new Response(null, { status: 304, headers: responseHeaders });
     const base = env.RELATIVE_MEDIA_URLS === '1' ? '/r2' : new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
-    const output = toPublicMapConfigV4(config, base);
+    const output = protocol === 5 ? toPublicMapConfigV5(config, base) : toPublicMapConfigV4(config, base);
     return request.method === "HEAD"
       ? new Response(null, { headers: responseHeaders })
       : jsonResponse(output, 200, responseHeaders);

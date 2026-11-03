@@ -38,9 +38,10 @@ jobs:
           verification_pid=$!
           trap 'kill "$verification_pid"' EXIT
           for attempt in {1..30}; do
-            if curl --silent --fail http://127.0.0.1:8787/maps-v4.json > /dev/null; then break; fi
+            if curl --silent --fail http://127.0.0.1:8787/maps-v5.json > /dev/null; then break; fi
             sleep 1
           done
+          node scripts/verify-entrances.mjs
           pnpm verify:pwa:update
 
   containers:

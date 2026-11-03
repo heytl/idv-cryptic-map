@@ -121,6 +121,7 @@ export const ENABLED_ENTRANCES: Record<GameMode, readonly EntranceType[]> = {
 export function publicationIssues(
   map: MapItemV2,
   hasFloor: (floor: FloorType) => boolean = floor => !!map.layout[floor],
+  checkEntrances = true,
 ): string[] {
   const issues: string[] = [];
   for (const floor of REQUIRED_LAYOUTS[map.mode]) {
@@ -129,6 +130,7 @@ export function publicationIssues(
   if (map.mode === "hard" && hasFloor("basement"))
     issues.push("困难模式不使用地下室地图，请先移除");
 
+  if (!checkEntrances) return issues;
   const requiredTypes = REQUIRED_ENTRANCES[map.mode];
   for (const type of requiredTypes) {
     const entrance = map.entrances.find((item) => item.type === type);

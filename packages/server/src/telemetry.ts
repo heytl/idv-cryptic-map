@@ -1,5 +1,5 @@
 import {
-  ENABLED_ENTRANCES,
+  publicEntrance,
   type MapConfigV3,
   type VisitEvent,
 } from "../../shared/src/index";
@@ -26,7 +26,7 @@ export function makeVisit(
   const entrance = layout?.entrances.find(
     (en) =>
       en.id === e.entranceId &&
-      ENABLED_ENTRANCES[layout.mode].includes(en.type),
+      publicEntrance(en, config.gameMaps.find(m => m.id === layout.gameMapId)!, layout.mode),
   );
   if (
     !layout ||

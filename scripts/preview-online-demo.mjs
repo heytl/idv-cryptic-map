@@ -1,5 +1,5 @@
 // Local UI + read-only public demo content. Never forwards admin or telemetry writes.
-// DEMO_CONFIG_URL may point to a public V2, V3 or V4 JSON endpoint.
+// DEMO_CONFIG_URL may point to a public V2–V5 JSON endpoint.
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, relative, extname } from "node:path";
@@ -54,16 +54,21 @@ async function loadConfig() {
   loading = (async () => {
     const source = await (await upstream(endpoint)).json();
     let config;
-    if ([3, 4].includes(source.schemaVersion) && Array.isArray(source.layouts) && Array.isArray(source.gameMaps)) {
-      config = { ...structuredClone(source), schemaVersion: 4 };
+    if ([3, 4, 5].includes(source.schemaVersion) && Array.isArray(source.layouts) && Array.isArray(source.gameMaps)) {
+      config = { ...structuredClone(source), schemaVersion: 5 };
     } else if (source.schemaVersion === 2 && Array.isArray(source.maps)) {
       const { maps, ...rest } = source;
       config = {
-        ...rest, schemaVersion: 4,
+        ...rest, schemaVersion: 5,
         gameMaps: [{ id: "lady-of-doom", name: "厄运之女", sort: 10, published: true }],
         layouts: maps.map(({ layout, ...item }) => ({ ...item, gameMapId: "lady-of-doom", floorImages: layout })),
       };
-    } else throw new Error("Demo endpoint must return public V2, V3 or V4 JSON");
+    } else throw new Error("Demo endpoint must return public V2–V5 JSON");
+    for (const map of config.gameMaps) map.enabledEntrances ??= { hard: ["side"], nightmare: ["front", "upstairs"] };
+    const maps = new Map(config.gameMaps.map(map => [map.id, map]));
+    config.layouts = config.layouts.map(layout => ({ ...layout,
+      entrances: layout.entrances.filter(e => maps.get(layout.gameMapId)?.enabledEntrances[layout.mode]?.includes(e.type)),
+    })).filter(layout => layout.entrances.length);
     for (const layout of config.layouts) {
       for (const asset of Object.values(layout.floorImages)) asset.url = imageUrl(asset.url);
       if (layout.floorRegions) layout.floorRegions.sourceUrl = imageUrl(layout.floorRegions.sourceUrl);
@@ -90,7 +95,7 @@ createServer(async (req, res) => {
   if (!["GET", "HEAD"].includes(req.method)) { req.resume(); res.writeHead(405); res.end(); return; }
   if (path.startsWith("/api/") || path.startsWith("/admin")) { res.writeHead(404); res.end(); return; }
   try {
-    if (path === "/maps-v4.json") {
+    if (path === "/maps-v5.json") {
       const config = await loadConfig();
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       res.end(req.method === "HEAD" ? undefined : JSON.stringify(config));

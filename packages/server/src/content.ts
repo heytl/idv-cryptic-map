@@ -1,6 +1,10 @@
 import {
   assetKeys,
   validateMapConfigV3,
+  normalizeEntranceRules,
+  entranceAvailabilityIssues,
+  layoutPublicationIssues,
+  ENTRANCE_RULES_VERSION,
   type MapConfigV3,
 } from "../../shared/src/index";
 import type {
@@ -22,7 +26,7 @@ export function checkedConfig(value: unknown): MapConfigV3 {
   const validation = validateMapConfigV3(value);
   if (!validation.valid)
     throw new ServiceError(400, "invalid_config", validation.errors.join("\n"));
-  return value as MapConfigV3;
+  return normalizeEntranceRules(value as MapConfigV3);
 }
 export async function saveContent(
   repo: ContentRepository,
@@ -35,6 +39,8 @@ export async function saveContent(
   const current = await repo.read();
   if (current.version !== expectedVersion)
     throw new ServiceError(409, "version_conflict", "内容已更新，请刷新后重试");
+  if (current.entranceRulesVersion !== undefined && (candidate as MapConfigV3)?.entranceRulesVersion !== ENTRANCE_RULES_VERSION)
+    throw new ServiceError(409, "admin_upgrade_required", "请刷新后台后再保存，旧版后台不支持难度与入口配置");
   // Keep tombstones: IDs must remain reserved even across restore/import.
   const maps = new Map(config.gameMaps.map((m) => [m.id, m]));
   for (const map of current.gameMaps)
@@ -58,6 +64,15 @@ export async function saveContent(
     if (l.deletedAt && !next.deletedAt)
       throw new ServiceError(400, "retired_id", "已移除布局 ID 不可复用");
   }
+  const oldLayouts = new Map(current.layouts.map(l => [l.id, l]));
+  const mapById = new Map(config.gameMaps.map(m => [m.id, m]));
+  for (const layout of config.layouts) if (layout.published && !layout.deletedAt &&
+    (!oldLayouts.get(layout.id)?.published || oldLayouts.get(layout.id)?.mode !== layout.mode)) {
+    const issues = layoutPublicationIssues(layout, mapById.get(layout.gameMapId));
+    if (issues.length) throw new ServiceError(400, "invalid_publication", `布局 ${layout.id}：${issues.join("；")}`);
+  }
+  const readiness = entranceAvailabilityIssues(config, current);
+  if (readiness.length) throw new ServiceError(400, "entrance_not_ready", readiness.join("；"));
   for (const key of assetKeys(config))
     if (!(await assets.exists(key)))
       throw new ServiceError(400, "missing_asset", `缺少图片：${key}`);

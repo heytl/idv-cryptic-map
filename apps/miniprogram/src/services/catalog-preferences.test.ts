@@ -2,6 +2,12 @@ import { expect, it } from "vitest";
 import { createCatalogPreferences } from "./catalog-preferences";
 
 const maps = [{ id: "lady-of-doom" }, { id: "second" }];
+it("uses map-specific defaults and skips closed modes", () => {
+  const preferences = createCatalogPreferences({ get: () => '{"gameMapId":"second","mode":"hard","entrance":"side"}', set: () => {} });
+  expect(preferences.read([{ id: "second", enabledEntrances: { hard: [], nightmare: ["upstairs", "front"] } }]))
+    .toEqual({ gameMapId: "second", mode: "nightmare", entrance: "upstairs" });
+  expect(preferences.read([{ id: "second", enabledEntrances: { hard: [], nightmare: [] } }])).toBeUndefined();
+});
 it("restores committed conditions after a new session", () => {
   let value = "";
   const preferences = createCatalogPreferences({ get: () => value, set: (_key, next) => { value = next; } });

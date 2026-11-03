@@ -1,5 +1,6 @@
 export * from "./map-v2";
 export * from "./map-v3";
+export * from "./entrance-rules";
 export * from "./stats";
 export * from "./date";
 export * from "./catalog";

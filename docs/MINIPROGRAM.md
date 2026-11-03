@@ -9,7 +9,7 @@
 - 详情使用微信原生导航栏，支持全图 / 可用楼层、四方向旋转、重置、1–4 倍缩放和页面内全屏。
 - 单指拖图、双指捏合及边缘横滑切层由 WXS 处理；楼层胶囊与图片切换共用动画。
 - 点击地图打开微信原生图片预览，区域楼层在空闲时预生成 PNG，并跨页面、跨启动缓存。
-- 目录页底部提供“关于手册”入口；关于页包含项目简介、网页地址复制、最新更新、小程序码 / 发布状态、反馈占位及素材致谢。更新日志支持时间线、独立展开 / 收起和每批 10 条加载。
+- 目录页底部提供“关于手册”入口；关于页包含项目简介、网页地址复制、最新更新、小程序码 / 扫码限制说明、GitHub Issues 反馈入口及素材致谢。更新日志支持时间线、独立展开 / 收起和每批 10 条加载。
 
 详情工具栏保留全屏、旋转、重置、放大、缩小五项。入口参考、备注和图例面板不在本初版界面中。访问统计已接入正式 `/telemetry/events`，需更新小程序发布包后生效。分享直达、配置与主图的完整离线下载尚未接入；楼层 PNG 缓存不等同于离线包。
 
@@ -103,10 +103,10 @@ pnpm --filter miniprogram generate:icons
 
 关于页的项目名称、简介、网址、作者、小程序状态及码图地址统一维护在 `packages/shared/src/project-info.ts`；更新日志统一编辑 `docs/CHANGELOG.md`，两端重新构建后生效。关于页与日志页不依赖地图 API。微信内外部链接使用原生剪贴板，并提示在浏览器打开；返回时优先复用已有目录 / 关于页，直接进入日志页时也可返回。
 
-正式构建前，将 `.env.example` 复制为 `apps/miniprogram/.env.production.local` 并填写：
+正式环境配置保留在不提交的本地文件中。正式构建前，将 `apps/miniprogram/.env.example` 复制为 `apps/miniprogram/.env.production.local` 并填写；已有本地文件需核对 API 地址，Vite 会优先使用本地覆盖值：
 
 ```dotenv
-VITE_MAP_API_BASE_URL=https://实际生产域名
+VITE_MAP_API_BASE_URL=https://api.example.com
 WECHAT_APP_ID=实际微信AppID
 ```
 
