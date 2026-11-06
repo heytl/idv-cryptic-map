@@ -14,7 +14,7 @@ const options = { headless: true };
 if (process.env.STATIC_BROWSER_CHANNEL !== 'chromium') options.channel = process.env.STATIC_BROWSER_CHANNEL || 'chrome';
 const browser = await chromium.launch(options);
 const reports = [];
-const config = await (await fetch(base + '/maps-v4.json')).json();
+const config = await (await fetch(base + '/maps-v6.json')).json();
 const catalog = await (await fetch(base + '/versions/index.json')).json();
 const prefixes = ['/', ...catalog.versions.filter(version => version.version !== 'v1').map(version => version.url)];
 const offlinePrefixes = ['/', prefixes.find(prefix => prefix === `/${catalog.latest.version}/`) || prefixes[1]];
@@ -48,7 +48,8 @@ try {
   reports.push({ allUniqueImagesDecoded: decoded.length });
   await context.close();
   for (const prefix of prefixes) {
-    const localConfig = await (await fetch(base + prefix + 'maps-v4.json')).json();
+    const localRelease = await (await fetch(base + prefix + 'release.json')).json();
+    const localConfig = await (await fetch(base + prefix + (localRelease.schemaVersion === 6 ? 'maps-v6.json' : 'maps-v4.json'))).json();
     for (const mobile of [false, true]) {
       const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1365, height: 900 }, isMobile: mobile, hasTouch: mobile, serviceWorkers: 'allow' });
       // Third-party analytics is unrelated to the archived UI and may be unavailable locally.

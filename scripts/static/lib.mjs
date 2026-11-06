@@ -78,7 +78,7 @@ export async function verifyRelease(root) {
   const own = actual.filter(x => !['release.json', 'integrity.json'].includes(x.path) && !/^(?:v[1-9]\d*(?:\.\d+){0,2}|versions)\//.test(x.path));
   if (JSON.stringify(own) !== JSON.stringify(expected)) throw Error(`File integrity mismatch: ${root}`);
   if (release.integritySha256 !== sha256(await readFile(resolve(root, 'integrity.json')))) throw Error('Inventory hash mismatch');
-  const config = await json(resolve(root, 'maps-v4.json'));
+  const config = await json(resolve(root, release.schemaVersion === 6 ? 'maps-v6.json' : 'maps-v4.json'));
   if (config.layouts.length !== release.layouts || config.gameMaps.length !== release.gameMaps || config.dataVersion !== release.dataVersion) throw Error('Config counts/version mismatch');
   const paths = new Set(expected.map(x => x.path));
   for (const [item, key] of mediaReferences(config)) {

@@ -16,7 +16,7 @@ export async function capture(endpoint, destination) {
     }
   }
   const originalBytes = await download(endpoint), original = JSON.parse(originalBytes);
-  if (original.schemaVersion !== 4 || !Array.isArray(original.layouts)) throw Error('Expected public V4 config');
+  if (original.schemaVersion !== 6 || !Array.isArray(original.layouts)) throw Error('Expected public V6 config');
   const capturedAt = new Date().toISOString();
   const urls = [...new Set(mediaReferences(original).map(([item, key]) => new URL(item[key], endpoint).href))];
   const mediaIndex = []; let index = 0;

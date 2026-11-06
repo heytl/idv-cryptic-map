@@ -20,9 +20,10 @@ export async function verifySite(site) {
   for (const entry of await readdir(site, { withFileTypes: true })) if (entry.isDirectory() && entry.name !== 'v1' && /^v[1-9]\d*(?:\.\d+){0,2}$/.test(entry.name)) roots.push({ directory: resolve(site, entry.name), version: entry.name });
   for (const { directory, version } of roots) {
     const release = await verifyRelease(directory);
-    const originalBytes = await readFile(resolve(directory, 'source-maps-v4.json'));
+    const protocol = release.schemaVersion === 6 ? 'v6' : 'v4';
+    const originalBytes = await readFile(resolve(directory, `source-maps-${protocol}.json`));
     assert.equal(sha256(originalBytes), release.sourceConfigSha256);
-    const original = JSON.parse(originalBytes), config = await json(resolve(directory, 'maps-v4.json'));
+    const original = JSON.parse(originalBytes), config = await json(resolve(directory, `maps-${protocol}.json`));
     const media = await json(resolve(directory, 'media-index.json'));
     const localized = mediaReferences(config), source = mediaReferences(original);
     assert.equal(localized.length, source.length);

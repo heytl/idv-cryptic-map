@@ -17,7 +17,10 @@ function replaceOnce(code, before, after, id) {
 export default {
   root: resolve(source, 'apps/web'),
   base,
-  resolve: { alias: { '@idv-map/shared': resolve(source, 'packages/shared/src/index.ts') } },
+  resolve: { alias: [
+    { find: '@idv-map/shared/dynamic', replacement: resolve(source, 'packages/shared/src/dynamic.ts') },
+    { find: '@idv-map/shared', replacement: resolve(source, 'packages/shared/src/index.ts') },
+  ] },
   define: { 'import.meta.env.VITE_MAP_API_BASE_URL': JSON.stringify(base) },
   plugins: [
     {
@@ -29,8 +32,8 @@ export default {
           code = replaceOnce(code, '/^\\/r2\\/[^\\\\\\s]+$/', '/^\\/(?!\\/)[^\\\\\\s]+$/', id);
         }
         if (path.endsWith('/src/composables/useOfflineCache.ts')) {
-          for (const name of ['maps-config-v4', 'map-images-r2']) code = code.replaceAll(`"${name}"`, `"static-${scope}-${name}"`);
-          code = code.replaceAll('idv_map_offline_v4_', `idv_static_${scope}_offline_v4_`);
+          for (const name of ['maps-config-v6', 'map-images-r2']) code = code.replaceAll(`"${name}"`, `"static-${scope}-${name}"`);
+          code = code.replaceAll('idv_map_offline_v6_', `idv_static_${scope}_offline_v6_`);
         }
         if (path.endsWith('/src/main.ts')) code = replaceOnce(code, 'void retireLegacyCaches();', '// Historical versions own their caches; never retire another version.', id);
         if (path.endsWith('/src/App.vue')) code = replaceOnce(code,

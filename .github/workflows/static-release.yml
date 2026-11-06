@@ -5,7 +5,7 @@ on:
       source_ref:
         description: Formal UI branch, tag or commit
         required: true
-        default: production
+        default: codex/static-production-source
       archive:
         description: New frozen version (v4), or leave empty to update latest only
         required: false
@@ -52,7 +52,11 @@ jobs:
       - name: Verify UI, complete maps, mobile, version isolation and offline use
         env:
           STATIC_BROWSER_CHANNEL: chromium
-        run: node scripts/static/browser-verify.mjs
+        run: |
+          node --test scripts/static/lib.test.mjs
+          node scripts/static/browser-verify.mjs
+          node scripts/static/verify-dynamic.mjs
+          node scripts/static/verify-upgrade.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

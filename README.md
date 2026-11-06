@@ -16,8 +16,8 @@
 需要 Git、Node.js 24、pnpm 11。完整克隆仓库并安装 pnpm 后：
 
 ```powershell
-git fetch origin main production
-node scripts/static/release.mjs --source-ref origin/production
+git fetch origin main production codex/static-production-source
+node scripts/static/release.mjs --source-ref origin/codex/static-production-source
 node scripts/static/verify.mjs
 node --test scripts/static/lib.test.mjs
 ```
@@ -53,7 +53,9 @@ node scripts/static/browser-verify.mjs
 
 本地静态预览模拟 Vercel 的 `cleanUrls` 跳转，离线验收覆盖首次访问下载离线包后立即断网刷新，无需先在线刷新页面。
 
-`source-maps-v4.json` 保存导出时的原始公开配置，`media-index.json` 记录图片来源与 SHA-256，`integrity.json` 记录版本内每个文件的校验值，`release.json` 记录 UI 提交、地图数据版本与保存时间。原始配置用于审计，实际页面只读取本地 `maps-v4.json`。
+最新静态站采用公开 V6，`source-maps-v6.json` 保存原始公开配置，页面只读取本地 `maps-v6.json`。历史归档保留原协议。`media-index.json` 记录图片来源与 SHA-256，`integrity.json` 记录文件校验值，`release.json` 记录 UI 提交、地图数据版本与保存时间。
+
+本次 V6 源码从正式版 `cc6bf1f` 派生，仅移入正式部署已使用的 Web 与共享动态地图能力，锁定为 `22c8d9d`。远程 `production` 尚未同步该能力，更新时须显式选择支持 V6 的正式版适配提交。验收补充运行 `scripts/static/verify-dynamic.mjs` 和 `scripts/static/verify-upgrade.mjs`，检查磷光症筛选、窄屏、离线与旧 PWA 升级。
 
 ## 目录
 

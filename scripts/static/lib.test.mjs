@@ -3,9 +3,29 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
-import { extractGitArchive, inside } from './lib.mjs';
+import { extractGitArchive, inside, mediaReferences } from './lib.mjs';
 import { runInNewContext } from 'node:vm';
 import { createPwa } from './pwa.mjs';
+
+test('V6 dynamic media includes crop sources and custom entrance references', () => {
+  const config = { layouts: [{ floorImages: { full: { url: '/media/full.webp' } }, floorRegions: { sourceUrl: '/media/crop.webp', regions: { b3: {} } }, entrances: [{ type: 'basement-track', imageUrl: '/media/entry.webp', thumbUrl: '/media/thumb.webp' }] }] };
+  assert.deepEqual(mediaReferences(config).map(([item, key]) => item[key]), ['/media/full.webp', '/media/crop.webp', '/media/entry.webp', '/media/thumb.webp']);
+});
+
+test('V6 config requests use the isolated configuration cache', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'idv-static-v6-'));
+  await createPwa(root, '/', 'v6-regression');
+  const handlers = new Map(), opened = [];
+  runInNewContext(await readFile(resolve(root, 'sw.js'), 'utf8'), {
+    self: { addEventListener: (name, fn) => handlers.set(name, fn), location: { origin: 'https://handbook.test' } },
+    caches: { async open(name) { opened.push(name); return { put: async () => {} }; } },
+    fetch: async () => new Response('{"schemaVersion":6}'), Request, Response, URL, AbortSignal,
+  });
+  let response;
+  handlers.get('fetch')({ request: new Request('https://handbook.test/maps-v6.json'), respondWith(value) { response = value; } });
+  assert.equal((await response).status, 200);
+  assert.deepEqual(opened, ['static-latest-maps-config-v6']);
+});
 test('Git archive extraction retains Chinese paths and exact binary bytes on Windows', async () => {
   const root = await mkdtemp(resolve(tmpdir(), 'idv-static-'));
   const name = 'site/public/entry/北-1沙发门.webp';

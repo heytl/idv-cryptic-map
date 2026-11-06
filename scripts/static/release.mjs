@@ -19,7 +19,7 @@ for (const key of Object.keys(args)) if (!['source-ref', 'source-dir', 'config-u
 const archive = args.archive;
 if (archive && !/^v[1-9]\d*(?:\.\d+){0,2}$/.test(archive)) throw Error('Archive must be v3, v3.1 or v3.1.0');
 if (archive === 'v1') throw Error('v1 is reserved for the original static site');
-const endpoint = new URL(args['config-url'] || 'https://idv-map.321666.xyz/maps-v4.json');
+const endpoint = new URL(args['config-url'] || 'https://idv-map.321666.xyz/maps-v6.json');
 if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw Error('Use a public HTTPS config URL without credentials/query/fragment');
 const git = (...params) => execFileSync('git', ['-c', `safe.directory=${root.replaceAll('\\', '/')}`, '-c', 'core.quotepath=false', '-c', 'core.autocrlf=false', ...params], { cwd: root, maxBuffer: 64 * 1024 * 1024 });
 const sourceSha = git('rev-parse', '--verify', `${args['source-ref'] || 'origin/production'}^{commit}`).toString().trim();
@@ -72,7 +72,8 @@ const viteRequire = createRequire(vitePath);
 const { build: bundle } = await import(pathToFileURL(viteRequire.resolve('esbuild')).href);
 const validatorPath = resolve(work, 'validator.mjs');
 await bundle({ entryPoints: [resolve(source, 'packages/shared/src/index.ts')], outfile: validatorPath, bundle: true, platform: 'node', format: 'esm' });
-const { isPublicMapConfigV4, resolvePublicMediaUrls } = await import(pathToFileURL(validatorPath).href);
+const { isPublicMapConfigV6, resolvePublicMediaUrls } = await import(pathToFileURL(validatorPath).href);
+if (typeof isPublicMapConfigV6 !== 'function') throw Error('Select a production-based source commit supporting public V6 maps with --source-ref');
 console.log(`Locked UI: ${sourceSha}; content: ${endpoint.href}`);
 const captureDir = args['capture-dir'] ? resolve(args['capture-dir']) : resolve(work, 'capture');
 if (!args['capture-dir']) await capture(endpoint, captureDir);
@@ -81,7 +82,7 @@ if (captured.sourceUrl !== endpoint.href) throw Error('Capture endpoint mismatch
 const originalBytes = await readFile(resolve(captureDir, 'source.json'));
 if (sha256(originalBytes) !== captured.configSha256) throw Error('Capture config hash mismatch');
 const original = JSON.parse(originalBytes);
-if (!isPublicMapConfigV4(resolvePublicMediaUrls(original, endpoint.href))) throw Error('Live config fails the production V4 validator');
+if (!isPublicMapConfigV6(resolvePublicMediaUrls(original, endpoint.href))) throw Error('Live config fails the production V6 validator');
 const capturedAt = captured.capturedAt;
 const publisherSha256 = sha256(JSON.stringify(await inventory(resolve(root, 'scripts/static'))));
 const releaseId = sha256(sourceSha + sha256(originalBytes) + publisherSha256).slice(0, 16);
@@ -101,15 +102,17 @@ async function build(target, base, version) {
     env: { ...process.env, STATIC_SOURCE_DIR: source, STATIC_BASE: base, STATIC_BUILD_DIR: target },
   });
   if (result.status !== 0) throw Error(`UI build failed: ${base}`);
+  const headersPath = resolve(target, '_headers');
+  if (await exists(headersPath)) await writeFile(headersPath, (await readFile(headersPath, 'utf8')).replaceAll('\r\n', '\n'));
   await cp(mediaRoot, resolve(target, 'media'), { recursive: true });
   const config = structuredClone(original);
   for (const [item, key] of mediaReferences(config)) item[key] = base + byUrl.get(new URL(item[key], endpoint).href);
   // Validate every field and every floor region again after localization.
   const absolute = structuredClone(config);
   for (const [item, key] of mediaReferences(absolute)) item[key] = new URL(item[key], 'https://static.invalid').href;
-  if (!isPublicMapConfigV4(absolute)) throw Error('Localized config fails production validator');
-  await write(resolve(target, 'maps-v4.json'), JSON.stringify(config, null, 2) + '\n');
-  await write(resolve(target, 'source-maps-v4.json'), originalBytes);
+  if (!isPublicMapConfigV6(absolute)) throw Error('Localized config fails production validator');
+  await write(resolve(target, 'maps-v6.json'), JSON.stringify(config, null, 2) + '\n');
+  await write(resolve(target, 'source-maps-v6.json'), originalBytes);
   await write(resolve(target, 'media-index.json'), JSON.stringify(mediaIndex, null, 2) + '\n');
   await createPwa(target, base, releaseId);
   const integrity = JSON.stringify(await inventory(target), null, 2) + '\n';

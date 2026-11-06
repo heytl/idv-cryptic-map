@@ -28,7 +28,7 @@ export async function createPwa(root, base, releaseId) {
     icons: [192, 512].map(size => ({ src: base + `pwa-${size}.png`, sizes: `${size}x${size}`, type: 'image/png' })),
   }, null, 2) + '\n');
   await write(resolve(root, 'sw.js'), `const BASE = ${JSON.stringify(base)}, SHELL = ${JSON.stringify(shell)};
-const PREFIX = ${JSON.stringify(prefix + 'shell-')}, CONFIG = ${JSON.stringify(prefix + 'maps-config-v4')}, MEDIA = ${JSON.stringify(prefix + 'map-images-r2')};
+const PREFIX = ${JSON.stringify(prefix + 'shell-')}, CONFIG = ${JSON.stringify(prefix + 'maps-config-v6')}, MEDIA = ${JSON.stringify(prefix + 'map-images-r2')};
 const PRECACHE = ${JSON.stringify([...precache.map(path => base + path), base + 'registerSW.js', base + 'manifest.webmanifest'])};
 self.addEventListener('install', event => event.waitUntil((async () => { await (await caches.open(SHELL)).addAll(PRECACHE); await self.skipWaiting(); })()));
 self.addEventListener('activate', event => event.waitUntil((async () => {
@@ -61,7 +61,7 @@ self.addEventListener('fetch', event => {
   if (event.request.mode === 'navigate' && (path === '' || path === 'index.html')) {
     event.respondWith(networkFirst(event.request, SHELL, BASE + 'index.html')); return;
   }
-  if (path === 'maps-v4.json') { event.respondWith(networkFirst(event.request, CONFIG)); return; }
+  if (path === 'maps-v6.json') { event.respondWith(networkFirst(event.request, CONFIG)); return; }
   if (path.startsWith('media/')) {
     event.respondWith((async () => {
       const cache = await caches.open(MEDIA), saved = await cache.match(event.request);

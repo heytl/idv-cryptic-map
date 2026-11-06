@@ -1,30 +1,18 @@
 {
   "version": "v3",
   "base": "/",
-  "releaseId": "050b23b6db62f62f",
-  "sourceSha": "badc484a8c100e3b50415f3b606c014f441b77d4",
-  "publisherSha256": "e819a229b3fd02e23576953ae6d01448344ca0e63f23c5b03e274106e7bb0449",
-  "sourceUrl": "https://idv-map.321666.xyz/maps-v4.json",
-  "capturedAt": "2026-10-24T15:25:52.182Z",
-  "sourceConfigSha256": "5c2d3bf060914621fd2b8ad26c52d244ce94fd4b970b79abd933725bcb563646",
-  "integritySha256": "0675de52b3b37c5d8be736858b68f6ece587fd573b80ca1530b6893ba34ce5b2",
-  "schemaVersion": 4,
-  "dataVersion": 2,
-  "updatedAt": "2026-10-22T17:22:43.445Z",
-  "layouts": 55,
-  "gameMaps": 1,
-  "sourceImages": 223,
-  "uniqueImages": 223,
-  "maintenance": [
-    {
-      "at": "2026-10-24T15:48:28.521Z",
-      "fix": "Serve redirected precache HTML as a navigation response for first-visit offline reload",
-      "uiAndMapsUnchanged": true
-    },
-    {
-      "at": "2026-10-24T15:54:32.842Z",
-      "fix": "Keep archive worker activation independent from the parent root worker; preserve first-visit offline navigation",
-      "uiAndMapsUnchanged": true
-    }
-  ]
+  "releaseId": "ddfaec48cfe86360",
+  "sourceSha": "22c8d9de8b17e81903bcd1d542add5d29514b395",
+  "publisherSha256": "fa5c5b2d75849469275dfe718288fb1688ce851a5c017107fa88593c3a490ddd",
+  "sourceUrl": "https://idv-map.321666.xyz/maps-v6.json",
+  "capturedAt": "2026-11-06T08:34:53.461Z",
+  "sourceConfigSha256": "3c99fad19680c5f2e809e68017e3ce48e258dc9df518af3a2b02c4bf8b2fc5e1",
+  "integritySha256": "4b192918359c54450fd8b37a410e6da4fc660ca759183de70a224e56e445a437",
+  "schemaVersion": 6,
+  "dataVersion": 9,
+  "updatedAt": "2026-11-06T08:07:33.661Z",
+  "layouts": 71,
+  "gameMaps": 2,
+  "sourceImages": 271,
+  "uniqueImages": 271
 }
