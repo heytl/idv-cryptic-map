@@ -21,7 +21,7 @@ export function useOfflineCache(gameMapId: Ref<string>) {
   const failed = ref(0);
   const error = ref("");
   const key = (id = gameMapId.value, version = mapsV2Version.value) =>
-    `idv_map_offline_v5_${id}_${version}`;
+    `idv_map_offline_v6_${id}_${version}`;
   watch(
     [gameMapId, mapsV2Version],
     () => {
@@ -56,10 +56,10 @@ export function useOfflineCache(gameMapId: Ref<string>) {
         const response = await fetch(publicEndpoint(), { cache: "no-cache" });
         if (!response.ok) throw new Error("配置下载失败");
         const config = await response.clone().json();
-        if (config.schemaVersion !== 5) throw new Error("配置格式无效");
+        if (config.schemaVersion !== 6) throw new Error("配置格式无效");
         if (config.dataVersion !== downloadVersion) throw new Error("地图内容已更新，请刷新页面后重新下载离线包");
         await (
-          await caches.open("maps-config-v5")
+          await caches.open("maps-config-v6")
         ).put(publicEndpoint(), response);
       }
     } catch (e) {
@@ -113,7 +113,7 @@ export function useOfflineCache(gameMapId: Ref<string>) {
     try {
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const k = localStorage.key(i);
-        if (k?.startsWith(`idv_map_offline_v5_${gameMapId.value}_`) || k?.startsWith(`idv_map_offline_v4_${gameMapId.value}_`))
+        if (k?.startsWith(`idv_map_offline_v6_${gameMapId.value}_`) || k?.startsWith(`idv_map_offline_v5_${gameMapId.value}_`) || k?.startsWith(`idv_map_offline_v4_${gameMapId.value}_`))
           localStorage.removeItem(k);
       }
     } catch {}

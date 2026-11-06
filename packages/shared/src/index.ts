@@ -8,4 +8,7 @@ export * from "./map-client";
 export * from "./viewport";
 export * from "./project-info";
 export * from "./changelog";
+export { definitionReferences, purgeGameMap } from './definition-references';
 export { createVisitTracker } from "./visit-tracker";
+export { migrateV3ToV4, normalizeMapConfigV4, validateMapConfigV4, toPublicMapConfigV6, projectLegacyConfig, assetKeysV4, isPublicMapConfigV6, hydrateConfigV6, validId, entranceFilterFor } from './map-v4';
+export type { MapConfigV4, GameMapV4, LayoutV4, EntranceV4, Definition, EntranceDefinition, EntranceFilter, FloorDefinition, MapDifficulty, PublicMapConfigV6, PublicGameMapV6, PublicLayoutV6, PublicEntranceV6 } from './map-v4';

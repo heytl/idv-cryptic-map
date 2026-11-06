@@ -3,7 +3,7 @@ import type {
   RouteLocationGeneric,
   RouteRecordRaw,
 } from "vue-router";
-import { DEFAULT_GAME_MAP_ID, availableModes, enabledEntranceTypes, defaultEntrance } from "@idv-map/shared";
+import { DEFAULT_GAME_MAP_ID, availableModes, enabledEntranceTypes, defaultEntrance } from "@idv-map/shared/dynamic";
 import CatalogV2View from "./views/CatalogV2View.vue";
 import StrategyV2View from "./views/StrategyV2View.vue";
 import { preferredCatalogPath } from "./catalogPreferences";
@@ -45,7 +45,7 @@ export async function normalizeV2Route(to: RouteLocationNormalized) {
     const filter = to.params.filter;
     const path =
       base +
-      (requested === entrance && to.params.mode === mode && filter && isCatalogFilterV2(entrance, filter) ? `/${filter}` : "");
+      (requested === entrance && to.params.mode === mode && filter && isCatalogFilterV2(entrance, filter, gameMap, mode) ? `/${filter}` : "");
     return to.path === path ? true : { path, replace: true };
   }
   const layout = findMapV2(Number(to.params.layoutId), mode, gameMapId);

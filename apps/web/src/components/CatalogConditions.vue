@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { ENTRANCE_LABELS, MODE_LABELS, availableModes, enabledEntranceTypes, type EntranceType, type GameMode } from "@idv-map/shared";
+import { ENTRANCE_LABELS, MODE_LABELS, availableModes, enabledEntranceTypes, type EntranceType, type GameMode } from "@idv-map/shared/dynamic";
 import { gameMaps } from "../data/maps-v2";
 
 const props = defineProps<{ gameMapId: string; mode: GameMode; entrance: EntranceType }>();

@@ -3,7 +3,7 @@ import { normalizeV2Route, routes } from "./routes";
 import { findEntranceV2, findMapV2 } from "./data/maps-v2";
 import { rememberCatalog } from "./catalogPreferences";
 import { createVisitTracker } from "./telemetry";
-import type { EntranceType } from "@idv-map/shared";
+import type { EntranceType } from "@idv-map/shared/dynamic";
 
 export const router = createRouter({
   history: createWebHashHistory(),

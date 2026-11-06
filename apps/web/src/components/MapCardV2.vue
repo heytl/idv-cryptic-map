@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PublicEntranceV2, PublicLayout } from "@idv-map/shared";
+import type { PublicEntranceV2, PublicLayout } from "@idv-map/shared/dynamic";
 import { useRouter } from "vue-router";
 import { entranceFilterLabelV2 } from "../data/maps-v2";
 import { navState } from "../navState";
@@ -19,7 +19,7 @@ function open() {
   <button
     type="button"
     class="map-card-item"
-    :data-dir="entrance.direction"
+    :data-filter="entrance.filterValue"
     @click="open"
   >
     <div class="img-wrapper">
@@ -32,7 +32,7 @@ function open() {
     <div class="map-card-info">
       <div class="map-card-name">{{ map.displayName }}</div>
       <div class="map-card-dir">
-        {{ entrance.typeLabel }} · {{ entranceFilterLabelV2(entrance) }}
+        {{ entrance.typeLabel }}<template v-if="entranceFilterLabelV2(entrance)"> · {{ entranceFilterLabelV2(entrance) }}</template>
       </div>
     </div>
   </button>
