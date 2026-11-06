@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, nextTick, onBeforeUnmount } from "vue";
+import { computed, ref, shallowRef, nextTick, onBeforeUnmount, watch, getCurrentInstance } from "vue";
 import { onHide, onLoad, onResize, onShow } from "@dcloudio/uni-app";
-import { DEFAULT_FLOOR, FLOOR_LABELS, availableFloors, resolveFloorSource,
-  enabledEntranceTypes, type FloorType, type PublicLayoutV4 } from "@idv-map/shared";
+import { DEFAULT_FLOOR, floorLabel, availableFloors, resolveFloorSource,
+  enabledEntranceTypes, type FloorType, type PublicLayoutV4 } from "@idv-map/shared/dynamic";
 import MapViewport from "../../components/MapViewport.vue";
 import FloorPreview from "../../components/FloorPreview.vue";
 import { adjacentFloor } from "../../services/map-gestures";
@@ -27,11 +27,31 @@ const floorIndex = computed(() => floors.value.indexOf(floor.value));
 const floorSources = computed(() => layout.value ? floors.value.map(item => resolveFloorSource(layout.value!, item)!) : []);
 const source = computed(() => floorSources.value[floorIndex.value]);
 const highlightedFloor = computed(() => transitioningFloor.value ?? floorIndex.value);
+const instance = getCurrentInstance();
+const tabBoxes = ref<{left:number;width:number}[]>([]);
+const scrollLeft = ref(0); const scrollWidth = ref(0);
+function centerCurrent() {
+  const box=tabBoxes.value[floorIndex.value];
+  if(box) scrollLeft.value=Math.max(0,box.left-(scrollWidth.value-box.width)/2);
+}
+function measureTabs() {
+  if (!instance?.proxy || disposed) return;
+  uni.createSelectorQuery().in(instance.proxy).select('.floor-scroll').boundingClientRect().select('.floor-track').boundingClientRect().selectAll('.floor-tab').boundingClientRect().exec((result: any[]) => {
+    if(disposed || !result[0] || !result[1] || !Array.isArray(result[2])) return;
+    scrollWidth.value=result[0].width;
+    tabBoxes.value=result[2].map((r:{left:number;width:number})=>({left:r.left-result[1].left,width:r.width}));
+    centerCurrent();
+  });
+}
 const indicatorStyle = computed(() => {
-  const count = floors.value.length || 1;
-  return { width: `calc(${100 / count}% - ${(count - 1) * 2 / count}px)`,
-    transform: `translateX(calc(${highlightedFloor.value * 100}% + ${highlightedFloor.value * 2}px))` };
+  const value=Math.max(0,Math.min(tabBoxes.value.length-1,highlightedFloor.value));
+  const a=tabBoxes.value[Math.floor(value)],b=tabBoxes.value[Math.ceil(value)]??a;
+  if(!a)return {visibility:'hidden' as const};
+  const fraction=value-Math.floor(value);
+  return {width:`${a.width+(b.width-a.width)*fraction}px`,transform:`translateX(${a.left+(b.left-a.left)*fraction}px)`};
 });
+watch(floors,async()=>{await nextTick();measureTabs();});
+watch(floorIndex,centerCurrent);
 let disposed = false;
 const tracker = createMiniProgramVisitTracker();
 function trackVisit() {
@@ -78,7 +98,7 @@ onLoad(query => {
   windowHeight.value = uni.getWindowInfo().windowHeight;
   void load();
 });
-onResize(event => { windowHeight.value = event.size?.windowHeight ?? uni.getWindowInfo().windowHeight; viewer.value?.measure(); });
+onResize(event => { windowHeight.value = event.size?.windowHeight ?? uni.getWindowInfo().windowHeight; viewer.value?.measure(); void nextTick(measureTabs); });
 onShow(() => { foreground.value = true; trackVisit(); });
 onHide(() => { foreground.value = false; });
 onBeforeUnmount(() => { disposed = true; });
@@ -90,7 +110,7 @@ onBeforeUnmount(() => { disposed = true; });
     <view v-else-if="error" class="status"><text>{{ error }}</text><button @tap="load">重试</button><button @tap="back">返回目录</button></view>
     <template v-else-if="layout && source">
       <view v-if="!focused" class="header">
-        <view class="floors"><view class="floor-indicator" :style="indicatorStyle" aria-hidden="true" /><button v-for="(item, index) in floors" :key="item" :class="{ active: highlightedFloor === index }" :data-floor="item" :aria-pressed="floor === item" hover-class="floor-pressed" @tap="selectFloor(item)"><view class="floor-face">{{ FLOOR_LABELS[item] }}</view></button></view>
+        <scroll-view class="floor-scroll" scroll-x :scroll-left="scrollLeft" :show-scrollbar="false"><view class="floor-track"><view class="floor-indicator" :style="indicatorStyle" aria-hidden="true"/><button v-for="(item,index) in floors" :key="item" class="floor-tab" :class="{active:highlightedFloor===index}" :data-floor="item" :aria-pressed="floor===item" hover-class="floor-pressed" @tap="selectFloor(item)"><view class="floor-face">{{floorLabel(layout,item)}}</view></button></view></scroll-view>
       </view>
       <view class="map-panel"><MapViewport ref="viewer" :source="source" :sources="floorSources" :floor-index="floorIndex" :focused="focused" :align-top="floor === DEFAULT_FLOOR && !focused" @toggle-focus="toggleFocus" @switch-floor="switchFloor" @floor-transition="floorTransition" @preview="previewFloors" @ready="mapReady = $event" @interaction="mapInteracting = $event" @activity="imagePreview?.activity()" /></view>
       <FloorPreview ref="imagePreview" :sources="floorSources" :current="floorIndex" :ready="mapReady" :interacting="mapInteracting" :foreground="foreground" />
@@ -102,11 +122,12 @@ onBeforeUnmount(() => { disposed = true; });
 .strategy { --detail-muted: #b1a58f; display: flex; flex-direction: column; height: 100vh; padding-bottom: env(safe-area-inset-bottom); overflow: hidden; position: relative; }
 .header { flex: none; padding: 0 8px; background: rgba(17,24,30,.72); }
 /* Match the Web pill dimensions while keeping a 44px native tap target. */
-.floors { position: relative; display: flex; width: 100%; max-width: 320px; margin: 0 auto; gap: 2px; }
+.floor-scroll { width:100%; max-width:320px; margin:0 auto; white-space:nowrap; }
+.floor-track { position:relative; display:inline-flex; min-width:100%; gap:2px; }
 .floor-indicator { position: absolute; left: 0; top: 8.36px; height: 27.28px; border-radius: 999px; background: var(--gold); box-shadow: inset 0 1px 0 #ead5aa; transition: transform 240ms cubic-bezier(.22,.8,.24,1); pointer-events: none; }
-.floors button { position: relative; display: flex; align-items: center; justify-content: center; flex: 1 1 0; min-width: 0; height: 44px; min-height: 44px; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; font-family: inherit; font-size: 14.4px; line-height: 1.2; font-weight: 500; }
+.floor-tab { position: relative; display: flex; align-items: center; justify-content: center; flex: 1 0 auto; min-width: 44px; height: 44px; min-height: 44px; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; font-family: inherit; font-size: 14.4px; line-height: 1.2; font-weight: 500; }
 .floor-face { width: 100%; padding: 5px 10px; border-radius: 999px; color: var(--detail-muted); background: transparent; text-align: center; white-space: nowrap; transition: color 180ms ease; }
-.floors button.active .floor-face { color: #171710; }
+.floor-tab.active .floor-face { color: #171710; }
 .floor-pressed .floor-face { color: #f0d8ab; }
 .map-panel { flex: 1; min-height: 0; }
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from "vue";
-import type { FloorSource } from "@idv-map/shared";
+import type { FloorSource } from "@idv-map/shared/dynamic";
 import { createFloorPreview, type PreviewCanvas } from "../services/floor-preview";
 import { floorPreviewCache } from "../services/floor-preview-storage";
 import { createPreviewIdle } from "../services/preview-idle";

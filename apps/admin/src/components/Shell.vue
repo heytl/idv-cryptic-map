@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
       <div class="sidebar-footer">
         <span class="status-light" :class="{ error: !!storeV2.fatal, loading: storeV2.loading }" aria-hidden="true"></span>
         <span>{{ dataStatus }}</span>
-        <small>V3 · {{ storeV2.version }}</small>
+        <small>配置 · {{ storeV2.version }}</small>
       </div>
     </n-layout-sider>
 

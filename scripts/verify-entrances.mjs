@@ -4,11 +4,11 @@ import { randomUUID } from "node:crypto";
 
 const base = process.env.TEST_URL || "http://127.0.0.1:8787";
 if (!["127.0.0.1", "localhost"].includes(new URL(base).hostname)) throw new Error("Use local verification fixtures only");
-const admin = () => fetch(`${base}/api/admin/v3/maps`).then(r => r.json());
+const admin = () => fetch(`${base}/api/admin/v4/maps`).then(r => r.json());
 const original = await admin();
 let current = original;
 async function save(config, status = 200) {
-  const response = await fetch(`${base}/api/admin/v3/maps`, {
+  const response = await fetch(`${base}/api/admin/v4/maps`, {
     method: "PUT", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ baseVersion: current.version, config }),
   });
@@ -34,24 +34,25 @@ const visit = async (layout, entrance, status) => {
 };
 
 try {
-  assert.equal(current.entranceRulesVersion, 2);
+  assert.equal(current.schemaVersion, 4);
   let candidate = structuredClone(current);
   const mapId = "lady-of-doom";
   let map = candidate.gameMaps.find(m => m.id === mapId);
   assert(map);
-  map.entranceRules.hard.enabled = ["side"];
+  map.difficulties.find(d=>d.difficultyId==="hard").entranceRules.enabled = ["side"];
   const layout = candidate.layouts.find(l => l.gameMapId === mapId && l.mode === "hard" && l.published && !l.deletedAt);
   assert(layout);
   // A published layout can have just the currently visible entrance, while a
   // second entrance is unfinished in the same record.
-  layout.entrances = [layout.entrances.find(e => e.type === "side"), { id: `${layout.id}-front`, type: "front", direction: "south" }];
+  for (const entry of layout.entrances) if (entry.type !== 'side') { delete entry.image; delete entry.thumb; }
+
   await save(candidate);
   let published = await publicConfig();
   assert.equal(published.layouts.find(l => l.id === layout.id).entrances.length, 1);
   assert(published.layouts.filter(l => l.mode === "hard" && l.gameMapId === mapId).every(l => l.entrances.every(e => e.type === "side")));
 
   candidate = structuredClone(current);
-  candidate.gameMaps.find(m => m.id === mapId).entranceRules.hard.enabled = ["front", "side", "upstairs"];
+  candidate.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").entranceRules.enabled = ["front", "side", "upstairs"];
   await save(candidate);
   published = await publicConfig();
   assert.deepEqual(published.gameMaps.find(m => m.id === mapId).enabledEntrances.hard, ["front", "side", "upstairs"]);
@@ -65,38 +66,36 @@ try {
   // Closing side hides the side-only layout without destroying its published
   // record, while other front/upstairs layouts continue to work.
   candidate = structuredClone(current);
-  candidate.gameMaps.find(m => m.id === mapId).entranceRules.hard.enabled = ["front", "upstairs"];
+  candidate.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").entranceRules.enabled = ["front", "upstairs"];
   await save(candidate);
   assert(!(await publicConfig()).layouts.some(l => l.id === layout.id));
   assert(current.layouts.find(l => l.id === layout.id).published);
 
   candidate = structuredClone(current);
-  const hardSelection = [...candidate.gameMaps.find(m => m.id === mapId).entranceRules.hard.enabled];
-  candidate.gameMaps.find(m => m.id === mapId).modeVisibility.hard = false;
+  const hardSelection = [...candidate.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").entranceRules.enabled];
+  candidate.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").visible = false;
   await save(candidate);
-  assert.deepEqual(current.gameMaps.find(m => m.id === mapId).entranceRules.hard.enabled, hardSelection);
+  assert.deepEqual(current.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").entranceRules.enabled, hardSelection);
   assert(!(await publicConfig()).layouts.some(l => l.gameMapId === mapId && l.mode === "hard"));
   await visit(fullLayout, front, 400);
   candidate = structuredClone(current);
-  candidate.gameMaps.find(m => m.id === mapId).modeVisibility.hard = true;
+  candidate.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").visible = true;
   await save(candidate);
   assert.deepEqual((await publicConfig()).gameMaps.find(m => m.id === mapId).enabledEntrances.hard, hardSelection);
   candidate = structuredClone(current);
-  candidate.gameMaps.find(m => m.id === mapId).modeVisibility = { hard: false, nightmare: false };
+  for (const d of candidate.gameMaps.find(m => m.id === mapId).difficulties) d.visible = false;
   await save(candidate);
   assert(!(await publicConfig()).gameMaps.some(m => m.id === mapId));
 
   const invalid = structuredClone(current);
-  invalid.gameMaps.find(m => m.id === mapId).entranceRules.hard.allowed = ["front"];
+  invalid.gameMaps.find(m => m.id === mapId).difficulties.find(d=>d.difficultyId==="hard").entranceRules.allowed = ["front"];
   assert.equal((await save(invalid, 400)).error, "invalid_config");
   const outdated = structuredClone(current);
-  delete outdated.entranceRulesVersion;
-  for (const m of outdated.gameMaps) delete m.entranceRules;
-  for (const m of outdated.gameMaps) delete m.modeVisibility;
+  outdated.schemaVersion=3;
   assert.equal((await save(outdated, 409)).error, "admin_upgrade_required");
-  const backups = await (await fetch(`${base}/api/admin/v3/backups`)).json();
+  const backups = await (await fetch(`${base}/api/admin/v4/backups`)).json();
   assert(backups.backups.length);
-  const exported = await (await fetch(`${base}/api/admin/v3/export`)).json();
+  const exported = await (await fetch(`${base}/api/admin/v4/export`)).json();
   assert.deepEqual(exported.config.gameMaps, current.gameMaps);
   assert(!JSON.stringify(await publicConfig()).includes('"allowed"'));
   console.log("PASS: incremental recording, map isolation, entry ordering, last-entry closure, V4 degradation, statistics, writer guard, backups/export.");

@@ -35,7 +35,7 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
   };
   try {
     await start();
-    assert.equal((await fetch(base + '/api/admin/v3/maps')).status, 401);
+    assert.equal((await fetch(base + '/api/admin/v4/maps')).status, 401);
     assert.equal((await fetch(base + '/admin/', { redirect: 'manual' })).status, 303);
     assert.match(await (await fetch(base + '/admin/')).text(), /登录工作台/);
     const login = body => fetch(base + '/auth/login', { method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -63,7 +63,7 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     const RememberCookie = rememberedForm.headers.get('set-cookie').split(';')[0];
     assert.equal((await fetch(base + '/api/admin/stats', { headers: { Authorization: 'Basic '+Buffer.from('admin:'+key).toString('base64') } })).status, 401);
     assert.equal((await fetch(base + '/api/admin/stats', { headers: { Cookie } })).status, 200);
-    assert.equal((await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers: { Cookie, 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
+    assert.equal((await fetch(base + '/api/admin/v4/maps', { method: 'PUT', headers: { Cookie, 'Content-Type': 'application/json' }, body: '{}' })).status, 403);
     assert.equal((await call('/healthz')).status, 200);
     const httpsLogin = await call('/auth/login', { method: 'POST', headers: { Host: 'maps.example', Origin: 'https://maps.example', 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
     assert.equal(httpsLogin.status, 200);
@@ -71,20 +71,20 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     assert.match(httpsLogin.headers.get('set-cookie'), /Max-Age=28800/);
     assert.equal(httpsLogin.headers.get('set-cookie').includes(key), false);
     assert.equal((await call('/api/admin/stats')).status, 200);
-    const config = await (await call('/api/admin/v3/maps')).json();
-    const save = () => call('/api/admin/v3/maps', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config, baseVersion: 0 }) });
+    const config = await (await call('/api/admin/v4/maps')).json();
+    const save = () => call('/api/admin/v4/maps', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config, baseVersion: 0 }) });
     assert.equal((await save()).status, 200);
     assert.equal((await save()).status, 409);
-    assert.equal((await (await call('/api/admin/v3/backups')).json()).backups.length, 1);
+    assert.equal((await (await call('/api/admin/v4/backups')).json()).backups.length, 1);
     const form = new FormData(); form.set('kind', 'full'); form.set('file', new Blob(['RIFF0000WEBPtest'], { type: 'image/webp' }), 'test.webp');
-    const uploaded = await call('/api/admin/v3/images', { method: 'POST', body: form });
+    const uploaded = await call('/api/admin/v4/images', { method: 'POST', body: form });
     assert.equal(uploaded.status, 200);
     const { asset, url } = await uploaded.json();
     assert.equal(url, '/r2/' + asset.key);
     for (const domain of ['first.example', 'second.example']) {
       const headers = { Host: domain, Origin: `https://${domain}` };
       const form = new FormData(); form.set('kind', 'full'); form.set('file', new Blob(['RIFF0000WEBPtest']), 'test.webp');
-      const r = await call('/api/admin/v3/images', { method: 'POST', headers, body: form });
+      const r = await call('/api/admin/v4/images', { method: 'POST', headers, body: form });
       assert.equal(r.status, 200);
       assert.equal((await r.json()).url, '/r2/' + asset.key);
       assert.equal((await call('/telemetry/events', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{}' })).status, 400);
@@ -97,13 +97,13 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
     }
     assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
     assert.equal((await fetch(base + '/r2/backups-v3/snapshot-v0.json')).status, 404);
-    assert.equal((await call('/api/admin/v3/maps', { method: 'PUT', headers: { Origin: 'https://evil.example' } })).status, 403);
+    assert.equal((await call('/api/admin/v4/maps', { method: 'PUT', headers: { Origin: 'https://evil.example' } })).status, 403);
     await stop(); await start();
     assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: RememberCookie } })).status, 200);
     assert.equal((await fetch(base + '/auth/logout', { method: 'POST', headers: { Cookie: RememberCookie, Origin: base } })).status, 200);
     assert.equal((await fetch(base + '/auth/session', { headers: { Cookie: RememberCookie } })).status, 401);
     assert.equal((await fetch(base + '/auth/session', { headers: { Cookie } })).status, 200);
-    assert.equal((await (await call('/api/admin/v3/maps')).json()).version, 1);
+    assert.equal((await (await call('/api/admin/v4/maps')).json()).version, 1);
     assert.equal((await fetch(base + '/r2/' + asset.key)).status, 200);
     assert.equal((await call('/api/admin/stats/export')).status, 200);
     assert.equal((await fetch(base + '/auth/logout', { method: 'POST', headers: { Cookie, Origin: base } })).status, 200);
@@ -128,7 +128,7 @@ test('server authentication, SQLite migrations, media, backups, conflicts and re
   } finally { if (child && child.exitCode === null) await stop(); rmSync(data, { recursive: true, force: true }); }
 });
 
-test('upgrade a populated V4 SQLite database without changing content until an explicit V5 save', async () => {
+test('upgrade a populated legacy SQLite database without changing content until an explicit V4 save', async () => {
   const data = mkdtempSync(join(tmpdir(), 'idv-upgrade-'));
   const base = 'http://localhost:18768';
   const key = randomBytes(32).toString('hex');
@@ -173,33 +173,34 @@ test('upgrade a populated V4 SQLite database without changing content until an e
     assert.equal(v5.dataVersion, legacy.version);
     assert.deepEqual(v5.layouts.map(l => l.id), v4.layouts.map(l => l.id));
     assert.ok(v5.layouts.length > 0);
-    const config = await get('/api/admin/v3/maps');
-    assert.equal(config.entranceRulesVersion, 2);
-    assert.deepEqual(config.layouts, legacy.layouts);
+    const config = await get('/api/admin/v4/maps');
+    assert.equal(config.schemaVersion, 4);
+    assert.deepEqual(config.layouts.map(l=>l.id), legacy.layouts.map(l=>l.id));
+    assert.ok(config.layouts.every(l=>l.modeLocked));
     const disk = new DatabaseSync(join(data, 'app.sqlite'), { readOnly: true });
     try {
       assert.equal(disk.prepare('SELECT value FROM kv WHERE key=?').get('config:v3:current').value, baseline);
       assert.equal(disk.prepare('SELECT count(*) AS n FROM migrations').get().n, 2);
     } finally { disk.close(); }
-    const stale = await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers, body: JSON.stringify({ config: legacy, baseVersion: legacy.version }) });
+    const stale = await fetch(base + '/api/admin/v4/maps', { method: 'PUT', headers, body: JSON.stringify({ config: legacy, baseVersion: legacy.version }) });
     assert.equal(stale.status, 409);
     assert.equal((await stale.json()).error, 'admin_upgrade_required');
-    assert.equal((await get('/api/admin/v3/maps')).version, legacy.version);
-    config.gameMaps[0].modeVisibility.hard = false;
-    const saved = await fetch(base + '/api/admin/v3/maps', { method: 'PUT', headers, body: JSON.stringify({ config, baseVersion: legacy.version }) });
+    assert.equal((await get('/api/admin/v4/maps')).version, legacy.version);
+    config.gameMaps[0].difficulties.find(d=>d.difficultyId==='hard').visible = false;
+    const saved = await fetch(base + '/api/admin/v4/maps', { method: 'PUT', headers, body: JSON.stringify({ config, baseVersion: legacy.version }) });
     assert.equal(saved.status, 200, await saved.text());
     await stop();
     await start();
-    const persisted = await get('/api/admin/v3/maps');
+    const persisted = await get('/api/admin/v4/maps');
     assert.equal(persisted.version, legacy.version + 1);
-    assert.equal(persisted.gameMaps[0].modeVisibility.hard, false);
-    assert.deepEqual(persisted.layouts, legacy.layouts);
+    assert.equal(persisted.gameMaps[0].difficulties.find(d=>d.difficultyId==='hard').visible, false);
+    assert.deepEqual(persisted.layouts, config.layouts);
     for (const endpoint of ['/maps-v4.json', '/maps-v5.json']) {
       const visible = await get(endpoint);
       assert.ok(visible.layouts.length > 0);
       assert.ok(visible.layouts.every(l => l.mode !== 'hard'));
     }
-    assert.ok((await get('/api/admin/v3/backups')).backups.some(b => b.key === `backups-v3/snapshot-v${legacy.version}.json`));
+    assert.ok((await get('/api/admin/v4/backups')).backups.some(b => b.key === `backups-v4/snapshot-v${legacy.version}.json`));
     assert.equal((await fetch(base + '/r2/' + [...keys][0])).status, 200);
     const diskAfter = new DatabaseSync(join(data, 'app.sqlite'), { readOnly: true });
     try { assert.equal(diskAfter.prepare('SELECT count(*) AS n FROM visits WHERE event_id=?').get('upgrade-baseline').n, 1); }

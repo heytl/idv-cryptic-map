@@ -1,4 +1,5 @@
-// Cloudflare deployment. Configure real production/preview D1 IDs before release.
+// Public template only. Put real bindings and Access settings in ignored wrangler.local.jsonc.
+// Deploy with: wrangler deploy --config wrangler.local.jsonc
 // See docs/V3-UPGRADE.md for migration, backup and rollback.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -11,7 +12,7 @@
     "binding": "ASSETS",
     // /_vercel/* 进 Worker 返回真 404：index.html 里的 Vercel 统计脚本在本部署
     // 不存在，若走 SPA fallback 会以 200 回 HTML，触发页面 SyntaxError 噪音
-    "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
+    "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/maps-v5.json", "/maps-v6.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
   },
   "triggers": {
     "crons": ["0 4 * * *"]
@@ -20,29 +21,24 @@
     // img 子域绑定 R2 后改为 https://img.<domain>；过渡期由本 Worker /r2/* 同源出图
     "IMG_BASE_URL": "/r2",
     "TELEMETRY_ORIGIN": "https://idv-map.321666.xyz",
-    "TELEMETRY_WECHAT_APP_ID": "wx91d04186846e3897",
+    "TELEMETRY_WECHAT_APP_ID": "",
     // Cron 快照永久回写 Worker 正式分支（配合 secret GITHUB_TOKEN 生效）。
     // main 专用于静态页面发布，不接收 Worker 后台快照。
     "GITHUB_REPO": "heytl/idv-cryptic-map",
     "GITHUB_BRANCH": "production",
     // Cloudflare Access（Zero Trust 应用 idv-map-admin，保护 /admin 与 /api）
-    "ACCESS_TEAM_DOMAIN": "https://zwdwrg.cloudflareaccess.com",
-    "ACCESS_AUD": "4e19758aa55c7ac99c86bd294f3947a4de492b3042272ad38b1318ae10328bee"
+    "ACCESS_TEAM_DOMAIN": "https://your-team.cloudflareaccess.com",
+    "ACCESS_AUD": "replace-with-access-application-audience"
   },
-  // 生产绑定（Phase 2.0 已开通，2026-07-16）
-  "kv_namespaces": [{ "binding": "CONFIG", "id": "d33cc5d1354f441287b216b2c7a96d9f" }],
-  "d1_databases": [{ "binding": "STATS", "database_name": "idv-map-stats", "database_id": "9a90fc23-8520-4f04-92a0-990e2a8302f8", "migrations_dir": "workers/migrations" }],
+  // Replace placeholders only in the ignored local configuration.
+  "kv_namespaces": [{ "binding": "CONFIG", "id": "00000000000000000000000000000001" }],
+  "d1_databases": [{ "binding": "STATS", "database_name": "idv-map-stats", "database_id": "00000000-0000-0000-0000-000000000001", "migrations_dir": "workers/migrations" }],
   "ratelimits": [{ "name": "TELEMETRY_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } }],
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "idv-media" }],
-  // CF 备用域名（部署时自动建 DNS 记录）；workers.dev 关闭，避免绕过 Access 的重复入口。
-  // 主域名 idv-map.321666.xyz 由 Oracle Docker 提供，禁止在 Worker 中重新绑定。
-  // new-map.321666.xyz 暂留作观察期回退入口，确认无误后删掉这条
+  // Public template never binds real domains; set routes in the ignored local configuration.
   "workers_dev": false,
   "preview_urls": true,
-  "routes": [
-    { "pattern": "idvmap.321666.xyz", "custom_domain": true },
-    { "pattern": "new-map.321666.xyz", "custom_domain": true }
-  ],
+  "routes": [],
   "env": {
     "dev": {
       "triggers": { "crons": [] },
@@ -52,7 +48,7 @@
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/maps-v5.json", "/maps-v6.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
       },
       "vars": {
         "IMG_BASE_URL": "/r2",
@@ -81,7 +77,7 @@
         "directory": "./apps/web/dist",
         "not_found_handling": "single-page-application",
         "binding": "ASSETS",
-        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
+        "run_worker_first": ["/maps.json", "/maps-v2.json", "/maps-v3.json", "/maps-v4.json", "/maps-v5.json", "/maps-v6.json", "/telemetry/*", "/api/*", "/r2/*", "/_vercel/*"]
       },
       // 仅测试 Worker 跳过 Access；正式环境仍按顶层 ACCESS_* 配置鉴权。
       "vars": {

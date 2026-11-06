@@ -24,7 +24,7 @@ async function load() {
   loading.value = true;
   error.value = "";
   try {
-    backups.value = (await request<{ backups: typeof backups.value }>("/api/admin/v3/backups")).backups;
+    backups.value = (await request<{ backups: typeof backups.value }>("/api/admin/v4/backups")).backups;
   } catch (e) {
     error.value = e instanceof Error ? e.message : "备份列表加载失败";
   } finally {
@@ -43,7 +43,7 @@ async function restore(key: string) {
   busy.value = true;
   error.value = "";
   try {
-    await request("/api/admin/v3/restore", {
+    await request("/api/admin/v4/restore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key, baseVersion: storeV2.version }),
@@ -89,7 +89,7 @@ onMounted(load);
         <div v-if="backups.length" class="backup-list">
           <article v-for="item in backups" :key="item.key" class="backup-row">
             <div class="map-manager-name">
-              <strong>{{ item.key }}</strong>
+              <strong>{{ item.key }}</strong><n-tag size="small" :bordered="false">{{item.key.includes("baseline") ? "迁移基线" : item.key.startsWith("backups-v3/") ? "V3 历史" : "V4"}}</n-tag>
               <span class="backup-time">备份时间：{{ uploadedAt(item.uploaded) }}</span>
             </div>
             <n-popconfirm

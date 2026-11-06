@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {
   DEFAULT_FLOOR,
+  floorLabel,
   resolveFloorSource,
   ENTRANCE_LABELS,
   enabledEntranceTypes,
   type EntranceType,
   type FloorType,
   type GameMode,
-} from "@idv-map/shared";
+} from "@idv-map/shared/dynamic";
 import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FloorSwitchV2 from "../components/FloorSwitchV2.vue";
@@ -69,6 +70,7 @@ const enabledEntrances = computed(() => {
 const floors = computed(() =>
   map.value ? availableFloors(map.value) : [DEFAULT_FLOOR],
 );
+const floorLabels = computed(() => Object.fromEntries(floors.value.map(id => [id, floorLabel(map.value, id)])));
 const floor = computed<FloorType>(() => {
   const requested = route.params.floor as FloorType | undefined;
   return requested && floors.value.includes(requested)
@@ -120,7 +122,7 @@ function goBack() {
         >
       </div>
       <div class="floor-toggle-wrapper">
-        <FloorSwitchV2 :floor="floor" :floors="floors" :motion-index="floorMotion?.index" :duration="floorMotion?.duration" @change="selectFloor" />
+        <FloorSwitchV2 :labels="floorLabels" :floor="floor" :floors="floors" :motion-index="floorMotion?.index" :duration="floorMotion?.duration" @change="selectFloor" />
       </div>
       <button class="reference-trigger" @click="referenceDialog?.showModal()">入口参考</button>
     </div>

@@ -9,6 +9,7 @@ V3 已于 2026-10-22 正式上线，实际部署与统计验证见 [正式上线
 | 文档 | 内容 |
 |---|---|
 | [项目 README](../README.md) | 项目介绍、功能、使用、开发与日常维护 |
+| [DYNAMIC-MAPS.md](DYNAMIC-MAPS.md) | 内部 V4、公开 V6，动态难度、楼层、入口、迁移与兼容 |
 | [BRANCHES.md](BRANCHES.md) | 当前分支职责、Actions 发布条件与正式分支改名记录 |
 | [DOCKER.md](DOCKER.md) | Docker 自托管部署、认证、反向代理、迁移与备份恢复 |
 | [releases/V3.1.0.md](releases/V3.1.0.md) | V3.1.0 Docker 更新准备、V4/V5 兼容、备份回滚与验收 |

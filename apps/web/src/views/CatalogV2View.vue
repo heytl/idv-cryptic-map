@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {
+  catalogFilterTitle,
   type EntranceType,
   type GameMode,
-} from "@idv-map/shared";
+} from "@idv-map/shared/dynamic";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import CatalogConditions from "../components/CatalogConditions.vue";
@@ -16,6 +17,7 @@ import {
   findEntranceV2,
   isCatalogFilterV2,
   mapsV2,
+  gameMaps,
   mapsV2Error,
   type CatalogFilterV2,
 } from "../data/maps-v2";
@@ -30,14 +32,15 @@ const entranceType = computed(() => route.params.entrance as EntranceType);
 const activeFilter = computed(
   () => (route.params.filter as CatalogFilterV2 | undefined) || "all",
 );
+const gameMap = computed(() => gameMaps.find(m => m.id === gameMapId.value));
 
 const filterTitle = computed(() =>
-  entranceType.value === "front" ? "通道" : "方向",
+  catalogFilterTitle(entranceType.value, gameMap.value, mode.value),
 );
 const filterOptions = computed(() =>
-  catalogFilterValuesV2(entranceType.value).map((value) => ({
+  catalogFilterValuesV2(entranceType.value, gameMap.value, mode.value).map((value) => ({
     value,
-    label: catalogFilterLabelV2(entranceType.value, value),
+    label: catalogFilterLabelV2(entranceType.value, value, gameMap.value, mode.value),
   })),
 );
 
@@ -70,7 +73,7 @@ function navigate(
 
 function applyConditions(nextMapId: string, nextMode: GameMode, nextEntrance: EntranceType) {
   const unchanged = nextMapId === gameMapId.value && nextMode === mode.value && nextEntrance === entranceType.value;
-  const filter = unchanged && isCatalogFilterV2(nextEntrance, activeFilter.value) ? activeFilter.value : "all";
+  const filter = unchanged && isCatalogFilterV2(nextEntrance, activeFilter.value, gameMap.value, mode.value) ? activeFilter.value : "all";
   router.replace(`/maps/${nextMapId}/${nextMode}/${nextEntrance}${filter === "all" ? "" : `/${filter}`}`);
 }
 </script>
@@ -83,7 +86,7 @@ function applyConditions(nextMapId: string, nextMode: GameMode, nextEntrance: En
         <CatalogConditions :game-map-id="gameMapId" :mode="mode" :entrance="entranceType" @apply="applyConditions" />
         <div class="v2-filter-toolbar catalog-layout-toolbar" aria-label="地图筛选">
           <div
-            class="v2-filter-segment v2-direction-filter"
+            v-if="filterOptions.length" class="v2-filter-segment v2-direction-filter"
             role="group"
             :aria-label="filterTitle"
           >

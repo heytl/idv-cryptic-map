@@ -1,17 +1,17 @@
 import type {
-  MapConfigV3,
+  MapConfigV4,
   StatsQuery,
   StatsReport,
   VisitEvent,
 } from "../../shared/src/index";
 
 export interface ContentRepository {
-  read(): Promise<MapConfigV3>;
+  read(): Promise<MapConfigV4>;
   /** KV implementation uses a best-effort version check, not an atomic CAS. */
-  save(config: MapConfigV3, expectedVersion: number): Promise<void>;
-  backup(config: MapConfigV3): Promise<void>;
+  save(config: MapConfigV4, expectedVersion: number): Promise<void>;
+  backup(config: MapConfigV4): Promise<void>;
   backups(): Promise<{ key: string; uploaded: string }[]>;
-  readBackup(key: string): Promise<MapConfigV3 | null>;
+  readBackup(key: string): Promise<MapConfigV4 | null>;
 }
 export interface StoredAsset {
   bytes: ArrayBuffer;

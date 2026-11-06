@@ -3,14 +3,14 @@ import assert from "node:assert/strict";
 const base = process.env.TEST_URL || "http://127.0.0.1:8787";
 if (!["127.0.0.1", "localhost"].includes(new URL(base).hostname))
   throw new Error("Use isolated local verification server");
-const original = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+const original = await (await fetch(`${base}/api/admin/v4/maps`)).json();
 const candidate = structuredClone(original);
 const regionLayout = candidate.layouts.find(l => l.id === 999);
 regionLayout.floorRegions = { sourceKey: regionLayout.floorImages.full.key, imageWidth: 900, imageHeight: 1500,
   regions: { floor1: { x: 0, y: 0, width: 900, height: 700 }, floor2: { x: 0, y: 700, width: 900, height: 800 } } };
 delete regionLayout.floorImages.floor1;
 delete regionLayout.floorImages.floor2;
-const saved = await fetch(`${base}/api/admin/v3/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: original.version, config: candidate }) });
+const saved = await fetch(`${base}/api/admin/v4/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: original.version, config: candidate }) });
 assert(saved.ok);
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const context = await browser.newContext();
@@ -63,7 +63,7 @@ try {
   console.error(await page.locator("body").ariaSnapshot());
   throw error;
 } finally {
-  const current = await (await fetch(`${base}/api/admin/v3/maps`)).json();
-  await fetch(`${base}/api/admin/v3/maps`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ baseVersion: current.version, config: original }) });
+  const current = await (await fetch(`${base}/api/admin/v4/maps`)).json();
+  await fetch(`${base}/api/admin/v4/maps`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ baseVersion: current.version, config: original }) });
   await browser.close();
 }

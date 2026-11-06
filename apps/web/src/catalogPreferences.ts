@@ -1,10 +1,10 @@
-import { DEFAULT_GAME_MAP_ID, availableModes, enabledEntranceTypes, type PublicGameMap, type EntranceType } from "@idv-map/shared";
+import { DEFAULT_GAME_MAP_ID, availableModes, enabledEntranceTypes, type PublicGameMap, type EntranceType } from "@idv-map/shared/dynamic";
 
 const KEY = "idv-catalog-conditions";
 export function rememberCatalog(gameMapId: string, mode: string, entrance: string) {
   try { localStorage.setItem(KEY, JSON.stringify({ gameMapId, mode, entrance })); } catch { /* Device preference is optional. */ }
 }
-export function preferredCatalogPath(maps: (Pick<PublicGameMap, "id"> & Partial<PublicGameMap>)[]): string | undefined {
+export function preferredCatalogPath(maps: PublicGameMap[]): string | undefined {
   maps = maps.filter(map => availableModes(map).length);
   if (!maps.length) return undefined;
   let saved: Record<string, unknown> = {};

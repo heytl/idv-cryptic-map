@@ -21,6 +21,7 @@ export interface StatRow {
   label?: string;
 }
 export interface StatsReport {
+  modeOptions?: { value: string; label: string }[];
   clients?: StatRow[];
   query: StatsQuery;
   total: number;
@@ -51,6 +52,6 @@ export function validateStatsQuery(q: StatsQuery, now = new Date()): boolean {
     q.from <= q.to &&
     q.from >= dayOffset(today, -89) &&
     q.to <= today &&
-    (!q.mode || ["hard", "nightmare"].includes(q.mode))
+    (!q.mode || /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(q.mode))
   );
 }

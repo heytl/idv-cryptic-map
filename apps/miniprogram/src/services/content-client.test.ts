@@ -1,16 +1,16 @@
 import { expect, it, vi } from "vitest";
 import { createContentClient } from "./content-client";
-import { toPublicMapConfigV5, type MapConfigV3 } from "@idv-map/shared";
+import { toPublicMapConfigV6, migrateV3ToV4, type MapConfigV3 } from "@idv-map/shared";
 import snapshot from "../../../web/src/data/maps-v3.snapshot.json";
 
-const data = () => toPublicMapConfigV5(snapshot as MapConfigV3, "https://example.com");
+const data = () => toPublicMapConfigV6(migrateV3ToV4(snapshot as MapConfigV3), "https://example.com");
 it("shares an in-flight request and can retry after network failure", async () => {
   const request = vi.fn().mockRejectedValueOnce(new Error("offline")).mockResolvedValue(data());
   const client = createContentClient(request);
   const first = client.load();
   expect(client.load()).toBe(first);
   await expect(first).rejects.toThrow("offline");
-  await expect(client.load()).resolves.toMatchObject({ schemaVersion: 5 });
+  await expect(client.load()).resolves.toMatchObject({ schemaVersion: 6 });
   await client.load();
   expect(request).toHaveBeenCalledTimes(2);
 });

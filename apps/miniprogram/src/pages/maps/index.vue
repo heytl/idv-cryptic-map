@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch, onBeforeUnmount } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
-import { availableModes, MODE_LABELS, ENTRANCE_LABELS, projectInfo, enabledEntranceTypes, isCatalogFilterV2,
-  catalogFilterValuesV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2,
-  type GameMode, type EntranceType, type CatalogFilterV2, type PublicMapConfigV5 } from "@idv-map/shared";
+import { availableModes, MODE_LABELS, ENTRANCE_LABELS, projectInfo, enabledEntranceTypes, entranceFilterFor,
+  entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2,
+  type GameMode, type EntranceType, type CatalogFilterV2, type PublicMapConfigV5 } from "@idv-map/shared/dynamic";
 import { content } from "../../services/content";
 import { catalogPreferences } from "../../services/catalog-preferences";
 import UiIcon from "../../components/UiIcon.vue";
@@ -32,7 +32,11 @@ const cards = computed(() => (config.value?.layouts ?? [])
     return entry && (!filter.value || entranceFilterValueV2(entry) === filter.value) ? [{ layout, entry }] : [];
   })
   .sort((a, b) => a.layout.sort - b.layout.sort || a.layout.id - b.layout.id));
-const filters = computed(() => catalogFilterValuesV2(entrance.value).map(value => ({ value, label: catalogFilterLabelV2(entrance.value, value) })));
+const entryDefinition = computed(() => entranceFilterFor(config.value?.gameMaps.find(m => m.id === gameMapId.value), mode.value, entrance.value));
+const filters = computed(() => [...(entryDefinition.value?.filterOptions ?? [])]
+  .filter(item => !item.archived && !item.deletedAt)
+  .sort((a, b) => a.sort - b.sort)
+  .map(item => ({ value: item.id, label: item.name })));
 const draftGameMap = computed(() => config.value?.gameMaps.find(m => m.id === draftMap.value));
 const modes = computed(() => availableModes(draftGameMap.value));
 const entrances = computed(() => enabledEntranceTypes(draftGameMap.value, draftMode.value));
@@ -45,6 +49,7 @@ async function load(refresh = false) {
     const data = await content.load(refresh);
     if (disposed) return;
     config.value = data;
+    if (filter.value && !filters.value.some(item => item.value === filter.value)) filter.value = "";
     if (!initialized) {
       const preferred = catalogPreferences.read(data.gameMaps);
       if (preferred) { gameMapId.value = preferred.gameMapId; mode.value = preferred.mode; entrance.value = preferred.entrance; }
@@ -113,8 +118,8 @@ onBeforeUnmount(dispose);
               <button :class="{ selected: compact }" hover-class="density-pressed" aria-label="紧凑卡片视图" :aria-pressed="compact" @tap="compact = true"><UiIcon name="compact" :tone="compact ? 'ink' : 'light'" :size="14" /></button>
             </view>
           </view>
-          <view class="filter-row" :class="{ passage: entrance === 'front' }">
-            <text class="filter-label">{{ entrance === 'front' ? '通道' : '方向' }}</text>
+          <view v-if="filters.length" class="filter-row" :class="{ passage: entrance === 'front' }">
+            <text class="filter-label">{{ entryDefinition?.filterLabel }}</text>
             <view class="filter-options">
               <button :class="{ selected: !filter }" hover-class="filter-pressed" :aria-pressed="!filter" @tap="filter = ''"><view class="filter-face">全部<text v-if="!filter" class="count">({{ cards.length }})</text></view></button>
               <button v-for="item in filters" :key="item.value" :class="{ selected: filter === item.value }" hover-class="filter-pressed" :aria-pressed="filter === item.value" @tap="filter = item.value"><view class="filter-face">{{ item.label }}<text v-if="filter === item.value" class="count">({{ cards.length }})</text></view></button>

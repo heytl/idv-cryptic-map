@@ -4,7 +4,9 @@
   "version": "2.0.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./dynamic": "./src/dynamic.ts",
+    "./media-paths": "./src/media-paths.mjs"
   },
   "scripts": {
     "test": "vitest run",

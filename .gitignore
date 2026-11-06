@@ -21,6 +21,7 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+wrangler.local.jsonc
 apps/miniprogram/.env.production
 
 # Gemini/Agentic systems

@@ -1,3 +1,4 @@
+import { isContentAssetKey } from '../packages/shared/src/media-paths.mjs';
 import { mkdir, readFile, writeFile, realpath, lstat } from "node:fs/promises";
 import { resolve, dirname, relative, sep } from "node:path";
 import { createHash } from "node:crypto";
@@ -42,9 +43,7 @@ const realRoot = await realpath(root);
 async function assetPath(key, create = false) {
   if (
     typeof key !== "string" ||
-    !/^maps\/(?:entry|entry-thumb|full|floor1|floor2|entrance|entrance-thumb|layout\/(?:full|basement|floor1|floor2))\/[^/\\]+\.webp$/.test(
-      key,
-    ) ||
+    !isContentAssetKey(key) ||
     key.includes("..")
   )
     throw new Error("非法资源路径");
@@ -74,11 +73,11 @@ async function assetPath(key, create = false) {
   return path;
 }
 if (action === "export") {
-  const manifest = await (await api("/api/admin/v3/export")).json();
+  const manifest = await (await api("/api/admin/v4/export")).json();
   for (const asset of manifest.assets) {
     const bytes = Buffer.from(
       await (
-        await api(`/api/admin/v3/assets?key=${encodeURIComponent(asset.key)}`)
+        await api(`/api/admin/v4/assets?key=${encodeURIComponent(asset.key)}`)
       ).arrayBuffer(),
     );
     asset.sha256 = digest(bytes);
@@ -98,7 +97,7 @@ if (action === "export") {
   );
   if (
     manifest.format !== "idv-content" ||
-    manifest.formatVersion !== 1 ||
+    ![1, 2].includes(manifest.formatVersion) ||
     !Array.isArray(manifest.assets)
   )
     throw new Error("备份格式不合法");
@@ -108,10 +107,10 @@ if (action === "export") {
     if (digest(b) !== asset.sha256 || b.length !== asset.size)
       throw new Error(`资源校验失败：${asset.key}`);
   }
-  const current = await (await api("/api/admin/v3/maps")).json();
+  const current = await (await api("/api/admin/v4/maps")).json();
   for (const asset of manifest.assets) {
     const b = await readFile(await assetPath(asset.key));
-    await api(`/api/admin/v3/assets?key=${encodeURIComponent(asset.key)}`, {
+    await api(`/api/admin/v4/assets?key=${encodeURIComponent(asset.key)}`, {
       method: "PUT",
       headers: {
         "Content-Type": "image/webp",
@@ -120,7 +119,7 @@ if (action === "export") {
       body: b,
     });
   }
-  const r = await api("/api/admin/v3/import", {
+  const r = await api("/api/admin/v4/import", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ baseVersion: current.version, manifest }),

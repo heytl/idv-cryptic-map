@@ -1,4 +1,4 @@
-import type { AssetRef, MapConfigV3 } from "@idv-map/shared";
+import type { AssetRef, MapConfigV3 } from "@idv-map/shared/dynamic";
 import { ApiError } from "./http";
 export const API_BASE = (import.meta.env.VITE_MAP_API_BASE_URL || "").replace(
   /\/$/,
@@ -20,13 +20,13 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 export function fetchConfigV2(): Promise<MapConfigV3> {
-  return request("/api/admin/v3/maps");
+  return request("/api/admin/v4/maps");
 }
 export function saveConfigV2(
   baseVersion: number,
   config: MapConfigV3,
 ): Promise<MapConfigV3> {
-  return request("/api/admin/v3/maps", {
+  return request("/api/admin/v4/maps", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ baseVersion, config }),
@@ -34,9 +34,7 @@ export function saveConfigV2(
 }
 export type UploadKindV2 =
   | "full"
-  | "basement"
-  | "floor1"
-  | "floor2"
+  | "floor"
   | "entrance"
   | "entranceThumb";
 export function uploadImageV2(
@@ -46,5 +44,5 @@ export function uploadImageV2(
   const form = new FormData();
   form.append("kind", kind);
   form.append("file", file, `${kind}.webp`);
-  return request("/api/admin/v3/images", { method: "POST", body: form });
+  return request("/api/admin/v4/images", { method: "POST", body: form });
 }

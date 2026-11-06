@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 const base = process.env.TEST_URL || 'http://127.0.0.1:8787';
 if (!['127.0.0.1', 'localhost'].includes(new URL(base).hostname)) throw new Error('Use isolated local fixtures');
-const original = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+const original = await (await fetch(`${base}/api/admin/v4/maps`)).json();
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const context = await browser.newContext({ viewport: { width: 1365, height: 900 }, hasTouch: true, serviceWorkers: 'block' });
 const page = await context.newPage();
@@ -40,12 +40,12 @@ try {
   const legacy = fixture.layouts.find(l => l.gameMapId === 'lady-of-doom' && l.mode === 'hard' && !l.deletedAt);
   const sample = await (await fetch(`${base}/r2/${legacy.floorImages.full.key}`)).blob();
   for (const kind of ['floor1', 'floor2']) {
-    const form = new FormData(); form.set('kind', kind); form.set('file', sample, 'sample.webp');
-    const uploaded = await fetch(`${base}/api/admin/v3/images`, { method: 'POST', body: form });
+    const form = new FormData(); form.set('kind', 'floor'); form.set('file', sample, 'sample.webp');
+    const uploaded = await fetch(`${base}/api/admin/v4/images`, { method: 'POST', body: form });
     assert(uploaded.ok); legacy.floorImages[kind] = (await uploaded.json()).asset;
   }
   delete legacy.floorRegions;
-  const prepared = await fetch(`${base}/api/admin/v3/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: original.version, config: fixture }) });
+  const prepared = await fetch(`${base}/api/admin/v4/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: original.version, config: fixture }) });
   assert(prepared.ok);
   await openLayout();
   const title = await page.locator('.editor-modal .n-card-header__main').innerText();
@@ -109,7 +109,7 @@ try {
   await page.getByRole('button', { name: '应用（还需保存内容）', exact: true }).click();
   // A failed config save retains the local draft for retry.
   let failSave = true;
-  await page.route('**/api/admin/v3/maps', async route => {
+  await page.route('**/api/admin/v4/maps', async route => {
     if (route.request().method() === 'PUT' && failSave) { failSave = false; await route.fulfill({ status: 500, json: { error: 'fixture_save_failure' } }); }
     else await route.continue();
   });
@@ -117,7 +117,7 @@ try {
   await page.getByText('fixture_save_failure', { exact: true }).waitFor();
   await page.getByRole('button', { name: '保存修改', exact: true }).click();
   await page.getByText('已保存', { exact: true }).first().waitFor();
-  let config = await (await fetch(`${base}/api/admin/v3/maps`)).json();
+  let config = await (await fetch(`${base}/api/admin/v4/maps`)).json();
   let saved = config.layouts.find(l => l.id === id);
   assert.deepEqual(saved.floorRegions.regions.floor1, target);
   assert(!saved.floorImages.floor1); assert(saved.floorImages.floor2);
@@ -168,7 +168,7 @@ try {
   await editor.getByRole('combobox', { name: '当前编辑区域' }).selectOption('floor2');
   await button('确认此区域').click();
   let failUpload = true;
-  await page.route('**/api/admin/v3/images', async route => {
+  await page.route('**/api/admin/v4/images', async route => {
     if (failUpload) { failUpload = false; await route.fulfill({ status: 500, json: { error: 'fixture_upload_failure' } }); }
     else await route.continue();
   });
@@ -176,7 +176,7 @@ try {
   assert(await editor.isVisible());
   await button('完成').click(); await editor.waitFor({ state: 'detached' });
   await saveLayout();
-  config = await (await fetch(`${base}/api/admin/v3/maps`)).json(); saved = config.layouts.find(l => l.id === id);
+  config = await (await fetch(`${base}/api/admin/v4/maps`)).json(); saved = config.layouts.find(l => l.id === id);
   assert.equal(saved.floorRegions.imageWidth, 1000); assert.equal(saved.floorRegions.imageHeight, 1600);
   assert.equal(saved.floorRegions.sourceKey, saved.floorImages.full.key);
   assert.deepEqual(saved.floorRegions.regions, { floor1: target, floor2: second });
@@ -187,7 +187,7 @@ try {
   await coordinates({ x: 10, y: 20, width: 350, height: 350 });
   await button('确认此区域').click(); await button('完成').click();
   await editor.waitFor({ state: 'detached' }); await saveLayout();
-  config = await (await fetch(`${base}/api/admin/v3/maps`)).json(); saved = config.layouts.find(l => l.id === id);
+  config = await (await fetch(`${base}/api/admin/v4/maps`)).json(); saved = config.layouts.find(l => l.id === id);
   const entry = saved.entrances[0];
   for (const [asset, width] of [[entry.image, 350], [entry.thumb, 300]]) {
     const bytes = Buffer.from(await (await fetch(`${base}/r2/${asset.key}`)).arrayBuffer());
@@ -200,7 +200,7 @@ try {
   await page.screenshot({ path: '.tmp/screenshots/regions-failure.png' });
   throw e;
 } finally {
-  const latest = await (await fetch(`${base}/api/admin/v3/maps`)).json();
-  await fetch(`${base}/api/admin/v3/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: latest.version, config: original }) });
+  const latest = await (await fetch(`${base}/api/admin/v4/maps`)).json();
+  await fetch(`${base}/api/admin/v4/maps`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ baseVersion: latest.version, config: original }) });
   await browser.close();
 }

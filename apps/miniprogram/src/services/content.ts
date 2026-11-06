@@ -1,5 +1,5 @@
 import { createContentClient } from "./content-client";
-import { resolvePublicMediaUrls } from "@idv-map/shared";
+import { resolvePublicMediaUrls } from "@idv-map/shared/dynamic";
 import { requestErrorMessage } from "./request-errors";
 import { floorPreviewCache } from "./floor-preview-storage";
 import { floorPreviewSources } from "./floor-preview-cache";
@@ -7,9 +7,9 @@ import { floorPreviewSources } from "./floor-preview-cache";
 export const apiOrigin = import.meta.env.VITE_MAP_API_BASE_URL.replace(/\/$/, "");
 export const content = createContentClient(() => new Promise((resolve, reject) => {
   uni.request({
-    url: `${apiOrigin}/maps-v5.json`, method: "GET", timeout: 15000,
+    url: `${apiOrigin}/maps-v6.json`, method: "GET", timeout: 15000,
     success: response => {
-      if (response.statusCode === 200) resolve(resolvePublicMediaUrls(response.data, `${apiOrigin}/maps-v5.json`));
+      if (response.statusCode === 200) resolve(resolvePublicMediaUrls(response.data, `${apiOrigin}/maps-v6.json`));
       else reject(new Error(`地图加载失败（${response.statusCode}），请稍后重试`));
     },
     fail: cause => {

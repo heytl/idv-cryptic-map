@@ -1,12 +1,12 @@
 import { DEFAULT_GAME_MAP_ID, defaultEntrance, availableModes, enabledEntranceTypes, isEntranceType,
-  type PublicGameMap, type GameMode, type EntranceType } from "@idv-map/shared";
+  type PublicGameMap, type GameMode, type EntranceType } from "@idv-map/shared/dynamic";
 
 export interface CatalogConditions { gameMapId: string; mode: GameMode; entrance: EntranceType }
 const key = "idv-catalog-conditions";
 
 export function createCatalogPreferences(storage: { get(key: string): unknown; set(key: string, value: string): void }) {
   return {
-    read(maps: (Pick<PublicGameMap, "id"> & Partial<PublicGameMap>)[]): CatalogConditions | undefined {
+    read(maps: PublicGameMap[]): CatalogConditions | undefined {
       maps = maps.filter(map => availableModes(map).length);
       if (!maps.length) return undefined;
       let saved: Record<string, unknown> = {};

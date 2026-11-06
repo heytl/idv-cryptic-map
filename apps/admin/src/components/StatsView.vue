@@ -15,13 +15,9 @@ import {
 import {
   beijingDay,
   dayOffset,
-  MODE_LABELS,
-  ENTRANCE_LABELS,
   type StatsReport,
   type StatRow,
-  type GameMode,
-  type EntranceType,
-} from "@idv-map/shared";
+} from "@idv-map/shared/dynamic";
 import { API_BASE, request } from "../api-v2";
 import { storeV2 } from "../store-v2";
 
@@ -122,34 +118,12 @@ async function download() {
   }
 }
 
-function layoutLabel(row: StatRow): string {
-  const layout = storeV2.maps.find((item) => String(item.id) === row.key);
-  if (!layout) return `布局 #${row.key}`;
-  const gameMap = storeV2.gameMaps.find((item) => item.id === layout.gameMapId);
-  return `${layout.displayName || layout.name} · ${gameMap?.name ?? layout.gameMapId}`;
-}
-
-const mapRows = computed<NamedStatRow[]>(() =>
-  (report.value?.gameMaps ?? []).map((row) => ({
-    ...row,
-    label: storeV2.gameMaps.find((map) => map.id === row.key)?.name ?? `地图 ${row.key}`,
-  })),
-);
-const layoutRows = computed<NamedStatRow[]>(() =>
-  (report.value?.layouts ?? []).map((row) => ({ ...row, label: layoutLabel(row) })),
-);
-const modeRows = computed<NamedStatRow[]>(() =>
-  (report.value?.modes ?? []).map((row) => ({
-    ...row,
-    label: MODE_LABELS[row.key as GameMode] || row.key,
-  })),
-);
-const entranceRows = computed<NamedStatRow[]>(() =>
-  (report.value?.entrances ?? []).map((row) => ({
-    ...row,
-    label: ENTRANCE_LABELS[row.key as EntranceType] || row.key,
-  })),
-);
+const namedRows = (rows: StatRow[] = []): NamedStatRow[] => rows.map(row => ({...row,label:row.label ?? row.key}));
+const mapRows = computed(() => namedRows(report.value?.gameMaps));
+const layoutRows = computed(() => namedRows(report.value?.layouts));
+const modeRows = computed(() => namedRows(report.value?.modes));
+const entranceRows = computed(() => namedRows(report.value?.entrances));
+const modeOptions = computed(() => report.value?.modeOptions ?? []);
 const average = computed(() => {
   const days = report.value?.daily.length ?? 0;
   return days ? ((report.value?.total ?? 0) / days).toFixed(1) : "0";
@@ -286,7 +260,7 @@ onMounted(load);
           clearable
           placeholder="全部模式"
           aria-label="统计模式"
-          :options="[{ label: '困难', value: 'hard' }, { label: '噩梦', value: 'nightmare' }]"
+          :options="modeOptions"
         />
       </label>
       <n-button attr-type="submit" type="primary" :loading="busy">查询</n-button>

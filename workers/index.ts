@@ -1,9 +1,9 @@
 import {
-  assetKeys,
+  assetKeysV4 as assetKeys,
   beijingDay,
   dayOffset,
-  toPublicMapConfigV4,
-  toPublicMapConfigV5,
+  toPublicMapConfigV6,
+  projectLegacyConfig,
   validateStatsQuery,
   type StatsQuery,
 } from "../packages/shared/src/index";
@@ -25,6 +25,7 @@ import { handleR2 } from "./media";
 import { runSnapshot } from "./snapshot";
 import { telemetryClient } from "./telemetry-source";
 import { jsonError, jsonResponse, type Env } from "./types";
+import { IMAGE_KINDS as KINDS, isContentAssetKey } from '../packages/shared/src/media-paths.mjs';
 
 const RETIRED = new Set([
   "/maps.json",
@@ -34,16 +35,6 @@ const RETIRED = new Set([
   "/api/preview",
   "/api/restore",
 ]);
-const KINDS = {
-  full: "layout/full",
-  basement: "layout/basement",
-  floor1: "layout/floor1",
-  floor2: "layout/floor2",
-  entrance: "entrance",
-  entranceThumb: "entrance-thumb",
-} as const;
-const ASSET_KEY =
-  /^maps\/(?:entry|entry-thumb|full|floor1|floor2|entrance|entrance-thumb|layout\/(?:full|basement|floor1|floor2))\/[^/\\]+\.webp$/;
 async function bytes(request: Request, max: number): Promise<Uint8Array> {
   if (Number(request.headers.get("Content-Length")) > max)
     throw new ServiceError(413, "body_too_large");
@@ -120,7 +111,7 @@ export async function handleRequest(
   if (path.startsWith("/r2/")) return handleR2(request, env);
   if (path.startsWith("/_vercel/")) return new Response(null, { status: 404 });
   if (
-    path === "/maps-v4.json" || path === "/maps-v5.json"
+    path === "/maps-v4.json" || path === "/maps-v5.json" || path === '/maps-v6.json'
   ) {
     const headers = {
       "Access-Control-Allow-Origin": "*",
@@ -134,13 +125,13 @@ export async function handleRequest(
     if (!["GET", "HEAD"].includes(request.method))
       return jsonError(405, "method_not_allowed");
     const config = await repo.read();
-    const protocol = path === "/maps-v5.json" ? 5 : 4;
+    const protocol = path === '/maps-v6.json' ? 6 : path === "/maps-v5.json" ? 5 : 4;
     const etag = `"maps-v${protocol}-${config.version}${env.RELATIVE_MEDIA_URLS === '1' ? '-relative' : ''}"`;
     const responseHeaders = { ...headers, ETag: etag };
     if (request.headers.get("If-None-Match") === etag)
       return new Response(null, { status: 304, headers: responseHeaders });
     const base = env.RELATIVE_MEDIA_URLS === '1' ? '/r2' : new URL(env.IMG_BASE_URL || "/r2", url.origin).href;
-    const output = protocol === 5 ? toPublicMapConfigV5(config, base) : toPublicMapConfigV4(config, base);
+    const output = protocol === 6 ? toPublicMapConfigV6(config, base) : projectLegacyConfig(config, base, protocol);
     return request.method === "HEAD"
       ? new Response(null, { headers: responseHeaders })
       : jsonResponse(output, 200, responseHeaders);
@@ -169,7 +160,8 @@ export async function handleRequest(
   if (path.startsWith("/api/")) {
     if (!(await new CloudflareAuth(env).authenticate(request)))
       return jsonError(401, "unauthorized");
-    if (path === "/api/admin/v3/maps") {
+    if (path.startsWith('/api/admin/v3/')) return jsonError(409, 'admin_upgrade_required', '请刷新并使用新版后台');
+    if (path === "/api/admin/v4/maps") {
       if (request.method === "GET")
         return jsonResponse(await repo.read(), 200, {
           "Cache-Control": "no-store",
@@ -182,7 +174,7 @@ export async function handleRequest(
       }
       return jsonError(405, "method_not_allowed");
     }
-    if (path === "/api/admin/v3/images" && request.method === "POST") {
+    if (path === "/api/admin/v4/images" && request.method === "POST") {
       const raw = await bytes(request, 20 * 1024 * 1024);
       const form = await new Response(raw.buffer as ArrayBuffer, {
         headers: { "Content-Type": request.headers.get("Content-Type") || "" },
@@ -197,13 +189,13 @@ export async function handleRequest(
       await storage.put(key, buffer, "image/webp");
       return jsonResponse({ asset: { key }, url: storage.url(key) });
     }
-    if (path === "/api/admin/v3/export" && request.method === "GET")
+    if (path === "/api/admin/v4/export" && request.method === "GET")
       return jsonResponse(await exportContent(repo, storage), 200, {
         "Cache-Control": "no-store",
       });
-    if (path === "/api/admin/v3/assets") {
+    if (path === "/api/admin/v4/assets") {
       const key = url.searchParams.get("key") || "";
-      if (!ASSET_KEY.test(key) || key.includes(".."))
+      if (!isContentAssetKey(key))
         return jsonError(400, "invalid_asset_key");
       if (request.method === "GET") {
         const a = await storage.get(key);
@@ -230,12 +222,12 @@ export async function handleRequest(
         return jsonResponse({ key, sha256: digest });
       }
     }
-    if (path === "/api/admin/v3/import" && request.method === "POST") {
+    if (path === "/api/admin/v4/import" && request.method === "POST") {
       const b = await body(request);
       const manifest = b.manifest;
       if (
         manifest?.format !== "idv-content" ||
-        manifest.formatVersion !== 1 ||
+        ![1, 2].includes(manifest.formatVersion) ||
         !Array.isArray(manifest.assets)
       )
         return jsonError(400, "invalid_manifest");
@@ -264,9 +256,9 @@ export async function handleRequest(
         ),
       );
     }
-    if (path === "/api/admin/v3/backups" && request.method === "GET")
+    if (path === "/api/admin/v4/backups" && request.method === "GET")
       return jsonResponse({ backups: await repo.backups() });
-    if (path === "/api/admin/v3/restore" && request.method === "POST") {
+    if (path === "/api/admin/v4/restore" && request.method === "POST") {
       const b = await body(request);
       const backup = await repo.readBackup(String(b.key));
       if (!backup) return jsonError(404, "backup_not_found");
@@ -298,20 +290,26 @@ export async function handleRequest(
             formatVersion: 1,
             query: q,
             events: await stats.export(q),
+            dictionaries: await repo.read().then(c => ({ modes: c.difficulties, entrances: c.entranceTypes, gameMaps: c.gameMaps.map(m => ({ id: m.id, name: m.name })), layouts: c.layouts.map(l => ({ id: l.id, name: l.displayName })) })),
           },
           200,
           { "Cache-Control": "no-store" },
         );
       const report = await stats.report(q);
       const c = await repo.read();
+      const mapNames = new Map(c.gameMaps.map(m => [m.id, m.name]));
+      const layoutNames = new Map(c.layouts.map(l => [String(l.id), `${mapNames.get(l.gameMapId) ?? l.gameMapId} · ${l.displayName}`]));
       for (const r of report.gameMaps)
-        r.label = c.gameMaps.find((m) => m.id === r.key)?.name || r.key;
+        r.label = mapNames.get(r.key) || r.key;
       for (const r of report.layouts) {
-        const layout = c.layouts.find((l) => String(l.id) === r.key);
-        r.label = layout
-          ? `${c.gameMaps.find((m) => m.id === layout.gameMapId)?.name || layout.gameMapId} · ${layout.displayName}`
-          : r.key;
+        r.label = layoutNames.get(r.key) || r.key;
       }
+      const modeNames = new Map(c.difficulties.map(d => [d.id, d.name])), entryNames = new Map(c.entranceTypes.map(e => [e.id, e.name]));
+      for (const r of report.modes) r.label = modeNames.get(r.key) ?? r.key;
+      for (const r of report.entrances) r.label = entryNames.get(r.key) ?? r.key;
+      for (const r of report.modes) if (!modeNames.has(r.key)) modeNames.set(r.key, r.key);
+      if (q.mode && !modeNames.has(q.mode)) modeNames.set(q.mode, q.mode);
+      report.modeOptions = [...modeNames].map(([value, label]) => ({ value, label }));
       return jsonResponse(report, 200, { "Cache-Control": "no-store" });
     }
     return jsonError(404, "not_found");

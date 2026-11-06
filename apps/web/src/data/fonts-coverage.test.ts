@@ -1,9 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import snapshot from "./maps-v3.snapshot.json";
 import { changelog } from "./changelog";
 describe("current handbook font subset", () => {
-  it("covers map names, layout remarks and document-backed changelog content", () => {
+  it("covers static document-backed changelog content", () => {
     const chars = new Set(
       readFileSync(
         new URL("../assets/fonts/subset-chars.txt", import.meta.url),
@@ -11,8 +10,6 @@ describe("current handbook font subset", () => {
       ),
     );
     const text =
-      snapshot.gameMaps.map((m) => m.name).join("") +
-      snapshot.layouts.map((l) => l.displayName + l.remarks).join("") +
       changelog
         .map(
           (entry) =>

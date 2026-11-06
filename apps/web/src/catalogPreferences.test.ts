@@ -1,9 +1,10 @@
+import { catalogMap } from '../../../packages/shared/test/fixtures';
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { preferredCatalogPath, rememberCatalog } from "./catalogPreferences";
 
 afterEach(() => vi.unstubAllGlobals());
 describe("catalog device preferences", () => {
-  const maps = [{ id: "lady-of-doom" }, { id: "second" }];
+  const maps = [catalogMap("lady-of-doom"), catalogMap("second")];
   it("remembers map, mode and entrance", () => {
     let stored = "";
     vi.stubGlobal("localStorage", { getItem: () => stored, setItem: (_key: string, value: string) => { stored = value; } });

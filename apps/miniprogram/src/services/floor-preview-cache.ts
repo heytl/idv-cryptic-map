@@ -1,4 +1,4 @@
-import { availableFloors, resolveFloorSource, type FloorSource, type PublicMapConfigV4 } from "@idv-map/shared";
+import { availableFloors, resolveFloorSource, type FloorSource, type PublicMapConfigV4 } from "@idv-map/shared/dynamic";
 
 // Include the rendering policy so a future format/size change cannot reuse old output.
 export function floorPreviewKey(source: FloorSource): string {

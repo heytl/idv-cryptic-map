@@ -1,12 +1,12 @@
 import {
-  publicEntrance,
-  type MapConfigV3,
+  type MapConfigV4,
   type VisitEvent,
 } from "../../shared/src/index";
+import { enabledEntranceTypes, completeEntrance } from '../../shared/src/map-v4';
 import { ServiceError } from "./content";
 export function makeVisit(
   input: unknown,
-  config: MapConfigV3,
+  config: MapConfigV4,
   now = new Date(),
 ): VisitEvent {
   const e = input as Partial<VisitEvent> | null;
@@ -26,11 +26,11 @@ export function makeVisit(
   const entrance = layout?.entrances.find(
     (en) =>
       en.id === e.entranceId &&
-      publicEntrance(en, config.gameMaps.find(m => m.id === layout.gameMapId)!, layout.mode),
+      enabledEntranceTypes(config.gameMaps.find(m => m.id === layout.gameMapId), layout.mode).includes(en.type) && completeEntrance(en),
   );
   if (
     !layout ||
-    !entrance ||
+    !entrance || !layout.floorImages.full ||
     !config.gameMaps.some(
       (m) => m.id === layout.gameMapId && m.published && !m.deletedAt,
     )

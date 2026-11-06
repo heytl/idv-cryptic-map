@@ -1,20 +1,20 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { MapConfigV3 } from "../packages/shared/src/map-v3";
+import { normalizeMapConfigV4 } from "../packages/shared/src/map-v4";
 import {
   decodeGitHubUtf8Base64,
   runSnapshot,
-  serializeSnapshotV3,
+  serializeSnapshotV4,
 } from "./snapshot";
 import type { Env } from "./types";
 
-const config: MapConfigV3 = {
+const config = normalizeMapConfigV4({
   schemaVersion: 3,
   entranceRulesVersion: 2,
   version: 23,
   updatedAt: "2026-08-23",
   gameMaps: [],
   layouts: [],
-};
+});
 
 function utf8Base64(value: string): string {
   const bytes = new TextEncoder().encode(value);
@@ -40,7 +40,7 @@ function mockEnv(existingBackup = false): {
     },
     MEDIA: {
       head: vi.fn(async () =>
-        existingBackup ? { key: "backups-v3/snapshot-v23.json" } : null,
+        existingBackup ? { key: "backups-v4/snapshot-v23.json" } : null,
       ),
       put: r2Put,
       list: r2List,
@@ -57,7 +57,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("V3 每日快照", () => {
+describe("V4 每日快照", () => {
   it("正确解码包含中文的 GitHub UTF-8 Base64", () => {
     const content = "噩梦模式：地下室、一楼、二楼\n";
     expect(decodeGitHubUtf8Base64(utf8Base64(content))).toBe(content);
@@ -70,7 +70,7 @@ describe("V3 每日快照", () => {
         new Response(
           JSON.stringify({
             sha: "same-sha",
-            content: utf8Base64(serializeSnapshotV3(config)),
+            content: utf8Base64(serializeSnapshotV4(config)),
           }),
           { status: 200 },
         ),
@@ -84,7 +84,7 @@ describe("V3 每日快照", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it("新版本先写入 backups-v3，再提交带 skip ci 的 V3 Git 快照", async () => {
+  it("新版本先写入 backups-v4，再提交带 skip ci 的 V4 Git 快照", async () => {
     const { env, r2Put } = mockEnv(false);
     const fetchMock = vi
       .fn()
@@ -95,7 +95,7 @@ describe("V3 每日快照", () => {
     await runSnapshot(env);
 
     expect(r2Put).toHaveBeenCalledWith(
-      "backups-v3/snapshot-v23.json",
+      "backups-v4/snapshot-v23.json",
       JSON.stringify(config),
       expect.objectContaining({
         httpMetadata: { contentType: "application/json" },
@@ -103,9 +103,9 @@ describe("V3 每日快照", () => {
     );
     const githubRequest = fetchMock.mock.calls[1]?.[1] as RequestInit;
     const body = JSON.parse(String(githubRequest.body));
-    expect(body.message).toBe("chore(snapshot): V3 地图配置快照 v23 [skip ci]");
+    expect(body.message).toBe("chore(snapshot): V4 地图配置快照 v23 [skip ci]");
     expect(decodeGitHubUtf8Base64(body.content)).toBe(
-      serializeSnapshotV3(config),
+      serializeSnapshotV4(config),
     );
   });
 });

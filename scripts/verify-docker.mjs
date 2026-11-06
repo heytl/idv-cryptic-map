@@ -32,10 +32,10 @@ try {
   const modern = await fetch(`${base}/maps-v5.json`);
   assert.equal(modern.status, 200);
   assert.equal((await modern.json()).schemaVersion, 5);
-  assert.equal((await fetch(`${base}/api/admin/v3/maps`)).status, 401);
+  assert.equal((await fetch(`${base}/api/admin/v4/maps`)).status, 401);
   assert.equal((await fetch(`${base}/admin/`, { redirect: 'manual' })).status, 303);
   assert.equal((await fetch(`${base}/admin/login`)).status, 200);
-  for (const path of ['/api/admin/v3/maps', '/api/admin/stats']) {
+  for (const path of ['/api/admin/v4/maps', '/api/admin/stats']) {
     assert.equal((await fetch(base + path, { headers: { Authorization: `Bearer ${key}` } })).status, 200);
   }
   const login = await fetch(`${base}/auth/login`, {
@@ -46,7 +46,7 @@ try {
   const cookie = login.headers.get('set-cookie');
   assert.match(cookie, /HttpOnly/);
   const headers = { Cookie: cookie.split(';')[0] };
-  assert.equal((await fetch(`${base}/api/admin/v3/maps`, { headers })).status, 200);
+  assert.equal((await fetch(`${base}/api/admin/v4/maps`, { headers })).status, 200);
   // Sessions are stored in SQLite: this proves the database survives container replacement.
   docker('rm', '-f', name);
   docker('run', '-d', '--name', name, '--read-only', '--cap-drop=ALL',

@@ -23,7 +23,7 @@ const server = createServer(async (req, res) => {
     if (path === "/admin/") {
       res.setHeader("Content-Type", "text/html");res.end('<input id="draft" value=""><p>admin</p>');return;
     }
-    if (/^\/(maps-v[45]\.json|r2\/|telemetry\/)/.test(path)) {
+    if (/^\/(maps-v[456]\.json|r2\/|telemetry\/)/.test(path)) {
       const r = await fetch(`http://127.0.0.1:8787${req.url}`, { method: req.method, ...(req.method === "POST" ? { body: "{}", headers: {"Content-Type":"application/json"} } : {}) });
       res.writeHead(r.status, Object.fromEntries(r.headers));res.end(Buffer.from(await r.arrayBuffer()));return;
     }
@@ -45,7 +45,7 @@ try {
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.reload();
   assert.equal(await page.getAttribute("html", "data-release"), "old");
-  // Preserve a real V4 configuration and media before activating the V5 app.
+  // Preserve a real V4 configuration and media before activating the V6 app.
   await page.evaluate(async () => {
     const response = await fetch('/maps-v4.json');
     const config = await response.clone().json();
@@ -58,8 +58,8 @@ try {
   await page.reload({waitUntil:"domcontentloaded"});
   await page.waitForFunction(() => document.documentElement.dataset.release === "new", undefined, {timeout:30000});
   await page.waitForFunction(async () => {
-    const response = await (await caches.open('maps-config-v5')).match('/maps-v5.json');
-    return response && (await response.json()).schemaVersion === 5;
+    const response = await (await caches.open('maps-config-v6')).match('/maps-v6.json');
+    return response && (await response.json()).schemaVersion === 6;
   });
   await page.getByRole('button', { name: '下载地图离线包', exact: true }).waitFor();
   assert.equal(await page.evaluate(async () => (await (await caches.open('map-images-r2')).match('/r2/maps/full/keep.webp'))?.text()), 'keep');
@@ -83,5 +83,5 @@ try {
   await freshPage.waitForFunction(() => !!navigator.serviceWorker.controller, undefined, {timeout:15000});
   assert.notEqual(await freshPage.evaluate(()=>document.readyState),"complete");
   await fresh.close();
-  console.log("PASS: legacy and V4-to-V5 upgrade, offline marker reset, retained media, online HTML refresh, admin drafts, offline shell/maps, registration before slow images finish");
+  console.log("PASS: legacy and V4-to-V6 upgrade, offline marker reset, retained media, online HTML refresh, admin drafts, offline shell/maps, registration before slow images finish");
 } finally {await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}

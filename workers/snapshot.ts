@@ -1,10 +1,10 @@
-// Daily V3 backup plus optional Git snapshot. V2 remains an archived migration baseline.
-import type { MapConfigV3 } from "../packages/shared/src/index";
+// Daily V4 backup plus optional Git snapshot. Legacy snapshots remain readable.
+import type { MapConfigV4 } from "../packages/shared/src/index";
 import { maintenance } from "../packages/server/src/content";
 import { CloudflareContent, D1Statistics } from "./cloudflare";
 import type { Env } from "./types";
 
-export const SNAPSHOT_V3_PATH = "apps/web/src/data/maps-v3.snapshot.json";
+export const SNAPSHOT_V4_PATH = "apps/web/src/data/maps-v4.snapshot.json";
 
 export function decodeGitHubUtf8Base64(value: string): string {
   const binary = atob(value.replace(/\s/g, ""));
@@ -19,7 +19,7 @@ function encodeGitHubUtf8Base64(value: string): string {
   return btoa(binary);
 }
 
-export function serializeSnapshotV3(config: MapConfigV3): string {
+export function serializeSnapshotV4(config: MapConfigV4): string {
   return `${JSON.stringify(config, null, 2)}\n`;
 }
 
@@ -31,10 +31,10 @@ export async function runSnapshot(env: Env): Promise<void> {
   const config = await repo.read();
   if (!env.GITHUB_TOKEN || !env.GITHUB_REPO) return;
 
-  const content = serializeSnapshotV3(config);
+  const content = serializeSnapshotV4(config);
 
   const branch = env.GITHUB_BRANCH ?? "main";
-  const apiBase = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${SNAPSHOT_V3_PATH}`;
+  const apiBase = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${SNAPSHOT_V4_PATH}`;
   const headers = {
     Authorization: `Bearer ${env.GITHUB_TOKEN}`,
     Accept: "application/vnd.github+json",
@@ -59,7 +59,7 @@ export async function runSnapshot(env: Env): Promise<void> {
     method: "PUT",
     headers,
     body: JSON.stringify({
-      message: `chore(snapshot): V3 地图配置快照 v${config.version} [skip ci]`,
+      message: `chore(snapshot): V4 地图配置快照 v${config.version} [skip ci]`,
       content: encodeGitHubUtf8Base64(content),
       branch,
       ...(sha ? { sha } : {}),

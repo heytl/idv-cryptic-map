@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import {
-  ENTRANCE_LABELS,
   configuredEntranceTypes,
-  MODE_LABELS,
   layoutPublicationIssues,
   type EntranceType,
   type GameMode,
   type Layout,
-} from "@idv-map/shared";
+} from "@idv-map/shared/dynamic";
 import {
   NAlert,
   NButton,
@@ -48,15 +46,16 @@ const gameMapOptions = computed(() =>
     .filter((m) => !m.deletedAt)
     .map((m) => ({ label: m.name, value: m.id })),
 );
+watch(gameMapOptions, options=>{if(!options.some(m=>m.value===gameMapId.value))gameMapId.value=options[0]?.value??'';},{immediate:true});
 const mapLayouts = computed(() =>
   activeMapsV2.value.filter((m) => m.gameMapId === gameMapId.value),
 );
 const activeMode = ref<GameMode>("hard");
 const selectedGameMap = computed(() => storeV2.gameMaps.find(m => m.id === gameMapId.value));
-const modeCounts = computed(() => ({
-  hard: mapLayouts.value.filter((map) => map.mode === "hard").length,
-  nightmare: mapLayouts.value.filter((map) => map.mode === "nightmare").length,
-}));
+const modeOptions = computed(() => selectedGameMap.value?.difficulties.filter(d=>!d.deletedAt).sort((a,b)=>a.sort-b.sort).map(d=>({value:d.difficultyId,label:storeV2.difficulties.find(v=>v.id===d.difficultyId)?.name??d.difficultyId}))??[]);
+const modeLabels = computed<Record<string,string>>(()=>Object.fromEntries(modeOptions.value.map(d=>[d.value,d.label])));
+const entryLabels = computed<Record<string,string>>(()=>Object.fromEntries(storeV2.entranceTypes.map(e=>[e.id,e.name])));
+watch(modeOptions, options=>{if(!options.some(o=>o.value===activeMode.value))activeMode.value=options[0]?.value??'';},{immediate:true});
 const visibleMaps = computed(() =>
   mapLayouts.value.filter((map) => map.mode === activeMode.value),
 );
@@ -150,11 +149,12 @@ function entrancesFor(mode: Layout["mode"], id: number): Layout["entrances"] {
   return types.map((type) => ({
     id: `${id}-${type}`,
     type,
-    ...(type === "front" ? { direction: "south" as const } : {}),
+
   }));
 }
 
 function createMap(): void {
+  if (!activeMode.value) return;
   const id = nextIdV2();
   const mode = activeMode.value;
   editing.value = {
@@ -166,6 +166,7 @@ function createMap(): void {
     remarks: "",
     sort: (storeV2.maps.length + 1) * 10,
     published: false,
+    modeLocked: false,
     floorImages: {},
     entrances: entrancesFor(mode, id),
   };
@@ -177,8 +178,21 @@ function editMap(map: Layout): void {
   editing.value = map;
 }
 
+function copyLayout(map: Layout) {
+  const clone: Layout = JSON.parse(JSON.stringify(map));
+  clone.id = nextIdV2(); clone.published=false; clone.modeLocked=false; delete clone.deletedAt;
+  clone.displayName += '（副本）'; clone.entrances = clone.entrances.filter(e=>!e.deletedAt).map(e=>({...e,id:`entry-${crypto.randomUUID()}`}));
+  editing.value=clone; editingIsNew.value=true;
+}
 function applyMap(map: Layout): void {
   const index = storeV2.maps.findIndex((item) => item.id === map.id);
+  if (index !== -1 && storeV2.maps[index].modeLocked) {
+    if (map.mode !== storeV2.maps[index].mode) {
+      message.warning('布局已发布，不能修改难度；请取消编辑后复制布局');
+      return;
+    }
+    map.modeLocked = true;
+  }
   if (index === -1) storeV2.maps.push(map);
   else storeV2.maps[index] = map;
   editing.value = null;
@@ -216,19 +230,14 @@ function closeEditor(): void {
         style="width: 200px"
       />
       <n-radio-group v-model:value="activeMode" name="v2-map-mode" size="large">
-        <n-radio-button value="hard"
-          >困难地图（{{ modeCounts.hard }}）</n-radio-button
-        >
-        <n-radio-button value="nightmare"
-          >噩梦地图（{{ modeCounts.nightmare }}）</n-radio-button
-        >
+        <n-radio-button v-for="option in modeOptions" :key="option.value" :value="option.value">{{option.label}}（{{mapLayouts.filter(l=>l.mode===option.value).length}}）</n-radio-button>
       </n-radio-group>
       <span class="spacer"></span>
       <n-button
         type="primary"
-        :disabled="!gameMapOptions.some((m) => m.value === gameMapId)"
+        :disabled="!activeMode || !gameMapOptions.some((m) => m.value === gameMapId)"
         @click="createMap"
-        >新增{{ MODE_LABELS[activeMode] }}布局</n-button
+        >新增{{ modeLabels[activeMode] }}布局</n-button
       >
     </div>
 
@@ -244,7 +253,7 @@ function closeEditor(): void {
       v-if="visibleMaps.length"
       ref="listWrap"
       class="card-list v2-card-list"
-      :aria-label="`${MODE_LABELS[activeMode]}布局列表`"
+      :aria-label="`${modeLabels[activeMode]}布局列表`"
     >
       <article
         v-for="(map, index) in visibleMaps"
@@ -286,7 +295,7 @@ function closeEditor(): void {
           <div class="sub">
             #{{ map.id }} · 入口：{{
               map.entrances
-                .map((item) => ENTRANCE_LABELS[item.type])
+                .filter(item => !item.deletedAt).map((item) => entryLabels[item.type])
                 .join("、") || "无"
             }}
           </div>
@@ -307,7 +316,7 @@ function closeEditor(): void {
               @update:value="(value: boolean) => togglePublish(map, value)"
             />
           </label>
-          <n-button size="small" @click="editMap(map)">编辑</n-button>
+          <n-button size="small" @click="editMap(map)">编辑</n-button><n-button size="small" @click="copyLayout(map)">复制</n-button>
           <n-popconfirm
             positive-text="确认移除"
             negative-text="取消"
@@ -322,10 +331,10 @@ function closeEditor(): void {
         </div>
       </article>
     </div>
-    <n-empty v-else :description="`还没有${MODE_LABELS[activeMode]}布局`" class="v2-empty">
+    <n-empty v-else :description="`还没有${modeLabels[activeMode]}布局`" class="v2-empty">
       <template #extra>
-        <n-button type="primary" :disabled="!gameMapOptions.some((m) => m.value === gameMapId)" @click="createMap">
-          新增{{ MODE_LABELS[activeMode] }}布局
+        <n-button type="primary" :disabled="!activeMode || !gameMapOptions.some((m) => m.value === gameMapId)" @click="createMap">
+          新增{{ modeLabels[activeMode] }}布局
         </n-button>
       </template>
     </n-empty>

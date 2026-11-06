@@ -1,3 +1,4 @@
+import { CONTENT_IMAGE_URL_PATTERN } from '../../packages/shared/src/media-paths.mjs';
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { VitePWA } from "vite-plugin-pwa";
@@ -65,8 +66,7 @@ export default defineConfig({
           {
             // Phase 2：R2 直出的地图图片（img.<domain>/maps/**，内容哈希文件名），
             // 规则按路径匹配、与主机名无关，域名定了无需再改
-            urlPattern:
-              /\/maps\/(entry|entry-thumb|floor1|floor2|full|entrance|entrance-thumb|layout\/(?:full|basement|floor1|floor2))\/[^/]+\.webp$/,
+            urlPattern: CONTENT_IMAGE_URL_PATTERN,
             handler: "CacheFirst",
             options: {
               cacheName: "map-images-r2",
@@ -80,9 +80,9 @@ export default defineConfig({
           {
             // 地图配置：在线永远走网络拿最新；离线回落到最近一次成功拉取的版本
             // 首次离线且无缓存时展示加载失败状态，不内嵌旧版静态地图兜底。
-            urlPattern: /\/maps-v5\.json$/,
+            urlPattern: /\/maps-v6\.json$/,
             handler: "NetworkFirst",
-            options: { cacheName: "maps-config-v5", networkTimeoutSeconds: 3 },
+            options: { cacheName: "maps-config-v6", networkTimeoutSeconds: 3 },
           },
         ],
       },
@@ -94,8 +94,9 @@ export default defineConfig({
     // Local Worker provides content and media.
     proxy: {
       "/api": "http://127.0.0.1:8787",
-      "/maps-v4.json": "http://127.0.0.1:8787",
       "/maps-v5.json": "http://127.0.0.1:8787",
+      "/maps-v4.json": "http://127.0.0.1:8787",
+      "/maps-v6.json": "http://127.0.0.1:8787",
       "/telemetry": "http://127.0.0.1:8787",
       "/maps-v2.json": "http://127.0.0.1:8787",
       "/r2": "http://127.0.0.1:8787",

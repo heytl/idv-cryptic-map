@@ -27,7 +27,7 @@ function collectText(dir, exts, acc) {
     if (entry.isDirectory()) {
       if (entry.name === 'assets' || entry.name === 'node_modules') continue;
       collectText(p, exts, acc);
-    } else if (exts.some((e) => entry.name.endsWith(e))) {
+    } else if (!/^maps-v\d+\.snapshot\.json$/.test(entry.name) && exts.some((e) => entry.name.endsWith(e))) {
       acc.push(readFileSync(p, 'utf8'));
     }
   }

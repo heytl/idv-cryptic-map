@@ -1,9 +1,9 @@
 import {
-  migrateV2ToV3,
+  normalizeMapConfigV4,
   beijingDay,
   dayOffset,
   type MapConfigV2,
-  type MapConfigV3,
+  type MapConfigV4,
   type StatsQuery,
   type StatsReport,
   type StatRow,
@@ -21,49 +21,47 @@ import type { Env } from "./types";
 
 export const CONFIG_V3_KEY = "config:v3:current";
 export const BACKUP_V3_PREFIX = "backups-v3/";
+export const CONFIG_V4_KEY = 'config:v4:current';
+export const BACKUP_V4_PREFIX = 'backups-v4/';
 export class CloudflareContent implements ContentRepository {
   constructor(private env: Env) {}
-  async read(): Promise<MapConfigV3> {
+  async read(): Promise<MapConfigV4> {
     if (!this.env.CONFIG) throw new ServiceError(503, "content_not_configured");
-    const current = await this.env.CONFIG.get<MapConfigV3>(
-      CONFIG_V3_KEY,
+    const current = await this.env.CONFIG.get<MapConfigV4>(
+      CONFIG_V4_KEY,
       "json",
     );
     if (current) return checkedConfig(current);
-    // Read-only migration bridge. First explicit V3 save persists the migration.
+    const legacy = await this.env.CONFIG.get<unknown>(CONFIG_V3_KEY, 'json');
+    if (legacy) return checkedConfig(legacy);
+    // Read-only bridge. Only an explicit save persists the migrated document.
     const v2 = await this.env.CONFIG.get<MapConfigV2>(
       "config:v2:current",
       "json",
     );
     if (!v2)
-      return {
-        schemaVersion: 3,
-        version: 0,
-        updatedAt: "",
-        gameMaps: [],
-        layouts: [],
-      };
-    return migrateV2ToV3(v2);
+      return normalizeMapConfigV4({ schemaVersion: 3, version: 0, updatedAt: '', gameMaps: [], layouts: [] });
+    return normalizeMapConfigV4(v2);
   }
-  async save(config: MapConfigV3, expectedVersion: number): Promise<void> {
+  async save(config: MapConfigV4, expectedVersion: number): Promise<void> {
     if ((await this.read()).version !== expectedVersion)
       throw new ServiceError(409, "version_conflict");
     // KV is eventually consistent; this check is not a multi-writer lock.
-    await this.env.CONFIG!.put(CONFIG_V3_KEY, JSON.stringify(config));
+    await this.env.CONFIG!.put(CONFIG_V4_KEY, JSON.stringify(config));
   }
-  async backup(config: MapConfigV3): Promise<void> {
+  async backup(config: MapConfigV4): Promise<void> {
     if (!this.env.MEDIA) throw new ServiceError(503, "media_not_configured");
-    if (!(await this.env.CONFIG?.get(CONFIG_V3_KEY))) {
-      const baseline = await this.env.CONFIG?.get("config:v2:current");
+    if (!(await this.env.CONFIG?.get(CONFIG_V4_KEY))) {
+      const baseline = await this.env.CONFIG?.get(CONFIG_V3_KEY) ?? await this.env.CONFIG?.get('config:v2:current');
       if (
         baseline &&
-        !(await this.env.MEDIA.head("backups-v3/v2-baseline.json"))
+        !(await this.env.MEDIA.head('backups-v4/v3-baseline.json'))
       )
-        await this.env.MEDIA.put("backups-v3/v2-baseline.json", baseline, {
+        await this.env.MEDIA.put('backups-v4/v3-baseline.json', baseline, {
           httpMetadata: { contentType: "application/json" },
         });
     }
-    const key = `${BACKUP_V3_PREFIX}snapshot-v${config.version}.json`;
+    const key = `${BACKUP_V4_PREFIX}snapshot-v${config.version}.json`;
     if (!(await this.env.MEDIA.head(key)))
       await this.env.MEDIA.put(key, JSON.stringify(config), {
         httpMetadata: { contentType: "application/json" },
@@ -73,23 +71,25 @@ export class CloudflareContent implements ContentRepository {
   async backups() {
     if (!this.env.MEDIA) throw new ServiceError(503, "media_not_configured");
     const items: { key: string; uploaded: string }[] = [];
+    for (const prefix of [BACKUP_V3_PREFIX, BACKUP_V4_PREFIX]) {
     let cursor: string | undefined;
     do {
       const page = await this.env.MEDIA.list({
-        prefix: BACKUP_V3_PREFIX,
+        prefix,
         cursor,
       });
       items.push(
         ...page.objects
-          .filter((o) => o.key !== "backups-v3/v2-baseline.json")
+          .filter((o) => /^backups-v[34]\/(?:snapshot-v\d+|v3-baseline)\.json$/.test(o.key))
           .map((o) => ({ key: o.key, uploaded: o.uploaded.toISOString() })),
       );
       cursor = page.truncated ? page.cursor : undefined;
     } while (cursor);
+    }
     return items.sort((a, b) => b.uploaded.localeCompare(a.uploaded));
   }
   async readBackup(key: string) {
-    if (!key.startsWith(BACKUP_V3_PREFIX) || key.includes(".."))
+    if (!/^backups-v[34]\/(?:snapshot-v\d+|v3-baseline)\.json$/.test(key))
       throw new ServiceError(400, "invalid_backup_key");
     const obj = await this.env.MEDIA?.get(key);
     return obj ? checkedConfig(await obj.json()) : null;

@@ -1,5 +1,5 @@
-import { isPublicMapConfigV5, resolvePublicMediaUrls, type PublicGameMap, type GameMode, type PublicLayoutV4 } from "@idv-map/shared";
-export { isGameMode, isEntranceType, enabledEntranceTypesV2, isEnabledEntranceV2, defaultEntranceV2, catalogFilterValuesV2, isCatalogFilterV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2, availableFloors, type CatalogFilterV2 } from "@idv-map/shared";
+import { hydrateConfigV6, isPublicMapConfigV5, resolvePublicMediaUrls, type PublicGameMap, type GameMode, type PublicLayoutV4 } from "@idv-map/shared/dynamic";
+export { isGameMode, isEntranceType, enabledEntranceTypesV2, isEnabledEntranceV2, defaultEntranceV2, catalogFilterValuesV2, isCatalogFilterV2, catalogFilterLabelV2, entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2, availableFloors, type CatalogFilterV2 } from "@idv-map/shared/dynamic";
 import { reactive, ref } from "vue";
 
 export const mapsV2 = reactive<PublicLayoutV4[]>([]);
@@ -13,8 +13,8 @@ let loadPromise: Promise<boolean> | null = null;
 export function publicEndpoint(): string {
   const base = (import.meta.env.VITE_MAP_API_BASE_URL ?? "").replace(/\/$/, "");
   // 正式 Access 策略覆盖 /api/*；使用等价的公开文件路由可让网页、main 静态站和小程序
-  // 在无需后台登录的情况下读取，同时仍由 Worker 从同一份 config:v3:current 下发。
-  return `${base}/maps-v5.json`;
+  // 在无需后台登录的情况下读取，同时仍由 Worker 从同一份 config:v4:current 下发。
+  return `${base}/maps-v6.json`;
 }
 
 export async function ensureMapsV2(): Promise<boolean> {
@@ -32,6 +32,7 @@ export async function ensureMapsV2(): Promise<boolean> {
         );
       const data = resolvePublicMediaUrls(await response.json(), new URL(publicEndpoint(), window.location.href).href);
       if (!isPublicMapConfigV5(data)) throw new Error("地图协议不合法，请更新服务端与客户端");
+      hydrateConfigV6(data);
       mapsV2.splice(0, mapsV2.length, ...data.layouts);
       gameMaps.splice(0, gameMaps.length, ...data.gameMaps);
       mapsV2UpdatedAt.value = data.updatedAt;

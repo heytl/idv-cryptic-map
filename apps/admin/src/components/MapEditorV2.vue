@@ -1,15 +1,7 @@
 <script setup lang="ts">
 import {
-  DIRECTIONS_V2,
-  DIRECTION_LABELS,
-  ENTRANCE_LABELS,
   allowedEntranceTypes,
-  configuredEntranceTypes,
-  REQUIRED_LAYOUTS,
-  FLOOR_LABELS,
-  FLOOR_ORDER,
-  PASSAGE_LABELS,
-  PASSAGES_V2,
+  entranceFilterFor,
   layoutPublicationIssues,
   type EntranceV2,
   type EntranceType,
@@ -18,7 +10,7 @@ import {
   type Layout,
   type RegionFloor,
   type PixelRect,
-} from "@idv-map/shared";
+} from "@idv-map/shared/dynamic";
 import {
   NAlert,
   NButton,
@@ -26,8 +18,6 @@ import {
   NImage,
   NInput,
   NModal,
-  NRadioButton,
-  NRadioGroup,
   NSelect,
   NSwitch,
   useMessage,
@@ -47,10 +37,8 @@ const message = useMessage();
 const cloneMap = (map: Layout): Layout =>
   JSON.parse(JSON.stringify(map)) as Layout;
 const draft = reactive<Layout>(cloneMap(props.map));
-// 正门的物理入口固定为南门，后台不再要求管理员重复选择。
-for (const entrance of draft.entrances) {
-  if (entrance.type === "front") entrance.direction = "south";
-}
+// A first publication can finish while this editor holds an older draft.
+const modeLocked = computed(() => draft.modeLocked || props.map.modeLocked);
 const busy = ref("");
 const previewFloor = ref<FloorType | null>(null);
 const regionJob = ref<{ source: string; candidate?: Blob; initialId?: string; items: RegionItem[]; required: string[] } | null>(null);
@@ -79,34 +67,31 @@ const recrop = ref<
   | null
 >(null);
 
-const floorSlots = computed(() =>
-  FLOOR_ORDER.filter((floor) => {
-    return (
-      REQUIRED_LAYOUTS[draft.mode].includes(floor) || !!draft.floorImages[floor] || (floor !== "full" && !!draft.floorRegions?.regions[floor])
-    );
-  }),
-);
 const gameMap = computed(() => storeV2.gameMaps.find(m => m.id === draft.gameMapId));
+const modeOptions = computed(() => gameMap.value?.difficulties.filter(d => !d.deletedAt).map(d => ({ value: d.difficultyId, label: storeV2.difficulties.find(v => v.id === d.difficultyId)?.name ?? d.difficultyId })) ?? []);
+const configuredFloors = computed(() => gameMap.value?.difficulties.find(d => d.difficultyId === draft.mode)?.floors.filter(f => !f.deletedAt) ?? []);
+const floorSlots = computed(() => [...new Set(['full', ...[...configuredFloors.value].sort((a,b) => a.sort-b.sort).map(f=>f.id), ...Object.keys(draft.floorImages), ...Object.keys(draft.floorRegions?.regions ?? {})])]);
+const floorLabels = computed<Record<string,string>>(() => Object.fromEntries([['full','全图'], ...(gameMap.value?.difficulties.flatMap(d => d.floors.map(f => [f.id,f.name])) ?? []), ...configuredFloors.value.map(f=>[f.id,f.name])]));
+const floorOrigins = reactive<Record<string,string>>(Object.fromEntries(configuredFloors.value.map(f => [f.id,f.name])));
+const floorConflicts = computed(() => configuredFloors.value.filter(f => (draft.floorImages[f.id] || draft.floorRegions?.regions[f.id]) && floorOrigins[f.id] && floorOrigins[f.id] !== f.name));
+function confirmFloorReuse() { for (const f of floorConflicts.value) floorOrigins[f.id] = f.name; }
+const entryLabels = computed<Record<string,string>>(() => Object.fromEntries(storeV2.entranceTypes.map(e=>[e.id,e.name])));
+const entryDefinition = (id:string) => entranceFilterFor(gameMap.value, draft.mode, id);
+const filterOptions = (id:string) => entryDefinition(id)?.filterOptions.filter(f=>!f.deletedAt && (!f.archived || draft.entrances.some(e=>e.type===id && e.filterValue===f.id))).sort((a,b)=>a.sort-b.sort).map(f=>({label:f.name,value:f.id})) ?? [];
+const activeEntrances = computed(() => draft.entrances.flatMap((entrance,index)=>entrance.deletedAt?[]:[{entrance,index}]));
 const issues = computed(() => {
-  const result = layoutPublicationIssues(draft, gameMap.value, !props.map.published || draft.mode !== props.map.mode);
-  for (const e of draft.entrances) if (!allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))
-    result.push(`${ENTRANCE_LABELS[e.type]}不允许录入，请移除或调整难度`);
+  const result = layoutPublicationIssues(draft, gameMap.value);
+  for (const id of [...Object.keys(draft.floorImages), ...Object.keys(draft.floorRegions?.regions ?? {})]) if (id !== 'full' && !configuredFloors.value.some(f => f.id === id)) result.push(`${floorLabels.value[id] ?? id}不属于目标难度，请移除或切回原难度`);
+  for (const e of draft.entrances) if (!e.deletedAt && !allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))
+    result.push(`${entryLabels.value[e.type]}不允许录入，请移除或调整难度`);
   return result;
 });
 const missingEntranceTypes = computed(() => {
   const expected = allowedEntranceTypes(gameMap.value, draft.mode);
   return expected.filter(
-    (type) => !draft.entrances.some((entrance) => entrance.type === type),
+    (type) => !draft.entrances.some((entrance) => !entrance.deletedAt && entrance.type === type),
   );
 });
-const directionOptions = DIRECTIONS_V2.map((value) => ({
-  label: DIRECTION_LABELS[value],
-  value,
-}));
-const passageOptions = PASSAGES_V2.map((value) => ({
-  label: PASSAGE_LABELS[value],
-  value,
-}));
 function mediaUrl(key: string): string {
   return `${API_BASE}/r2/${key}`;
 }
@@ -134,7 +119,7 @@ function floorRect(floor: FloorType): PixelRect | undefined {
 }
 function regionItems(): RegionItem[] {
   return floorSlots.value.filter(f => f !== 'full').map(f => ({
-    id: f, label: FLOOR_LABELS[f], rect: floorRect(f),
+    id: f, label: floorLabels.value[f], rect: floorRect(f),
     reference: draft.floorImages[f] ? mediaUrl(draft.floorImages[f]!.key) : undefined,
   }));
 }
@@ -163,6 +148,7 @@ async function applyRegions(result: RegionResult) {
     // Commit image + rectangles together only after upload succeeds.
     draft.floorImages.full = asset;
     draft.floorRegions = { sourceKey: asset.key, imageWidth: result.imageWidth, imageHeight: result.imageHeight, regions: result.regions };
+    for (const id of Object.keys(result.regions)) floorOrigins[id] = configuredFloors.value.find(f => f.id === id)?.name ?? id;
     for (const floor of Object.keys(result.regions) as RegionFloor[]) delete draft.floorImages[floor];
     closeRegions();
     message.success('区域已应用到布局草稿，还需应用布局并保存内容');
@@ -178,7 +164,7 @@ async function replaceEntrance(index: number): Promise<void> {
   const file = await pickImage();
   if (!file) return;
   const entrance = draft.entrances[index];
-  busy.value = `正在上传${ENTRANCE_LABELS[entrance.type]}…`;
+  busy.value = `正在上传${entryLabels.value[entrance.type]}…`;
   try {
     const webp = await fileToWebp(file);
     const [image, thumb] = await Promise.all([
@@ -205,7 +191,7 @@ function openEntranceRecrop(entranceIndex: number): void {
   recrop.value = {
     target: "entrance",
     entranceIndex,
-    label: `${ENTRANCE_LABELS[entrance.type]}入口图`,
+    label: `${entryLabels.value[entrance.type]}入口图`,
     currentSrc: entrance.image ? mediaUrl(entrance.image.key) : undefined,
     fullSrc: full ? mediaUrl(full.key) : undefined,
     initialFull: !entrance.image,
@@ -239,36 +225,31 @@ async function onRecropped(blob: Blob): Promise<void> {
 }
 
 function addEntrance(type: EntranceType): void {
-  const entrance: EntranceV2 = {
-    id: `${draft.id}-${type}`,
-    type,
-    ...(type === "front" ? { direction: "south" as const } : {}),
-  };
+  const entrance: EntranceV2 = { id: `entry-${crypto.randomUUID()}`, type };
   draft.entrances.push(entrance);
 }
 
 function removeEntrance(index: number): void {
-  draft.entrances.splice(index, 1);
+  draft.entrances[index].deletedAt = new Date().toISOString();
 }
 
 function changeMode(mode: GameMode): void {
+  if (modeLocked.value || draft.published) return;
   draft.mode = mode;
-  if (!props.isNew) return;
-
-  const expected = configuredEntranceTypes(gameMap.value, mode);
-  const existing = new Map(
-    draft.entrances.map((entrance) => [entrance.type, entrance]),
-  );
-  draft.entrances = [...existing.values()];
-  for (const type of expected) if (!existing.has(type)) {
-    const entrance: EntranceV2 = existing.get(type) ?? {
-      id: `${draft.id}-${type}`,
-      type,
-    };
-    if (type === "front") entrance.direction = "south";
-    draft.entrances.push(entrance);
-  }
-
+  if (issues.value.length) message.info('请检查并移除不属于目标难度的楼层和入口；取消可保留原布局');
+}
+function changeGameMap(id: string) {
+  if (!props.isNew || modeLocked.value) return;
+  draft.gameMapId = id;
+  draft.mode = gameMap.value?.difficulties.find(d => !d.deletedAt)?.difficultyId ?? '';
+  message.info('请检查目标地图的难度、楼层和入口；原布局不会改变');
+}
+async function uploadFloor(floor: string) {
+  const file = await pickImage(); if (!file) return;
+  busy.value = '正在上传楼层图…';
+  try { const asset = (await uploadImageV2('floor', await fileToWebp(file))).asset; draft.floorImages[floor] = asset; floorOrigins[floor] = configuredFloors.value.find(f => f.id === floor)?.name ?? floor; if (draft.floorRegions) delete draft.floorRegions.regions[floor]; }
+  catch (error) { message.error(error instanceof Error ? error.message : '上传失败'); }
+  finally { busy.value = ''; }
 }
 
 function setPublished(value: boolean): void {
@@ -284,22 +265,26 @@ function setPublished(value: boolean): void {
 }
 
 function apply(): void {
+  if (floorConflicts.value.length) { message.warning('请先核对并确认楼层素材归属'); return; }
+  if (!gameMap.value?.difficulties.some(d => d.difficultyId === draft.mode && !d.deletedAt)) {
+    message.warning('请先为目标地图添加难度'); return;
+  }
   if (!draft.name.trim() || !draft.displayName.trim()) {
     message.warning("逻辑名和展示名都要填写");
     return;
   }
-  if (draft.entrances.some(e => !allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))) {
+  if (draft.entrances.some(e => !e.deletedAt && !allowedEntranceTypes(gameMap.value, draft.mode).includes(e.type))) {
     message.warning("存在当前难度不允许的入口，请移除或调整难度");
     return;
   }
-  if (draft.published && issues.value.length > 0) {
+  if (issues.value.some(i => i.includes('不属于目标难度')) || (draft.published && issues.value.length > 0)) {
     message.warning(`还不能发布：${issues.value.join("；")}`, {
       duration: 8000,
       closable: true,
     });
     return;
   }
-  emit("apply", cloneMap(draft));
+  emit("apply", { ...cloneMap(draft), modeLocked: modeLocked.value });
 }
 </script>
 
@@ -314,14 +299,9 @@ function apply(): void {
     @close="emit('cancel')"
   >
     <div class="form-cols">
+      <n-form-item label="所属地图"><n-select role="combobox" :value="draft.gameMapId" :disabled="!isNew" :options="storeV2.gameMaps.filter(m=>!m.deletedAt).map(m=>({label:m.name,value:m.id}))" aria-label="布局所属地图" @update:value="changeGameMap" /></n-form-item>
       <n-form-item label="模式">
-        <n-radio-group
-          :value="draft.mode"
-          @update:value="(value: string) => changeMode(value as GameMode)"
-        >
-          <n-radio-button value="hard">困难</n-radio-button>
-          <n-radio-button value="nightmare">噩梦</n-radio-button>
-        </n-radio-group>
+        <n-select role="combobox" :value="draft.mode" :options="modeOptions" :disabled="modeLocked || draft.published" aria-label="布局难度" @update:value="changeMode" />
       </n-form-item>
       <n-form-item label="发布">
         <n-switch :value="draft.published" @update:value="setPublished" />
@@ -346,6 +326,10 @@ function apply(): void {
       </n-form-item>
     </div>
 
+    <n-alert v-if="floorConflicts.length" type="warning">
+      <div v-for="f in floorConflicts" :key="f.id">{{floorOrigins[f.id]}} → {{f.name}}</div>
+      <n-button size="small" @click="confirmFloorReuse">确认沿用这些楼层素材</n-button>
+    </n-alert>
     <h3 class="section-title">全图与楼层区域</h3>
     <p class="muted">上传完整全图，在图上选择楼层范围。楼层保存像素坐标，不再生成图片。</p>
     <div class="whole-crop-toolbar">
@@ -355,17 +339,18 @@ function apply(): void {
     <div class="img-slots">
       <div v-for="floor in floorSlots" :key="floor" class="img-slot" :class="{ missing: !draft.floorImages[floor] && !floorRect(floor) }">
         <div class="frame">
-          <button v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" class="region-preview-button" :aria-label="`预览${FLOOR_LABELS[floor]}`" @click="previewFloor = floor"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="FLOOR_LABELS[floor]" /></button>
+          <button v-if="floorRect(floor) && draft.floorRegions && draft.floorImages.full" class="region-preview-button" :aria-label="`预览${floorLabels[floor]}`" @click="previewFloor = floor"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(floor)!" :label="floorLabels[floor]" /></button>
           <n-image v-else-if="draft.floorImages[floor]" :src="mediaUrl(draft.floorImages[floor]!.key)" object-fit="contain" lazy />
           <span v-else class="muted">尚未设置</span>
         </div>
-        <div class="k">{{ FLOOR_LABELS[floor] }}{{ floor === 'full' ? '（默认）' : floorRect(floor) ? ' · 区域' : draft.floorImages[floor] ? ' · 待转换' : '' }}</div>
+        <div class="k">{{ floorLabels[floor] }}{{ floor === 'full' ? '（默认）' : floorRect(floor) ? ' · 区域' : draft.floorImages[floor] ? ' · 待转换' : '' }}</div>
         <div class="row-actions" style="justify-content: center">
           <template v-if="floor === 'full'">
             <n-button :disabled="!!busy" @click="uploadFull">换图</n-button>
             <n-button :disabled="!!busy || !draft.floorImages.full" @click="openFullCrop">裁切全图</n-button>
           </template>
           <n-button v-else :disabled="!!busy || !draft.floorImages.full" @click="openRegions(floor)">{{ floorRect(floor) ? '调整区域' : '选择区域' }}</n-button>
+          <n-button v-if="floor !== 'full'" :disabled="!!busy" @click="uploadFloor(floor)">上传独立图片</n-button>
           <n-button :disabled="!!busy || (!draft.floorImages[floor] && !floorRect(floor))" @click="removeFloor(floor)">移除</n-button>
         </div>
       </div>
@@ -374,7 +359,7 @@ function apply(): void {
     <h3 class="section-title">入口选项图</h3>
     <div class="entrance-admin-list">
       <div
-        v-for="(entrance, index) in draft.entrances"
+        v-for="{ entrance, index } in activeEntrances"
         :key="entrance.id"
         class="entrance-admin-row"
       >
@@ -387,26 +372,10 @@ function apply(): void {
           />
           <span v-else class="muted">缺图</span>
         </div>
-        <strong>{{ ENTRANCE_LABELS[entrance.type] }}</strong>
-        <div class="entrance-classifier">
-          <span class="entrance-field-label">{{
-            entrance.type === "front" ? "通道类型" : "入口方向"
-          }}</span>
-          <n-select
-            v-if="entrance.type === 'front'"
-            v-model:value="entrance.passage"
-            placeholder="选择通道（可后补）"
-            :options="passageOptions"
-          />
-          <n-select
-            v-else
-            v-model:value="entrance.direction"
-            placeholder="选择方向"
-            :options="directionOptions"
-          />
-          <span v-if="entrance.type === 'front'" class="entrance-field-hint"
-            >正门固定为南门，无需选择方向</span
-          >
+        <strong>{{ entryLabels[entrance.type] }}</strong>
+        <div v-if="filterOptions(entrance.type).length || entrance.filterValue" class="entrance-classifier">
+          <span class="entrance-field-label">{{ entryDefinition(entrance.type)?.filterLabel }}</span>
+          <n-select role="combobox" :value="entrance.filterValue ?? null" :options="filterOptions(entrance.type)" clearable placeholder="可后补" @update:value="value => entrance.filterValue = value ?? undefined" />
         </div>
         <div class="entrance-admin-actions">
           <n-button
@@ -441,7 +410,7 @@ function apply(): void {
           size="small"
           @click="addEntrance(type)"
         >
-          + {{ ENTRANCE_LABELS[type] }}
+          + {{ entryLabels[type] }}
         </n-button>
       </div>
     </div>
@@ -462,8 +431,8 @@ function apply(): void {
       >
     </div>
 
-    <n-modal :show="!!previewFloor" preset="card" :title="previewFloor ? FLOOR_LABELS[previewFloor] : ''" style="width: min(90vw, 900px)" @update:show="previewFloor = null">
-      <div v-if="previewFloor && floorRect(previewFloor) && draft.floorRegions && draft.floorImages.full" class="region-preview-large"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(previewFloor)!" :label="FLOOR_LABELS[previewFloor]" /></div>
+    <n-modal :show="!!previewFloor" preset="card" :title="previewFloor ? floorLabels[previewFloor] : ''" style="width: min(90vw, 900px)" @update:show="previewFloor = null">
+      <div v-if="previewFloor && floorRect(previewFloor) && draft.floorRegions && draft.floorImages.full" class="region-preview-large"><RegionPreview :src="mediaUrl(draft.floorImages.full.key)" :width="draft.floorRegions.imageWidth" :height="draft.floorRegions.imageHeight" :rect="floorRect(previewFloor)!" :label="floorLabels[previewFloor]" /></div>
     </n-modal>
     <RegionEditor v-if="regionJob" :source="regionJob.source" :items="regionJob.items" :initial-id="regionJob.initialId" :required-confirmation="regionJob.required" :pending-source="!!regionJob.candidate" :busy="!!busy" @done="applyRegions" @cancel="closeRegions" />
     <CropSingle
