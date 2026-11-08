@@ -4,7 +4,7 @@ import {
   type EntranceType,
   type GameMode,
 } from "@idv-map/shared/dynamic";
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import CatalogConditions from "../components/CatalogConditions.vue";
 import DensitySwitch from "../components/DensitySwitch.vue";
@@ -43,23 +43,81 @@ const filterOptions = computed(() =>
     label: catalogFilterLabelV2(entranceType.value, value, gameMap.value, mode.value),
   })),
 );
-
-const cards = computed(() =>
+const catalogCards = computed(() =>
   mapsV2
     .filter(
       (map) => map.mode === mode.value && map.gameMapId === gameMapId.value,
     )
     .flatMap((map) => {
       const entrance = findEntranceV2(map, entranceType.value);
-      if (
-        !entrance ||
-        (activeFilter.value !== "all" &&
-          entranceFilterValueV2(entrance) !== activeFilter.value)
-      )
-        return [];
-      return [{ map, entrance }];
+      return entrance ? [{ map, entrance }] : [];
     }),
 );
+const cards = computed(() => activeFilter.value === "all"
+  ? catalogCards.value
+  : catalogCards.value.filter(({ entrance }) => entranceFilterValueV2(entrance) === activeFilter.value));
+const filterCounts = computed(() => {
+  const counts = new Map<string, number>([["all", catalogCards.value.length]]);
+  for (const { entrance } of catalogCards.value) {
+    const value = entranceFilterValueV2(entrance);
+    if (value !== undefined) counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return counts;
+});
+
+const filterButtons = ref<HTMLElement | null>(null);
+const filterMinWidth = ref("3.5rem");
+let widthObserver: ResizeObserver | undefined;
+
+function measureFilterWidth() {
+  const group = filterButtons.value;
+  if (!group || !window.matchMedia("(max-width: 768px)").matches) return;
+  const counter = group.querySelector<HTMLElement>(".tab-count-num");
+  if (!counter) return;
+
+  // Measure complete labels with their own counts, even when not selected.
+  // Hidden probes are removed before painting and never enter the grid flow.
+  const probes = Array.from(group.querySelectorAll<HTMLButtonElement>(":scope > button"), button => {
+    const probe = button.cloneNode(true) as HTMLButtonElement;
+    probe.setAttribute("aria-hidden", "true");
+    probe.tabIndex = -1;
+    probe.style.cssText = "position:fixed;visibility:hidden;pointer-events:none;white-space:nowrap;width:max-content;min-width:max-content;max-width:none;transform:none";
+    probe.querySelector<HTMLElement>(".filter-option-label")!.style.whiteSpace = "nowrap";
+    const count = probe.querySelector<HTMLElement>(".tab-count-num") ?? probe.appendChild(counter.cloneNode(true)) as HTMLElement;
+    count.textContent = `(${filterCounts.value.get(button.dataset.filter ?? "all") ?? 0})`;
+    return probe;
+  });
+  group.append(...probes);
+  try {
+    const width = Math.ceil(Math.max(56, ...probes.map(probe => probe.getBoundingClientRect().width))) + 1;
+    filterMinWidth.value = `${width}px`;
+  } finally {
+    probes.forEach(probe => probe.remove());
+  }
+}
+
+watch(filterButtons, group => {
+  widthObserver?.disconnect();
+  if (!group) return;
+  let previousWidth = -1;
+  widthObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width !== previousWidth) {
+      previousWidth = entry.contentRect.width;
+      measureFilterWidth();
+    }
+  });
+  widthObserver.observe(group);
+  measureFilterWidth();
+}, { flush: "post" });
+watch([filterOptions, filterCounts], measureFilterWidth, { flush: "post" });
+onMounted(() => {
+  void document.fonts?.ready.then(measureFilterWidth);
+  document.fonts?.addEventListener("loadingdone", measureFilterWidth);
+});
+onUnmounted(() => {
+  widthObserver?.disconnect();
+  document.fonts?.removeEventListener("loadingdone", measureFilterWidth);
+});
 
 function navigate(
   nextMode: GameMode,
@@ -91,32 +149,35 @@ function applyConditions(nextMapId: string, nextMode: GameMode, nextEntrance: En
             :aria-label="filterTitle"
           >
             <span class="v2-filter-label">{{ filterTitle }}</span>
-            <div class="v2-segment-buttons v2-direction-buttons">
+            <div
+              ref="filterButtons"
+              class="v2-segment-buttons v2-direction-buttons"
+              :style="{ '--filter-min-width': filterMinWidth }"
+            >
               <button
+                data-filter="all"
                 class="tab-btn"
                 :class="{ active: activeFilter === 'all' }"
                 :aria-pressed="activeFilter === 'all'"
                 @click="navigate(mode, entranceType)"
               >
-                全部<span v-if="activeFilter === 'all'" class="tab-count-num">
-                  ({{ cards.length }})</span
-                >
+                <span class="filter-option-label">全部</span><span
+                  v-if="activeFilter === 'all'" class="tab-count-num"
+                >({{ cards.length }})</span>
               </button>
               <button
                 v-for="item in filterOptions"
                 :key="item.value"
+                :data-filter="item.value"
                 class="tab-btn"
                 :class="{ active: activeFilter === item.value }"
                 :aria-pressed="activeFilter === item.value"
                 @click="navigate(mode, entranceType, item.value)"
               >
-                {{ item.label
-                }}<span
+                <span class="filter-option-label">{{ item.label }}</span><span
                   v-if="activeFilter === item.value"
                   class="tab-count-num"
-                >
-                  ({{ cards.length }})</span
-                >
+                >({{ cards.length }})</span>
               </button>
             </div>
           </div>
@@ -143,21 +204,18 @@ function applyConditions(nextMapId: string, nextMode: GameMode, nextEntrance: En
 
 <style scoped>
 .catalog-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 10px; row-gap: 6px; margin-bottom: 12px; }
-.catalog-controls :deep(.catalog-conditions) { grid-column: 1 / -1; min-width: 0; }
-.catalog-controls :deep(.density-switch) { position: relative; top: auto; right: auto; transform: none; grid-column: 2; grid-row: 2; }
-.catalog-layout-toolbar { grid-column: 1; grid-row: 2; justify-content: space-between; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; }
-.catalog-layout-toolbar .v2-direction-filter { flex: 1; min-width: 0; }
-@media (min-width: 1200px) {
-  .catalog-controls { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); row-gap: 0; }
-  .catalog-controls :deep(.catalog-conditions) { grid-column: 2; grid-row: 1; }
-  .catalog-controls :deep(.density-switch) { grid-column: 3; grid-row: 1; justify-self: end; }
-  .catalog-layout-toolbar { grid-column: 1; grid-row: 1; }
-}
+.catalog-controls :deep(.catalog-conditions) { grid-column: 1; grid-row: 1; min-width: 0; }
+.catalog-controls :deep(.density-switch) { position: relative; top: auto; right: auto; transform: none; grid-column: 2; grid-row: 1; }
+.catalog-layout-toolbar { grid-column: 1 / -1; grid-row: 2; display: flex; justify-content: space-between; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; }
+.catalog-layout-toolbar .v2-direction-filter { flex: 1; min-width: 0; align-items: flex-start; }
+.catalog-layout-toolbar .v2-filter-label { padding-top: 10px; }
+.catalog-layout-toolbar .v2-direction-buttons { flex: 1; min-width: 0; flex-wrap: wrap; }
+.catalog-layout-toolbar .v2-direction-buttons .tab-btn { flex: 0 1 auto; min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.4; }
 @media (max-width: 768px) {
   .catalog-controls { column-gap: 6px; row-gap: 4px; margin-bottom: 10px; }
-  .catalog-controls :deep(.catalog-conditions) { grid-column: 1; grid-row: 1; }
-  .catalog-controls :deep(.density-switch) { grid-row: 1; }
-  .catalog-layout-toolbar { grid-column: 1 / -1; display: flex; }
-  .catalog-layout-toolbar .v2-direction-filter { flex: 1; }
+  .catalog-layout-toolbar .v2-direction-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--filter-min-width)), 1fr)); align-items: stretch; gap: 6px; }
+  .catalog-layout-toolbar .v2-direction-buttons .tab-btn { min-height: 36px; padding: 6px 4px; }
+  .catalog-layout-toolbar .filter-option-label { display: inline-block; max-width: 100%; vertical-align: middle; }
+  .catalog-layout-toolbar .tab-count-num { display: inline-block; white-space: nowrap; vertical-align: middle; }
 }
 </style>
