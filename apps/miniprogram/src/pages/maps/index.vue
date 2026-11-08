@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, watch, onBeforeUnmount } from "vue";
-import { onLoad } from "@dcloudio/uni-app";
+import { computed, getCurrentInstance, nextTick, ref, shallowRef, watch, onBeforeUnmount } from "vue";
+import { onLoad, onReady, onResize } from "@dcloudio/uni-app";
 import { availableModes, MODE_LABELS, ENTRANCE_LABELS, projectInfo, enabledEntranceTypes, entranceFilterFor,
   entranceFilterValueV2, entranceFilterLabelV2, findEntranceV2,
   type GameMode, type EntranceType, type CatalogFilterV2, type PublicMapConfigV5 } from "@idv-map/shared/dynamic";
@@ -25,18 +25,47 @@ let disposed = false;
 try { compact.value = uni.getStorageSync("idv-catalog-compact") === "1"; } catch { /* Optional preference. */ }
 watch(compact, value => { try { uni.setStorageSync("idv-catalog-compact", value ? "1" : "0"); } catch { /* Session only. */ } });
 const mapName = computed(() => config.value?.gameMaps.find(map => map.id === gameMapId.value)?.name ?? "选择地图");
-const cards = computed(() => (config.value?.layouts ?? [])
+const catalogCards = computed(() => (config.value?.layouts ?? [])
   .filter(l => l.gameMapId === gameMapId.value && l.mode === mode.value)
   .flatMap(layout => {
     const entry = findEntranceV2(layout, entrance.value);
-    return entry && (!filter.value || entranceFilterValueV2(entry) === filter.value) ? [{ layout, entry }] : [];
+    return entry ? [{ layout, entry }] : [];
   })
   .sort((a, b) => a.layout.sort - b.layout.sort || a.layout.id - b.layout.id));
+const cards = computed(() => !filter.value ? catalogCards.value
+  : catalogCards.value.filter(({ entry }) => entranceFilterValueV2(entry) === filter.value));
 const entryDefinition = computed(() => entranceFilterFor(config.value?.gameMaps.find(m => m.id === gameMapId.value), mode.value, entrance.value));
 const filters = computed(() => [...(entryDefinition.value?.filterOptions ?? [])]
   .filter(item => !item.archived && !item.deletedAt)
   .sort((a, b) => a.sort - b.sort)
   .map(item => ({ value: item.id, label: item.name })));
+const filterMeasurements = computed(() => [
+  { value: "", label: "全部", count: catalogCards.value.length },
+  ...filters.value.map(item => ({ ...item, count: catalogCards.value.filter(({ entry }) => entranceFilterValueV2(entry) === item.value).length })),
+]);
+const instance = getCurrentInstance();
+const filterMinWidth = ref(56);
+let measurementId = 0;
+function measureFilters() {
+  const current = ++measurementId;
+  nextTick(() => {
+    if (disposed) return;
+    const query = uni.createSelectorQuery().in(instance!.proxy);
+    query.select(".filter-options").boundingClientRect();
+    query.selectAll(".filter-measure-face").boundingClientRect();
+    query.exec(results => {
+      if (disposed || current !== measurementId) return;
+      const container = results[0] as { width: number } | null;
+      const faces = results[1] as { width: number }[] | null;
+      if (!container?.width || !faces?.length) return;
+      const width = Math.ceil(Math.max(56, ...faces.map(face => face.width))) + 1;
+      filterMinWidth.value = Math.min(width, container.width);
+    });
+  });
+}
+watch(filterMeasurements, measureFilters, { flush: "post" });
+onReady(measureFilters);
+onResize(measureFilters);
 const draftGameMap = computed(() => config.value?.gameMaps.find(m => m.id === draftMap.value));
 const modes = computed(() => availableModes(draftGameMap.value));
 const entrances = computed(() => enabledEntranceTypes(draftGameMap.value, draftMode.value));
@@ -120,9 +149,12 @@ onBeforeUnmount(dispose);
           </view>
           <view v-if="filters.length" class="filter-row" :class="{ passage: entrance === 'front' }">
             <text class="filter-label">{{ entryDefinition?.filterLabel }}</text>
-            <view class="filter-options">
+            <view class="filter-options" :style="{ '--filter-min-width': `${filterMinWidth}px` }">
               <button :class="{ selected: !filter }" hover-class="filter-pressed" :aria-pressed="!filter" @tap="filter = ''"><view class="filter-face">全部<text v-if="!filter" class="count">({{ cards.length }})</text></view></button>
               <button v-for="item in filters" :key="item.value" :class="{ selected: filter === item.value }" hover-class="filter-pressed" :aria-pressed="filter === item.value" @tap="filter = item.value"><view class="filter-face">{{ item.label }}<text v-if="filter === item.value" class="count">({{ cards.length }})</text></view></button>
+            </view>
+            <view class="filter-measure" aria-hidden="true">
+              <view v-for="item in filterMeasurements" :key="item.value" class="filter-face filter-measure-face">{{ item.label }}<text class="count">({{ item.count }})</text></view>
             </view>
           </view>
           <view class="cards" :class="{ compact }">
@@ -212,13 +244,13 @@ onBeforeUnmount(dispose);
 .density button.selected, .density button.density-pressed { opacity: 1; }
 .filter-row { display: flex; align-items: center; margin-bottom: 6px; }
 .filter-label { display: none; color: #695b46; font-size: 12px; margin-right: 6px; flex: none; }
-.filter-options { display: flex; flex: 1; min-width: 0; }
-.filter-options button { display: flex; align-items: center; justify-content: center; flex: 1 1 0%; height: 44px; min-width: 0; padding: 0; margin-right: 4px; border: 0; border-radius: 0; background: transparent; }
-.filter-options button:last-child { margin-right: 0; }
+.filter-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--filter-min-width), 1fr)); grid-gap: 6px; flex: 1; min-width: 0; }
+.filter-options button { display: flex; align-items: center; justify-content: center; min-height: 36px; min-width: 0; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; }
+.filter-measure { position: fixed; top: 0; left: -10000px; display: flex; width: 10000px; visibility: hidden; pointer-events: none; }
+.filter-measure-face { flex: none; width: auto !important; }
 .filter-face { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 36px; padding: 6px 2px; border: 1px solid var(--gold-dark); border-radius: 2px; background: #14161a; color: var(--gold); font-size: 12px; line-height: 1; white-space: nowrap; box-shadow: 0 3px 6px rgba(0,0,0,.3); }
 .filter-options button.selected .filter-face { background: var(--gold-dark); border-color: var(--gold); color: var(--parchment-light); box-shadow: 0 4px 8px rgba(43,34,22,.35); }
 .filter-pressed .filter-face { transform: translateY(1px); box-shadow: 0 1px 3px rgba(0,0,0,.35); }
-.passage .filter-options button.selected { flex-grow: 1.35; }
 .count { font-size: 10px; margin-left: 3px; }
 @media (min-width: 769px) { .filter-label { display: block; } }
 .cards { display: flex; flex-wrap: wrap; justify-content: flex-start; }
