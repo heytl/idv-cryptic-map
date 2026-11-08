@@ -16,8 +16,8 @@
 需要 Git、Node.js 24、pnpm 11。完整克隆仓库并安装 pnpm 后：
 
 ```powershell
-git fetch origin main production codex/static-production-source
-node scripts/static/release.mjs --source-ref origin/codex/static-production-source
+git fetch origin main dev production
+node scripts/static/release.mjs --source-ref 69578e8
 node scripts/static/verify.mjs
 node --test scripts/static/lib.test.mjs
 ```
@@ -55,7 +55,7 @@ node scripts/static/browser-verify.mjs
 
 最新静态站采用公开 V6，`source-maps-v6.json` 保存原始公开配置，页面只读取本地 `maps-v6.json`。历史归档保留原协议。`media-index.json` 记录图片来源与 SHA-256，`integrity.json` 记录文件校验值，`release.json` 记录 UI 提交、地图数据版本与保存时间。
 
-本次 V6 源码从正式版 `cc6bf1f` 派生，仅移入正式部署已使用的 Web 与共享动态地图能力，锁定为 `22c8d9d`。远程 `production` 尚未同步该能力，更新时须显式选择支持 V6 的正式版适配提交。验收补充运行 `scripts/static/verify-dynamic.mjs` 和 `scripts/static/verify-upgrade.mjs`，检查磷光症筛选、窄屏、离线与旧 PWA 升级。
+当前首页 UI 锁定为 `69578e8`，入口分类采用等宽 Grid 与实际文字测量，移动端保持 36px 基础高度。源码与正式内容版本以 `site/release.json` 为准，后续更新须显式选择已验证的 V6 源码提交。验收补充运行 `scripts/static/verify-dynamic.mjs` 和 `scripts/static/verify-upgrade.mjs`，检查磷光症筛选、窄屏、离线与旧 PWA 升级。
 
 ## 目录
 

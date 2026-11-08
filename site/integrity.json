@@ -15,19 +15,14 @@
     "sha256": "2e55cee88f7b46c9c64c6cac8d72594870db39868f7b9349f22ad0bf4e852235"
   },
   {
-    "path": "assets/AboutView-DSNT9los.js",
+    "path": "assets/AboutView-D5NHapf3.js",
     "bytes": 5932,
-    "sha256": "db29969eed38263afc8eaa600155202d37bcf208e047b83c7a2d375a45b95498"
+    "sha256": "0f516fb921f3948de3fadc44908ee2669c2b1b42688dc02a3d3a458267c59256"
   },
   {
-    "path": "assets/BBDFAo16.css",
-    "bytes": 36924,
-    "sha256": "c7f22a8b75116d3603e94526d24e765d693406c03218255b26d4d150fe4f99e7"
-  },
-  {
-    "path": "assets/ChangelogView-kxO30LYq.js",
+    "path": "assets/ChangelogView-DFMAnZ9-.js",
     "bytes": 1562,
-    "sha256": "074e48c80b68dd2159a5233a8ef71a2ce1b0b942a1b8d86f060397b16c0f6504"
+    "sha256": "dfc9a4fce3941fb57cfcb123060c2c5661da27aa5370ad631ce131caea478d5c"
   },
   {
     "path": "assets/CzXfDS-Z.css",
@@ -50,14 +45,19 @@
     "sha256": "90ed262dec86bcbdde51b7c5ca0b46234a12e43863dcdd71290389a69cedd7b6"
   },
   {
-    "path": "assets/changelog-Bh_OrJNX.js",
-    "bytes": 5676,
-    "sha256": "face9e88358ec3432aa35f62c67c553de344f00b14c53d0443a1576c5f411f34"
+    "path": "assets/changelog-BUtkbSuP.js",
+    "bytes": 5673,
+    "sha256": "fdf5dea77c809b0b32c5766175530cc2749ff7d10d59fdcf0e6312e50735eda8"
   },
   {
-    "path": "assets/index-DDqSifPp.js",
-    "bytes": 147642,
-    "sha256": "89476cc0a88b669b500560c29725eb490f478272f4fdb6570d2c1257d1a546e0"
+    "path": "assets/index-Duyu8YD3.js",
+    "bytes": 149252,
+    "sha256": "fed32ac95db81e92eaf6b8c266e624b45415b8540c104174a6358b9feb5feb07"
+  },
+  {
+    "path": "assets/pRuO7QNk.css",
+    "bytes": 37196,
+    "sha256": "ea2b976d7265c49397161a7c9c59f56e94fabe95520dab1f8ff95e83f3fc7270"
   },
   {
     "path": "assets/xNna6_96.woff2",
@@ -77,7 +77,7 @@
   {
     "path": "index.html",
     "bytes": 933,
-    "sha256": "5e21a45f3c10438e4b8265bd8487ed6de6e664d2706f22428891c0e0c44abeda"
+    "sha256": "486328a0ae9de7575992ba4ce5a1d378b072ae462df110bb9923d5f904cf1efb"
   },
   {
     "path": "manifest.webmanifest",
@@ -1707,6 +1707,6 @@
   {
     "path": "sw.js",
     "bytes": 3085,
-    "sha256": "bcfe6ca5bab236abc9d946dd3d268e57b64040572d43aab6f27ceaa2303846e2"
+    "sha256": "0d7a328ce204024bd4b5fa43db36a4ba3e20183d4417ba47d831f66e8d14b9b4"
   }
 ]
