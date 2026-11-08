@@ -1,18 +1,18 @@
 {
   "version": "v3",
   "base": "/",
-  "releaseId": "ddfaec48cfe86360",
+  "releaseId": "ce4eea201d3a78da",
   "sourceSha": "22c8d9de8b17e81903bcd1d542add5d29514b395",
-  "publisherSha256": "fa5c5b2d75849469275dfe718288fb1688ce851a5c017107fa88593c3a490ddd",
+  "publisherSha256": "0329dcbbe414a9c69d51f0224430a1ffcc709e7fa865854c296ac01cd8b31855",
   "sourceUrl": "https://idv-map.321666.xyz/maps-v6.json",
-  "capturedAt": "2026-11-06T08:34:53.461Z",
-  "sourceConfigSha256": "3c99fad19680c5f2e809e68017e3ce48e258dc9df518af3a2b02c4bf8b2fc5e1",
-  "integritySha256": "4b192918359c54450fd8b37a410e6da4fc660ca759183de70a224e56e445a437",
+  "capturedAt": "2026-11-08T07:13:58.995Z",
+  "sourceConfigSha256": "ec615d592677eb42e880c34b7c68c9516a11bec50a071c82b766975bcc64d2de",
+  "integritySha256": "c65ba5f4c112767fdf40b839956666cb58f356b2fd1223b82bbf3e7c8caee807",
   "schemaVersion": 6,
-  "dataVersion": 9,
-  "updatedAt": "2026-11-06T08:07:33.661Z",
-  "layouts": 71,
+  "dataVersion": 12,
+  "updatedAt": "2026-11-08T05:52:39.013Z",
+  "layouts": 86,
   "gameMaps": 2,
-  "sourceImages": 271,
-  "uniqueImages": 271
+  "sourceImages": 316,
+  "uniqueImages": 316
 }

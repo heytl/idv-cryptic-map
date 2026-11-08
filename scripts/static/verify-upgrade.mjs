@@ -9,6 +9,9 @@ import { gzipSync } from 'node:zlib';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const build = JSON.parse(await readFile(resolve(root, '.tmp/static-build.json')));
 const old = process.env.STATIC_PREVIOUS_SITE || resolve(build.work, 'previous-site'), latest = resolve(root, 'site');
+const config = JSON.parse(await readFile(resolve(latest,'maps-v6.json'),'utf8'));
+const nightmare = config.layouts.filter(layout => layout.gameMapId === 'phosphorescence-disease' && layout.mode === 'nightmare');
+assert(nightmare.length > 0, 'The new nightmare content must be published');
 const work = resolve(root, '.tmp', `upgrade-${Date.now()}`), host = resolve(work, 'host');
 await mkdir(work, { recursive: true });
 await cp(old, host, { recursive: true });
@@ -44,15 +47,20 @@ try {
   }));
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForFunction(() => !!performance.getEntriesByType('resource').find(r => r.name.endsWith('/maps-v6.json')));
-  await page.goto('http://127.0.0.1:8797/#/maps/phosphorescence-disease/hard/basement-track', { waitUntil: 'networkidle' });
-  assert.equal(await page.locator('.map-card-item').count(), 14);
+  await page.goto('http://127.0.0.1:8797/#/maps/phosphorescence-disease/nightmare/basement-track', { waitUntil: 'networkidle' });
+  assert.equal(await page.locator('.map-card-item').count(), nightmare.length);
   await page.getByRole('button', { name: '下载地图离线包', exact: true }).click();
   await page.getByRole('button', { name: '✓ 已可离线使用 · 复查', exact: true }).waitFor({ timeout: 120000 });
   await context.setOffline(true); await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('.map-card-item').first().waitFor();
-  assert.equal(await page.locator('.map-card-item').count(), 14);
+  assert.equal(await page.locator('.map-card-item').count(), nightmare.length);
+  await page.locator('.map-card-item').first().click();
+  for (const floor of ['负一层','负二层','负三层']) {
+    await page.getByRole('button',{name:floor,exact:true}).click();
+    await page.waitForFunction(() => document.querySelector('#main-map-img')?.naturalWidth > 0);
+  }
   assert.deepEqual(errors, []);
-  report.oldPwaUpgrade = true; report.newMapOfflineAfterUpgrade = true; report.errors = errors;
+  report.oldPwaUpgrade = true; report.newMapOfflineAfterUpgrade = true; report.nightmareLayouts = nightmare.length; report.dataVersion = config.dataVersion; report.errors = errors;
   await mkdir(resolve('.tmp/static-verification'), { recursive: true });
   await writeFile(resolve('.tmp/static-verification/upgrade-report.json'), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));

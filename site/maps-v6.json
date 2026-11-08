@@ -1,7 +1,7 @@
 {
   "schemaVersion": 6,
-  "dataVersion": 9,
-  "updatedAt": "2026-11-06T08:07:33.661Z",
+  "dataVersion": 12,
+  "updatedAt": "2026-11-08T05:52:39.013Z",
   "defaultFloor": "full",
   "dictionaries": {
     "modes": [
@@ -230,6 +230,70 @@
               ]
             }
           }
+        },
+        {
+          "difficultyId": "nightmare",
+          "sort": 20,
+          "floors": [
+            {
+              "id": "b1",
+              "name": "负一层",
+              "sort": 10,
+              "visible": true
+            },
+            {
+              "id": "b2",
+              "name": "负二层",
+              "sort": 20,
+              "visible": true
+            },
+            {
+              "id": "b3",
+              "name": "负三层",
+              "sort": 30,
+              "visible": true
+            }
+          ],
+          "enabledEntrances": [
+            "basement-track"
+          ],
+          "entranceFilters": {
+            "basement-track": {
+              "filterLabel": "路况",
+              "filterOptions": [
+                {
+                  "id": "left-only",
+                  "name": "只有左边",
+                  "sort": 10
+                },
+                {
+                  "id": "left-straight-lower-right-bend",
+                  "name": "左直-下右弯",
+                  "sort": 20
+                },
+                {
+                  "id": "left-straight-both-junctions",
+                  "name": "左直-两都有路口",
+                  "sort": 30
+                },
+                {
+                  "id": "left-straight-upper-right-bend",
+                  "name": "左直-右上弯",
+                  "sort": 40
+                },
+                {
+                  "id": "left-straight-right-straight",
+                  "name": "左直-右直",
+                  "sort": 50
+                },
+                {
+                  "id": "left-no-junction",
+                  "name": "左边没路口",
+                  "sort": 60
+                }
+              ]
+            }
+          }
         }
       ]
     }
@@ -281,8 +345,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "upper-left",
           "filterLabel": "左上弯",
-          "imageUrl": "/media/6c126e81f94e38d4c50a092a51e2fc1c33655cc61bd41af9461cb491e51cf88a.webp",
-          "thumbUrl": "/media/d042f081c3e7218f39c70a576a9ce1b16d7c3ea1e0ac9fedd50660c5468b5e41.webp"
+          "imageUrl": "/media/44190c490244de20c1bc81fcbb00fa23de2599ca76f1c21fdd5790441301b772.webp",
+          "thumbUrl": "/media/d41bd4f30f47e9fa351080252c493df0ea24590e0e9395a26be2139513f4744e.webp"
         }
       ]
     },
@@ -332,8 +396,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/696d77882c5ac48a9a11693fe8ec2e41c1f73dc9c760ad33a7aff547b373026a.webp",
-          "thumbUrl": "/media/75a28d2d310a128b7abac35b6826d7d3a2bafc048a8242c127cdf6bed24eabb9.webp"
+          "imageUrl": "/media/c38ea41b7482e0c421ff4c9eca68bf58aacde1452ba8a964901ff8a78e486139.webp",
+          "thumbUrl": "/media/b7215b6fb67651e8df9768f79e1239395bcd57fb4e25c537d38e2637c82b1ff4.webp"
         }
       ]
     },
@@ -383,8 +447,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "lower-left",
           "filterLabel": "左下弯",
-          "imageUrl": "/media/91cb8cd49883ea1a6c0432d9cd500a75a888a5269bfef41a0293678172c7ca49.webp",
-          "thumbUrl": "/media/85572d180073684a32564e1ad2230370e920e52b89c1e7368a5e2db068d35b22.webp"
+          "imageUrl": "/media/c877c68d7e92fe767d72b0690696ecbc9ac525dc636a20314e6946d8b7ca5848.webp",
+          "thumbUrl": "/media/62bf2acdd00fbc1ff50043f0c8c309432ae623ff6beef23c8f4dd4d83d535f1d.webp"
         }
       ]
     },
@@ -434,8 +498,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "upper-left",
           "filterLabel": "左上弯",
-          "imageUrl": "/media/c63c79ff203dc20c4274b11c313daa20acbd6ea6287746dad43065234e12626e.webp",
-          "thumbUrl": "/media/5b0f24c0b4cd3d5b0e9f392e3549d3d2ba73a36522660c8bc56d2df9e663c76d.webp"
+          "imageUrl": "/media/a12f151e516a8f97e8ac60d9e6099d4ded74a1bf05807191bd5645cfe3d01084.webp",
+          "thumbUrl": "/media/5c65a690c768529cd93a53bc104f9890c8242ef149361d2ca455eb8db00f3a56.webp"
         }
       ]
     },
@@ -485,8 +549,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "upper-left",
           "filterLabel": "左上弯",
-          "imageUrl": "/media/a4c4cede69d148fb11d7f072f1ff30e5467fbec812bdb9e8fd758668d752a7b5.webp",
-          "thumbUrl": "/media/c89957905791460dd9f2b5f07b050f58616ba381672bd742994df7741b5e2177.webp"
+          "imageUrl": "/media/5ae85967481fbe1ced4711ce385d76adbcfb10f5df4719663037952ab7908995.webp",
+          "thumbUrl": "/media/30baf0b5732a76dfdcd704c85833054bf93bd7f6a1b97c1e1d96f742bcc9c28c.webp"
         }
       ]
     },
@@ -536,8 +600,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/7ae49719d03925ca10e39c7cbebd7b1fb7859b99f691144bee0829509c3ffbf4.webp",
-          "thumbUrl": "/media/bd87d3d52888879a5335e59850dabe3163a0762888440aecdf528e7c2b013f37.webp"
+          "imageUrl": "/media/b16cb02d038c85828683421aebcf83c6c992e83aaa98ed2eddf0ea60b382cb2a.webp",
+          "thumbUrl": "/media/4c8ebe0d81407241eed78024c4251462642e4e14fc9408b7977ebec93007d480.webp"
         }
       ]
     },
@@ -587,8 +651,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/7eef5d5492d99cd6b0ace453778c62916ab601d3455fd554f97984601f92f2d5.webp",
-          "thumbUrl": "/media/da4e8a8474816bdca257c4486e5c345b2aecc09ad9cb0bb03bc4b4bbdc373723.webp"
+          "imageUrl": "/media/3c9f76129f405f27298e52f2f3deb57a134e2116142a78a07ec2966f89c87065.webp",
+          "thumbUrl": "/media/3e563804402f48f9c2dda98d5c5bab11e2ee3357753de1cfcbb5f0ee91015526.webp"
         }
       ]
     },
@@ -638,8 +702,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/2e0639d20a14b9e06bb67537f9b30143a8fc2c256090d9f1bb7f8193fa7f57e2.webp",
-          "thumbUrl": "/media/f7242052d7be17534b067c3a855a9a5c61e6764edbfb719719742cb24b2a22b0.webp"
+          "imageUrl": "/media/d40fa94798d0836f427b2e76a39181f4f66d67a61b21b87161c15d9d86df366d.webp",
+          "thumbUrl": "/media/6ee9d853deebd379d0b8dbc6548cbbe1e257f10bbeaef385270a9656098a4321.webp"
         }
       ]
     },
@@ -689,8 +753,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/301eb0ffa3265753cfbf82451653681451c4d50f1ebbbc9a3151db3c64bab479.webp",
-          "thumbUrl": "/media/9851e15aa70458f6854f528be3a602944019203f6f907b14966eb6ad2554c5c9.webp"
+          "imageUrl": "/media/4eea2ee419455e394473766c03532ab25b45091e01e1c22781227f2ad61d2e08.webp",
+          "thumbUrl": "/media/914535b9baaa8ba374d0db46ff985680a86d41bcc777c7a758aeccc91b2e58f3.webp"
         }
       ]
     },
@@ -787,8 +851,59 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "upper-left",
           "filterLabel": "左上弯",
-          "imageUrl": "/media/fbc706ebaa4edcec425e83b16dc2b7c1977ec2b911c548f714ea4fcfb1ee0ae6.webp",
-          "thumbUrl": "/media/7d66a4ca783223edf26c243a1c36513151a8f870dd1cd72d2ad1ce093c633868.webp"
+          "imageUrl": "/media/d634884c3aae382217004af2145a3cb366934e53fb40f04fd61f4e8b3bdc21d5.webp",
+          "thumbUrl": "/media/9eeb553802843d3535689273813ce540d84eebf24ef2c99b8c9a57f13432bcd8.webp"
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图1",
+      "displayName": "地图1",
+      "remarks": "",
+      "sort": 10,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/6fcca92937c49a28ae5b336384e2f4dd6e05f432f0391522177e5189aecd3424.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/6fcca92937c49a28ae5b336384e2f4dd6e05f432f0391522177e5189aecd3424.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2615,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 809
+          },
+          "b2": {
+            "x": 0,
+            "y": 822,
+            "width": 1000,
+            "height": 851
+          },
+          "b3": {
+            "x": 0,
+            "y": 1719,
+            "width": 1000,
+            "height": 896
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-75-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-both-junctions",
+          "filterLabel": "左直-两都有路口",
+          "imageUrl": "/media/1b11bad1956da347f406e3abd1f4744ddf1e8106d69229e42f69cecffa3bf0ed.webp",
+          "thumbUrl": "/media/26be2a3b5c18f351b3380d6bf8cedbd73f322751e201f141df725e5a4a96d153.webp"
         }
       ]
     },
@@ -838,8 +953,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/e984236a4ae2a40deb87f41d87d3de8958a6f90d53c519ca9be0f3c97fdd9201.webp",
-          "thumbUrl": "/media/9f40e5a768abb1cf2a3b0b6543a5b94d1e1e06fc832ac8a1fb3106e0c75364f8.webp"
+          "imageUrl": "/media/ac5b38cd1753744320a0601d896fe61a679b3b4aab4ae896c95662a069b04029.webp",
+          "thumbUrl": "/media/997d7864a2ad15928133032419ea1d08788a9d466f8da9a4ebd02296057c9448.webp"
         }
       ]
     },
@@ -889,8 +1004,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "upper-left",
           "filterLabel": "左上弯",
-          "imageUrl": "/media/bd529245936a34e019318187f18e112fba3d8ba75e9a7f418c601ccfc6b95ce2.webp",
-          "thumbUrl": "/media/9581daf8ad881e404efe957a7a4ab7feb809bbee811c941767dfb500c1595acc.webp"
+          "imageUrl": "/media/cefe4295359c9f730a1bbe8e49a0ac8b7530b0037ccf1283f300334a6ec8e1fc.webp",
+          "thumbUrl": "/media/a706b426d9a9b59b73fc18dd1471c0c0d9cadabb364937babedcaef402b372e4.webp"
         }
       ]
     },
@@ -940,8 +1055,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/7267a14d7cbc3bb8a24787ab7a5c4c8d7ca39781d63157fb8e3131c8a84ab569.webp",
-          "thumbUrl": "/media/e60ce9a646f0225c2bba1fc911f02e4c8de211e6648d951d337ccb484d0f7d22.webp"
+          "imageUrl": "/media/c8a00d6a63c0b060e036b6bc78acb99798dd68cf6fdf483ce1e4fea52da6826d.webp",
+          "thumbUrl": "/media/f4170c98597ea44c4a1bd4f663ae00bfa203547f5bfeeb270aead32adbde6612.webp"
         }
       ]
     },
@@ -991,8 +1106,8 @@
           "typeLabel": "负二楼轨道",
           "filterValue": "straight-left",
           "filterLabel": "左直线",
-          "imageUrl": "/media/af401a87c7afcac752554e133b4e1f4e73a3293b74c0c4d163c34eae2c8b7a20.webp",
-          "thumbUrl": "/media/967ab856beed9e87007e0c2afaafdf1c570df79fa07e9c334198535e8f95cdf9.webp"
+          "imageUrl": "/media/c4290c8e86030c20b8b4e3ad5144ee0c0d2fc4467f6729aa896d4f26961f33ba.webp",
+          "thumbUrl": "/media/f3c0a5ce4383ba05aa39260b6b944070fae196f2cad6f1029235990632af4ddd.webp"
         }
       ]
     },
@@ -1044,6 +1159,57 @@
       ]
     },
     {
+      "id": 76,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图2",
+      "displayName": "地图2",
+      "remarks": "",
+      "sort": 20,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/bf3adccf00996553c6701c3a11104190f28526d0675c1e15f1282571ea040caa.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/bf3adccf00996553c6701c3a11104190f28526d0675c1e15f1282571ea040caa.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2722,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 801
+          },
+          "b2": {
+            "x": 0,
+            "y": 830,
+            "width": 1000,
+            "height": 895
+          },
+          "b3": {
+            "x": 0,
+            "y": 1726,
+            "width": 1000,
+            "height": 996
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-76-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-right-straight",
+          "filterLabel": "左直-右直",
+          "imageUrl": "/media/a8bc73a9fd0b7cbd84f65b6a8a8d67dd745ad94122882c1c9aa5634aac9a1cb4.webp",
+          "thumbUrl": "/media/63e3571a700d677208671f6bdc86741027f42496c91f2906eef0d5363d33e025.webp"
+        }
+      ]
+    },
+    {
       "id": 3,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1087,6 +1253,57 @@
           "filterLabel": "左",
           "imageUrl": "/media/aa7674c67bc2094d9050c15d6e031656c4ece1ac42559bf686a32d49eadeba35.webp",
           "thumbUrl": "/media/c8d3e66dacba0a5c73d6078db59f22d5c5ff650275a85dc6d3d75883beb1b5b3.webp"
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图3",
+      "displayName": "地图3",
+      "remarks": "",
+      "sort": 30,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/f2c325ab3df834af4fb1d0b4012e3c3a71745b815dadddabf6505a135f61d863.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/f2c325ab3df834af4fb1d0b4012e3c3a71745b815dadddabf6505a135f61d863.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2662,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 784
+          },
+          "b2": {
+            "x": 0,
+            "y": 799,
+            "width": 1000,
+            "height": 907
+          },
+          "b3": {
+            "x": 0,
+            "y": 1753,
+            "width": 1000,
+            "height": 909
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-77-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-only",
+          "filterLabel": "只有左边",
+          "imageUrl": "/media/e26c753d89bef47dd6ff26a4bbe79082ca06f9ac7561f49f32f09279208e671e.webp",
+          "thumbUrl": "/media/46b5f1947d89f4b27fa9d899300fae1c0e250f1e524b818bab14cb8e4ae9a16a.webp"
         }
       ]
     },
@@ -1138,6 +1355,57 @@
       ]
     },
     {
+      "id": 78,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图4",
+      "displayName": "地图4",
+      "remarks": "",
+      "sort": 40,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/ab0494cfee77cebf121458daa937c3d991e426a676c004bb02635bc63c7d32bd.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/ab0494cfee77cebf121458daa937c3d991e426a676c004bb02635bc63c7d32bd.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2675,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 851
+          },
+          "b2": {
+            "x": 0,
+            "y": 848,
+            "width": 1000,
+            "height": 919
+          },
+          "b3": {
+            "x": 0,
+            "y": 1759,
+            "width": 1000,
+            "height": 916
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-78-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-both-junctions",
+          "filterLabel": "左直-两都有路口",
+          "imageUrl": "/media/0ee2d1f9a5362af29a26973f2bb7fb3e69586b6d6d21d1cb7093eb0922b1a064.webp",
+          "thumbUrl": "/media/aeee7d9ad1f539624ae456c413d016136381492d26646cb09ee5c694efda9394.webp"
+        }
+      ]
+    },
+    {
       "id": 5,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1181,6 +1449,57 @@
           "filterLabel": "左",
           "imageUrl": "/media/b0d66966422d4ca82c00d30a2d5ccccc1f8644a62fb26227f0a4087f5eaf7e66.webp",
           "thumbUrl": "/media/b2a20c63433cb264b40b04b9d590cf09ff413ba77588790dd94d334da7a5ee7e.webp"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图5",
+      "displayName": "地图5",
+      "remarks": "",
+      "sort": 50,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/d8d6c21404af4911747b51e1a3806a4bab0ad94aaf9a778a6737a5e6bac38117.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/d8d6c21404af4911747b51e1a3806a4bab0ad94aaf9a778a6737a5e6bac38117.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2740,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 860
+          },
+          "b2": {
+            "x": 0,
+            "y": 853,
+            "width": 1000,
+            "height": 963
+          },
+          "b3": {
+            "x": 0,
+            "y": 1817,
+            "width": 1000,
+            "height": 923
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-79-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-only",
+          "filterLabel": "只有左边",
+          "imageUrl": "/media/c92e0eaf134dbe5f99b456468dbab697cb419178e89d88ec36e0594e0d9b235d.webp",
+          "thumbUrl": "/media/a1b1d462789d7ebc8979d0163481f840203b3d18b3558b18e504b04a8006cae1.webp"
         }
       ]
     },
@@ -1232,6 +1551,57 @@
       ]
     },
     {
+      "id": 80,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图6",
+      "displayName": "地图6",
+      "remarks": "",
+      "sort": 60,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/0a1f0fead4906fb26d96f95d765d756b6a885008ebee7c17674cb2bdfe82fca7.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/0a1f0fead4906fb26d96f95d765d756b6a885008ebee7c17674cb2bdfe82fca7.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2687,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 852
+          },
+          "b2": {
+            "x": 0,
+            "y": 929,
+            "width": 1000,
+            "height": 830
+          },
+          "b3": {
+            "x": 0,
+            "y": 1757,
+            "width": 1000,
+            "height": 930
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-80-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-upper-right-bend",
+          "filterLabel": "左直-右上弯",
+          "imageUrl": "/media/c8c673c7b0d2547f22dacf22a6052bb1e2cecb9aeaeeabec29064acdf55a4ddf.webp",
+          "thumbUrl": "/media/030f94782d38d014c4d1a34c77f766eb5f5600d108db06384206cc38ea6f1769.webp"
+        }
+      ]
+    },
+    {
       "id": 7,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1275,6 +1645,57 @@
           "filterLabel": "左",
           "imageUrl": "/media/62ef6248cd96133f30d3718e5a86d7583a9ebf106d994142ee89a71bbe7782d5.webp",
           "thumbUrl": "/media/b9f7ca4821de0df6838e14fcbf9e50b9c902fdc908fa7941f8aad912c0c52940.webp"
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图7",
+      "displayName": "地图7",
+      "remarks": "",
+      "sort": 70,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/ca6b3ab7ef6efea31f1d882794f8e9f6480decba892eacfdc002571dcb7c12f9.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/ca6b3ab7ef6efea31f1d882794f8e9f6480decba892eacfdc002571dcb7c12f9.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2708,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 821
+          },
+          "b2": {
+            "x": 0,
+            "y": 829,
+            "width": 1000,
+            "height": 915
+          },
+          "b3": {
+            "x": 0,
+            "y": 1791,
+            "width": 1000,
+            "height": 917
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-81-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-upper-right-bend",
+          "filterLabel": "左直-右上弯",
+          "imageUrl": "/media/a1d9a7258e2c7fd42491f2a15f96deadf6479a8e9b0b8d2373528f39c206f552.webp",
+          "thumbUrl": "/media/a0d510eb652e0b9ea9f6e495f549807fb63b1af9cc05518d0fb5a7bff3e94bf4.webp"
         }
       ]
     },
@@ -1327,6 +1748,57 @@
       ]
     },
     {
+      "id": 82,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图8",
+      "displayName": "地图8",
+      "remarks": "",
+      "sort": 80,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/19a7592cfada9f4aedb5ed2059f179b38e606b07dc8ddf8ddc7f8c3e4957658e.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/19a7592cfada9f4aedb5ed2059f179b38e606b07dc8ddf8ddc7f8c3e4957658e.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2670,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 810
+          },
+          "b2": {
+            "x": 0,
+            "y": 808,
+            "width": 1000,
+            "height": 934
+          },
+          "b3": {
+            "x": 0,
+            "y": 1755,
+            "width": 1000,
+            "height": 915
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-82-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-only",
+          "filterLabel": "只有左边",
+          "imageUrl": "/media/46b8cd712d988bd54543b7997980e48ed7d4d50e377bd99475b689d6b561b4dd.webp",
+          "thumbUrl": "/media/a4af32c07ae018c78fd08516cd938a3710b1565d53413eddb42834ac82ff11c2.webp"
+        }
+      ]
+    },
+    {
       "id": 27,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1371,6 +1843,57 @@
           "filterLabel": "左",
           "imageUrl": "/media/ea7a76be141021327d353f703dd427cc0fb3abe3baff80e2854c6efdd75b67ad.webp",
           "thumbUrl": "/media/9f30b845b31e308005e40f59a4a3f1552674ca1327f22bc4ef24f7dc95efaf2b.webp"
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图9",
+      "displayName": "地图9",
+      "remarks": "",
+      "sort": 90,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/ef8f444a34acdad3e5b5b8e356d95b2d1f3f22a72b7e0008092504b73a2e4b35.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/ef8f444a34acdad3e5b5b8e356d95b2d1f3f22a72b7e0008092504b73a2e4b35.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2681,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 813
+          },
+          "b2": {
+            "x": 0,
+            "y": 811,
+            "width": 1000,
+            "height": 904
+          },
+          "b3": {
+            "x": 0,
+            "y": 1770,
+            "width": 1000,
+            "height": 911
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-83-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-no-junction",
+          "filterLabel": "左边没路口",
+          "imageUrl": "/media/f359dc20caa29c0dc47587664caf4f53148b365741a63e1a80a5e1babde78061.webp",
+          "thumbUrl": "/media/b1c5f2c699257ffb62c64da52d9976db1acde9344cc3e2ac2aa156e30bde0a0d.webp"
         }
       ]
     },
@@ -1422,6 +1945,57 @@
       ]
     },
     {
+      "id": 84,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图10",
+      "displayName": "地图10",
+      "remarks": "",
+      "sort": 100,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/f373d7c1645b6b963d5a4a77c53f63ae0217e4bde7e682203decd8ca7d28fb1c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/f373d7c1645b6b963d5a4a77c53f63ae0217e4bde7e682203decd8ca7d28fb1c.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2681,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 867
+          },
+          "b2": {
+            "x": 0,
+            "y": 935,
+            "width": 1000,
+            "height": 813
+          },
+          "b3": {
+            "x": 0,
+            "y": 1760,
+            "width": 1000,
+            "height": 921
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-84-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-right-straight",
+          "filterLabel": "左直-右直",
+          "imageUrl": "/media/1b07d36e5e3fe73a9250b7f7775c85a76b03cb8d27ea4dff58a7736699ef23fe.webp",
+          "thumbUrl": "/media/6aa0a62c39581c9c7f6016b82e527226c00914344e7e25f1f45db3b7409bab68.webp"
+        }
+      ]
+    },
+    {
       "id": 9,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1465,6 +2039,57 @@
           "filterLabel": "右",
           "imageUrl": "/media/e4896fd199a344875e2e0188b489f4aadf43099a065c12f056f9925282805d73.webp",
           "thumbUrl": "/media/99938da8690975b874cd155fee6c00df5d32a3647be6fa4ee21cf466db83fb69.webp"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图11",
+      "displayName": "地图11",
+      "remarks": "",
+      "sort": 110,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/c52c55a7649a03a10ed3f2ebbc8a59a5ad70ae8c1e142f548d25f440ad40300c.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/c52c55a7649a03a10ed3f2ebbc8a59a5ad70ae8c1e142f548d25f440ad40300c.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2667,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 862
+          },
+          "b2": {
+            "x": 0,
+            "y": 915,
+            "width": 1000,
+            "height": 852
+          },
+          "b3": {
+            "x": 0,
+            "y": 1758,
+            "width": 1000,
+            "height": 909
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-85-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-upper-right-bend",
+          "filterLabel": "左直-右上弯",
+          "imageUrl": "/media/4f81fe97c2ca00b6883f227a8e744cb750411a8c38d158dee2b88b73c93efaed.webp",
+          "thumbUrl": "/media/51a500a09dd5f2b731a189aece39067f7775a32ce0543ece30f38c61386d6597.webp"
         }
       ]
     },
@@ -1516,6 +2141,57 @@
       ]
     },
     {
+      "id": 86,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图12",
+      "displayName": "地图12",
+      "remarks": "",
+      "sort": 120,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/d3490457345454792a656ba3b13fbea43296e6dd78b97952b4a6109d115fa8fd.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/d3490457345454792a656ba3b13fbea43296e6dd78b97952b4a6109d115fa8fd.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2693,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 877
+          },
+          "b2": {
+            "x": 0,
+            "y": 965,
+            "width": 1000,
+            "height": 801
+          },
+          "b3": {
+            "x": 0,
+            "y": 1771,
+            "width": 1000,
+            "height": 922
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-86-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-lower-right-bend",
+          "filterLabel": "左直-下右弯",
+          "imageUrl": "/media/c88ee1da95f91a0297d46333dae9eab8d3762b45dff80f5840c82083414e0292.webp",
+          "thumbUrl": "/media/a25a3c4f55bf8faec2deccd286aa4aceb13eb5e51ed7c57d48dbd647702b2d08.webp"
+        }
+      ]
+    },
+    {
       "id": 11,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1559,6 +2235,57 @@
           "filterLabel": "右",
           "imageUrl": "/media/a5172cd45984d5c30d6b7611ea06b1fcb150d3611c683a31043fdc544b8afe0f.webp",
           "thumbUrl": "/media/d20e09531c8e8afd9ff257947584745c74358ca67eca2044326ac4e717bfb096.webp"
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图13",
+      "displayName": "地图13",
+      "remarks": "",
+      "sort": 130,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/147a7a7787af71043cca5c4cc9e42924f44f55dc9ae6d33ae658ab30412b023b.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/147a7a7787af71043cca5c4cc9e42924f44f55dc9ae6d33ae658ab30412b023b.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2675,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 822
+          },
+          "b2": {
+            "x": 0,
+            "y": 821,
+            "width": 1000,
+            "height": 932
+          },
+          "b3": {
+            "x": 0,
+            "y": 1766,
+            "width": 1000,
+            "height": 909
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-87-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-lower-right-bend",
+          "filterLabel": "左直-下右弯",
+          "imageUrl": "/media/5ab0d5c2cc005f5dcb4a050ea705e479b01140cc810cc98fb52857dddf531a56.webp",
+          "thumbUrl": "/media/aa329be1074ec976f7b85d63ff07e88bb64a15ea95dd1681aec3b9749e332a9e.webp"
         }
       ]
     },
@@ -1610,6 +2337,57 @@
       ]
     },
     {
+      "id": 88,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图14",
+      "displayName": "地图14",
+      "remarks": "",
+      "sort": 140,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/882d83e01630dd235427ca66a90bc38ecc62ca8cb16e94b544cf72cf3ba2cabe.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/882d83e01630dd235427ca66a90bc38ecc62ca8cb16e94b544cf72cf3ba2cabe.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2684,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 840
+          },
+          "b2": {
+            "x": 0,
+            "y": 888,
+            "width": 1000,
+            "height": 887
+          },
+          "b3": {
+            "x": 0,
+            "y": 1824,
+            "width": 1000,
+            "height": 860
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-88-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-right-straight",
+          "filterLabel": "左直-右直",
+          "imageUrl": "/media/7384045595bd86fbd732b98a282c7db87256023f4d99846fa0bcd201b18070e6.webp",
+          "thumbUrl": "/media/1eb670a79e29d4afc838acf8d39aca0fcc3ece44b4382461911beaaff9c80578.webp"
+        }
+      ]
+    },
+    {
       "id": 26,
       "gameMapId": "lady-of-doom",
       "mode": "hard",
@@ -1654,6 +2432,57 @@
           "filterLabel": "右",
           "imageUrl": "/media/3b81943e5e54c1450494db6b0d9c451786744144f76559831067790fb59c66da.webp",
           "thumbUrl": "/media/fb8110887f64631d94542ecae619f6dc830e424d7d4f70de6ee5baba117a538d.webp"
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "gameMapId": "phosphorescence-disease",
+      "mode": "nightmare",
+      "name": "地图15",
+      "displayName": "地图15",
+      "remarks": "",
+      "sort": 150,
+      "legacyNames": [],
+      "floorImages": {
+        "full": {
+          "url": "/media/6e23908d5df2c932cae97b3af6d75170e87351c91f080b54e7d25ed73cdae8f1.webp"
+        }
+      },
+      "floorRegions": {
+        "sourceUrl": "/media/6e23908d5df2c932cae97b3af6d75170e87351c91f080b54e7d25ed73cdae8f1.webp",
+        "imageWidth": 1000,
+        "imageHeight": 2697,
+        "regions": {
+          "b1": {
+            "x": 0,
+            "y": 0,
+            "width": 1000,
+            "height": 837
+          },
+          "b2": {
+            "x": 0,
+            "y": 828,
+            "width": 1000,
+            "height": 959
+          },
+          "b3": {
+            "x": 0,
+            "y": 1782,
+            "width": 1000,
+            "height": 915
+          }
+        }
+      },
+      "entrances": [
+        {
+          "id": "phosphor-nightmare-89-track",
+          "type": "basement-track",
+          "typeLabel": "负二楼轨道",
+          "filterValue": "left-straight-upper-right-bend",
+          "filterLabel": "左直-右上弯",
+          "imageUrl": "/media/dbc72b44dc46ac018933f8f0d5f0d26c5ed12b02504ad86c99a40e8fabe8343f.webp",
+          "thumbUrl": "/media/dab1f6fde02646a8a99090f177e6530412fce92131b9660a2d44887586013ae3.webp"
         }
       ]
     },

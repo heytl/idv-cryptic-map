@@ -1,6 +1,6 @@
-const BASE = "/", SHELL = "static-latest-shell-ddfaec48cfe86360";
+const BASE = "/", SHELL = "static-latest-shell-ce4eea201d3a78da";
 const PREFIX = "static-latest-shell-", CONFIG = "static-latest-maps-config-v6", MEDIA = "static-latest-map-images-r2";
-const PRECACHE = ["/assets/6TITYALK.woff2","/assets/9unVA9SI.css","/assets/AboutView-C6V8eew6.js","/assets/BBDFAo16.css","/assets/ChangelogView-vJsfMM9x.js","/assets/CzXfDS-Z.css","/assets/D8SXnS9M.woff2","/assets/DA6fE2Uq.css","/assets/Xa87wuGl.png","/assets/changelog-1qNXNuSn.js","/assets/index-eR1_OGFA.js","/assets/xNna6_96.woff2","/favicon.ico","/icons/treasure.webp","/index.html","/pwa-192.png","/pwa-512.png","/static/miniprogram-code.png","/registerSW.js","/manifest.webmanifest"];
+const PRECACHE = ["/assets/6TITYALK.woff2","/assets/9unVA9SI.css","/assets/AboutView-DSNT9los.js","/assets/BBDFAo16.css","/assets/ChangelogView-kxO30LYq.js","/assets/CzXfDS-Z.css","/assets/D8SXnS9M.woff2","/assets/DA6fE2Uq.css","/assets/Xa87wuGl.png","/assets/changelog-Bh_OrJNX.js","/assets/index-DDqSifPp.js","/assets/xNna6_96.woff2","/favicon.ico","/icons/treasure.webp","/index.html","/pwa-192.png","/pwa-512.png","/static/miniprogram-code.png","/registerSW.js","/manifest.webmanifest"];
 self.addEventListener('install', event => event.waitUntil((async () => { await (await caches.open(SHELL)).addAll(PRECACHE); await self.skipWaiting(); })()));
 self.addEventListener('activate', event => event.waitUntil((async () => {
   for (const key of await caches.keys()) if (key.startsWith(PREFIX) && key !== SHELL) await caches.delete(key);

@@ -9,17 +9,18 @@ if (!['127.0.0.1', 'localhost', 'jysj.321666.xyz'].includes(new URL(base).hostna
 const config = await (await fetch(base + '/maps-v6.json')).json();
 const map = config.gameMaps.find(m => m.id === 'phosphorescence-disease');
 assert(map, 'Published phosphorescence map required');
-const layouts = config.layouts.filter(l => l.gameMapId === map.id);
+const mapLayouts = config.layouts.filter(l => l.gameMapId === map.id);
 const browser = await chromium.launch({ ...(process.env.STATIC_BROWSER_CHANNEL === 'chromium' ? {} : { channel: 'chrome' }), headless: true });
 const reports = [];
 const shots = resolve('.tmp/static-verification'); await mkdir(shots, { recursive: true });
 try {
-  for (const width of [320, 390, 1365]) {
+  for (const width of [320, 390, 1365]) for (const difficulty of map.difficulties) {
     const context = await browser.newContext({ viewport: { width, height: 844 } });
     await context.route('**/_vercel/insights/**', r => r.fulfill({ body: '', contentType: 'application/javascript' }));
     const page = await context.newPage(), errors = [];
     page.on('pageerror', e => errors.push(e.message));
-    const difficulty = map.difficulties[0], entrance = difficulty.enabledEntrances[0];
+    const entrance = difficulty.enabledEntrances[0];
+    const layouts = mapLayouts.filter(l => l.mode === difficulty.difficultyId && l.entrances.some(e => e.type === entrance));
     const route = `${base}/#/maps/${map.id}/${difficulty.difficultyId}/${entrance}`;
     await page.goto(route, { waitUntil: 'networkidle' });
     await page.locator('.map-card-item').first().waitFor();
@@ -33,7 +34,7 @@ try {
     }
     await page.getByRole('button', { name: '下载地图离线包', exact: true }).click();
     await page.getByRole('button', { name: '✓ 已可离线使用 · 复查', exact: true }).waitFor({ timeout: 120000 });
-    await page.screenshot({ path: resolve(shots, `phosphorescence-${width}-catalog.png`), fullPage: true });
+    await page.screenshot({ path: resolve(shots, `phosphorescence-${difficulty.difficultyId}-${width}-catalog.png`), fullPage: true });
     await page.locator('.map-card-item').first().click();
     await page.waitForFunction(() => document.querySelector('#main-map-img')?.naturalWidth > 0);
     await context.setOffline(true);
@@ -44,9 +45,9 @@ try {
       await page.waitForFunction(() => document.querySelector('#main-map-img')?.naturalWidth > 0);
     }
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
-    await page.screenshot({ path: resolve(shots, `phosphorescence-${width}-offline.png`), fullPage: true });
+    await page.screenshot({ path: resolve(shots, `phosphorescence-${difficulty.difficultyId}-${width}-offline.png`), fullPage: true });
     assert.deepEqual(errors, []);
-    reports.push({ width, layouts: layouts.length, filters: true, offlineFloors: difficulty.floors.length, errors });
+    reports.push({ width, difficulty: difficulty.difficultyId, layouts: layouts.length, filters: true, offlineFloors: difficulty.floors.length, errors });
     await context.close();
   }
   await writeFile(resolve(shots, 'dynamic-report.json'), JSON.stringify(reports, null, 2));
