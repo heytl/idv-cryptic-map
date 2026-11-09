@@ -1,0 +1,20 @@
+.mini-dialog-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 9998; background: rgba(26,20,16,.65); }
+dialog[open] { z-index: 9999; }
+dialog:not([open]) { display: none; }
+[data-mini-flex="row"] > * + * { margin-left: var(--mini-column-gap, 0px); }
+[data-mini-flex="column"] > * + * { margin-top: var(--mini-row-gap, 0px); }
+.map-card-item .img-wrapper::before, .entry-img-container::before { content: ''; display: block; padding-top: 100%; }
+.map-card-item .img-wrapper > img, .entry-img-container > img { position: absolute; top: 0; left: 0; }
+.qr-frame { height: 174px; }
+[data-mini-external] { -webkit-user-select: text; user-select: text; overflow-wrap: break-word; }
+html.mini-keyboard-focus button:focus, html.mini-keyboard-focus a:focus, html.mini-keyboard-focus select:focus { outline: 2px solid #d4b77c; outline-offset: 3px; }
+html:not(.mini-keyboard-focus) body.minitool-shell button:focus,
+html:not(.mini-keyboard-focus) body.minitool-shell a:focus,
+html:not(.mini-keyboard-focus) body.minitool-shell select:focus { outline: none; }
+html { touch-action: manipulation; }
+body { -webkit-touch-callout: none; }
+@supports (aspect-ratio: 1) {
+  .map-card-item .img-wrapper::before, .entry-img-container::before { display: none; }
+  .map-card-item .img-wrapper > img, .entry-img-container > img { position: static; }
+}
+* { --mini-row-gap: 0px; --mini-column-gap: 0px; }

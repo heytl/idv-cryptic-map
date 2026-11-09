@@ -7,6 +7,7 @@
     "dev:admin": "pnpm --filter admin dev",
     "build": "pnpm --filter web build && pnpm --filter admin build && pnpm build:miniprogram:preview",
     "preview": "pnpm --filter web preview",
+    "build:minitool": "node scripts/minitool/build.mjs && node scripts/minitool/audit.mjs && python scripts/minitool/package.py",
     "preview:demo": "node scripts/preview-online-demo.mjs",
     "test": "pnpm --filter @idv-map/shared test && pnpm test:worker && pnpm --filter web test && pnpm --filter admin test && pnpm --filter miniprogram test",
     "test:worker": "pnpm --filter @idv-map/shared exec vitest run --root ../.. workers",

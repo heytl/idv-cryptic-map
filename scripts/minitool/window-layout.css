@@ -1,0 +1,55 @@
+/* This stylesheet belongs only to the small-tool adapter. */
+body.minitool-shell .app-container {
+  padding-top: var(--mini-top, calc(var(--safe-area-inset-top, 0px) + 44px));
+}
+body.minitool-shell.catalog-v2-view-active .app-container {
+  padding-top: var(--mini-logo-top, var(--mini-top));
+}
+body.minitool-shell.catalog-v2-view-active .app-header {
+  min-height: 60px;
+  padding: 4px var(--mini-logo-side, 0px);
+  gap: 4px;
+  margin-bottom: 14px;
+}
+body.minitool-shell.catalog-v2-view-active .app-header .app-title {
+  font-size: 1.375rem;
+  line-height: 1.2;
+  gap: 4px;
+  white-space: nowrap;
+}
+body.minitool-shell.catalog-v2-view-active .app-header .app-title .en-font {
+  font-size: .625rem;
+  line-height: 1.2;
+  letter-spacing: 1.6px;
+}
+body.minitool-shell.catalog-v2-view-active .header-decoration {
+  width: 96px;
+  height: 1px;
+  margin: 0;
+}
+body.minitool-shell.strategy-view-active .app-container { padding: 0; }
+/* Let the native-button reserve and the detail toolbar share one continuous canvas. */
+body.minitool-shell.strategy-view-active .control-bar::before { background: transparent; }
+body.minitool-shell #strategy-v2-view {
+  padding-top: var(--mini-top);
+  padding-bottom: var(--mini-bottom, 0px);
+  padding-left: var(--mini-left, 0px);
+  padding-right: var(--mini-right, 0px);
+}
+body.minitool-shell .map-viewport.in-page-fullscreen {
+  top: var(--mini-top);
+  height: calc(var(--strategy-viewport-height, 100vh) - var(--mini-top) - var(--mini-bottom, 0px));
+}
+body.minitool-shell .reference-dialog {
+  top: var(--mini-top);
+  height: calc(100vh - var(--mini-top) - var(--mini-bottom, 0px));
+  max-height: calc(100vh - var(--mini-top) - var(--mini-bottom, 0px));
+}
+body.minitool-shell .condition-dialog {
+  max-height: calc(100vh - var(--mini-top) - var(--mini-bottom, 0px) - 12px);
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+@media (max-width: 768px) {
+  body.minitool-shell .reference-dialog { top: auto; height: auto; }
+}
